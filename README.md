@@ -196,6 +196,7 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 **D2. Fundamentação e citações / Grounding and citations.**
 - PT: estes dois critérios da candidatura ainda não têm código (só latência, recusa e fuga do bloco de raciocínio). Definir e implementar de raiz: o que conta como afirmação suportada pelo contexto, e quando uma citação é exata (aponta para o excerto que contém a afirmação). Validar o método à mão em algumas respostas antes de o aplicar às 50.
 - EN: these two criteria have no code yet. Define and build, from scratch, what counts as a claim supported by the context and when a citation is exact; check the method by hand on a few answers before running all 50.
+- Cardápio / Menu: ver [`CRITERIOS-AVALIACAO.md`](CRITERIOS-AVALIACAO.md) (secção D, indicadores 1, 3 e 7, e secção E / section D, indicators 1, 3 and 7, and section E). Opções para seleção pela equipa, não imperativas; recusar um item é válido com justificação. / Options for the team to choose from, not mandatory; any item may be rejected with a reason.
 
 **D3. Origem do texto dos prompts / Provenance of prompt text.**
 - PT: confirmar que os prompts e a frase de recusa foram escritos neste repositório e não copiados do PC-IA (secção 6, declaração, ponto 4). Se houver cópia, declarar ou reescrever.
@@ -212,6 +213,7 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 **D6. Parâmetros configuráveis / Configurable parameters.**
 - PT: o código fixa 6 excertos e 9000 caracteres. A curva de k (3 a 20) e o limite de caracteres têm de ser parâmetros, aplicados da mesma forma aos dois modelos, com cache dos resultados intermédios para não repetir configurações. Dimensionar primeiro quantas configurações cabem nas cerca de 7 h 15 úteis do Evento (valor dito na conversa; não verificado) e quanto custam em tokens.
 - EN: the code fixes 6 chunks and 9000 characters. The k curve (3 to 20) and the character limit must be parameters, applied identically to both models, with caching of intermediate results. First size how many configurations fit in the roughly 7h15 of working time (stated in the chat; unverified) and what they cost in tokens.
+- Cardápio / Menu: ver [`CRITERIOS-AVALIACAO.md`](CRITERIOS-AVALIACAO.md) (secções A e B, parâmetros e valores a testar / sections A and B, parameters and values to test). Opções para seleção pela equipa, não imperativas; recusar um item é válido com justificação. / Options for the team to choose from, not mandatory; any item may be rejected with a reason.
 
 **D7. Comparabilidade dos modelos / Model comparability (recomendação, por decidir).**
 - Nota / Note: o texto vem da conta `coopera-web` (commit `3d653cd`); a renumeração de D5 para D7 foi feita a 26-10-2026 para não coincidir com o D5 das propostas de clientes. O alias `grok-latest` apontar para `grok-4.7` e os preços citados **não foram verificados** por quem reviu o repositório; confirmar na API antes de decidir. / Text by `coopera-web`; renumbered D5 to D7 to avoid clashing with the client-proposals D5. The `grok-latest` to `grok-4.7` mapping and the prices are **unverified** by the reviewer; check against the API before deciding.
@@ -220,6 +222,7 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
   - **Referência extra (topo vs topo), se os créditos chegarem:** `grok-4.7` vs Gemini Pro.
   - Fixar versões concretas em vez de aliases `latest`; usar o mesmo limite de tokens de resposta e a mesma temperatura; registar se o raciocínio está ligado (afeta latência e custo).
 - EN: the current setup compares a lightweight Gemini model with Grok's flagship reasoning model, so differences mix provider and model tier. Recommended: main comparison Flash-Lite vs `grok-4.20-non-reasoning` (or `grok-4.3` with reasoning off); optional flagship-vs-flagship reference `grok-4.7` vs Gemini Pro. Pin versions, match output-token cap and temperature, and record whether reasoning is on.
+- Cardápio / Menu: ver [`CRITERIOS-AVALIACAO.md`](CRITERIOS-AVALIACAO.md) (secção C / section C). Opções para seleção pela equipa, não imperativas; recusar um item é válido com justificação. / Options for the team to choose from, not mandatory; any item may be rejected with a reason.
 
 ## 9b. Termos / Glossary
 
@@ -273,6 +276,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Corpus do repositório (86 documentos) medido contra o do P4 (162 ficheiros): duplicados, ruído e baixo sinal registados no D1; sem alteração aos dados. / Repository corpus (86 documents) measured against the P4 one (162 files): duplicates, noise and low-signal chunks recorded in D1; no data change. |
 | 26-10-2026 | Decisão do Ricardo: a pergunta central é usar o Grok como modelo alternativo e comparar resultados com o Gemini; volume e forma do contexto passam a parâmetro (D6). / Ricardo's decision: the central question is Grok as an alternative model compared with Gemini; context volume and form become a parameter (D6). |
 | 26-10-2026 | Dados pessoais redigidos de novo em 4 excertos de `data/chunk_data/chunks.json` após a regeneração do corpus; criado `ALTERACOES-DO-ASSISTENTE.md` (registo das alterações diretas do assistente, um capítulo por ficheiro). / Personal data redacted again in 4 chunks after corpus regeneration; `ALTERACOES-DO-ASSISTENTE.md` created. |
+| 26-10-2026 | Criado `CRITERIOS-AVALIACAO.md`: cardápio de parâmetros e indicadores para seleção pela equipa (não imperativo), referenciado em D2, D6 e D7. / `CRITERIOS-AVALIACAO.md` created: menu of parameters and indicators for the team to select (not mandatory), referenced in D2, D6 and D7. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
