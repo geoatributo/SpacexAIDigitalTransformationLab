@@ -199,6 +199,10 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 | Tipos de pergunta / question types | Factual, lista ou tabela, recusa esperada, seguimento (do plano). / Factual, list or table, expected refusal, follow-up. |
 | Custo / cost | Tokens e latência por pergunta; o preço em euros só com os preços oficiais dos modelos (por verificar). / Tokens and latency per question; money only with official model prices (unverified). |
 
+**Resposta aos desafios / Response to the challenges.**
+- PT: o conjunto P4 ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) tem 30 perguntas (37 turnos) já tipificadas: 10 factuais, 9 de lista ou tabela, 6 recusas esperadas (R1–R6, três com armadilha de contexto próximo) e 5 sequências de seguimento, com resposta esperada e fonte. Inclui as recusas indevidas F9 e L9 e os casos difíceis das rondas de QA. Vai ser feito um exercício de agregação deste ficheiro com o golden set global de 50 perguntas (`data/geoatributo_base2_gold_questions.json`), ficando assim respondidos os desafios D1 a D4.
+- EN: the P4 set ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) has 30 typed questions (37 turns): 10 factual, 9 list/table, 6 expected refusals and 5 follow-up sequences, each with expected answer and source. It will be merged with the global 50-question golden set, which addresses challenges D1 to D4.
+
 ## 10. Histórico e evolução / History and evolution
 
 O histórico do Git mantém-se: não se reescreve. Esta secção explica as mudanças. / Git history is kept, not rewritten; this section gives the context.
