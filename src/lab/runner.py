@@ -259,12 +259,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         nargs="?",
         const="",
         default=None,
-        help="Avaliar uma run já gravada (sem chamar as APIs, salvo --judge). Sem caminho, usa a mais recente.",
+        help="Avaliar uma run já gravada (sem chamar as APIs, salvo --judge/--cross-judge). Sem caminho, usa a mais recente.",
     )
     parser.add_argument(
         "--judge",
         action="store_true",
-        help="Avaliar com um terceiro modelo (JUDGE_PROVIDER/JUDGE_MODEL). Por omissão só corre a métrica lexical.",
+        help="Avaliar com um terceiro modelo (JUDGE_PROVIDER/JUDGE_MODEL).",
+    )
+    parser.add_argument(
+        "--cross-judge",
+        action="store_true",
+        help="Grok avalia Gemini e Gemini avalia Grok, sem identificar o autor no prompt.",
+    )
+    parser.add_argument(
+        "--pass-threshold",
+        type=float,
+        default=0.8,
+        help="Limiar de correctness para pass_rate (default 0.8).",
     )
     return parser.parse_args(argv)
 
@@ -276,8 +287,15 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.eval is not None:
         run_path = Path(args.eval) if args.eval else latest_run()
-        settings = load_settings(require_keys=True) if args.judge else None
-        out_path = evaluate_path(run_path, settings=settings, use_judge=args.judge)
+        need_keys = args.judge or args.cross_judge
+        settings = load_settings(require_keys=True) if need_keys else None
+        out_path = evaluate_path(
+            run_path,
+            settings=settings,
+            use_judge=args.judge,
+            use_cross_judge=args.cross_judge,
+            pass_threshold=args.pass_threshold,
+        )
         report = json.loads(out_path.read_text(encoding="utf-8"))
         log.info("Run: %s", run_path)
         log.info("Eval: %s", out_path)
@@ -290,7 +308,13 @@ def main(argv: list[str] | None = None) -> None:
     settings = load_settings(require_keys=not args.dry_run)
     path = run_phase1(settings, limit=args.limit, policy=policy, dry_run=args.dry_run)
     if not args.dry_run:
-        out_path = evaluate_path(path, settings=settings, use_judge=args.judge)
+        out_path = evaluate_path(
+            path,
+            settings=settings,
+            use_judge=args.judge,
+            use_cross_judge=args.cross_judge,
+            pass_threshold=args.pass_threshold,
+        )
         report = json.loads(out_path.read_text(encoding="utf-8"))
         log.info("Métricas: %s", out_path)
         for line in format_summary(report).splitlines():
