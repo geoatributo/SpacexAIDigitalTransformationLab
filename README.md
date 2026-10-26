@@ -4,6 +4,8 @@ Regras oficiais do Evento (prazos, entregáveis, PI, pré-existente): [RULES.md]
 
 Data: 26-10-2026 (data do sistema). Estado: rascunho, nada enviado a ninguém.
 
+**Idioma / Language:** os documentos deste repositório passam a ser bilingues (português e inglês). A tradução faz-se **à medida que cada documento é atualizado**; ver a tabela na secção 11. / Documents in this repository are becoming bilingual (Portuguese and English), translated **as each document is updated**; see the table in section 11.
+
 ## 0. Regra de trabalho (obrigatória)
 
 Este repositório (`SpacexAIDigitalTransformationLab`) é o único sítio onde se constrói o lab. O projeto **PC-IA** (`geoatributo/pc-ia-cognitive-assistant`) **não se altera**.
@@ -20,6 +22,8 @@ O PC-IA continua a ser o sistema em uso (Gemini) contra o qual se compara o Grok
 **Pergunta a responder** (candidatura): trocar o modelo de geração (Gemini por Grok), sobre o **mesmo contexto já recuperado**, melhora de forma mensurável a fundamentação nas fontes, a exatidão das citações e as recusas corretas? E a que custo e latência?
 
 O que se constrói no Lab é só o **módulo de geração e a avaliação** (a candidatura descreve o pipeline de ingestão, partição em excertos e pesquisa como já existente e inalterado).
+
+> **EN.** Question: does switching the generation model (Gemini to Grok), on the **same retrieved context**, measurably improve grounding in sources, citation accuracy and correct refusals, and at what cost and latency? What we build at the Event is only the generation module and the evaluation; the ingestion, chunking and retrieval pipeline is described in our application as existing and unchanged. Measured quantitatively: grounding, citation accuracy, refusal correctness, latency and cost per question. A qualitative side-by-side review by users is a secondary addition.
 
 - Usar o PC-IA só como referência: os mesmos mecanismos e critérios, reescritos neste repositório.
 - Construir de raiz uma interface simples, com o serviço mínimo para interação com o utilizador.
@@ -136,8 +140,49 @@ Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `da
 - A chave da API é um segredo partilhado: variável de ambiente, nunca no repositório nem no chat.
 - Créditos finitos: definir o limite de resposta antes da primeira chamada.
 - Dados: confirmar que os dados usados podem ir para uma API externa. Copiar para este repositório só o mínimo necessário; o resto permanece no PC-IA, sem o modificar.
-- Dados pessoais no corpus: `chunks.json` contém, num documento de proposta, identificação pessoal e morada de um gerente. Não entra no contexto de nenhuma das 50 perguntas (verificado), mas está no repositório e no histórico do Git. Decidir se se remove ou anonimiza antes de partilhar o repositório com o júri. A TAIKAI não garante confidencialidade.
-- O conjunto de 50 perguntas só tem casos em que a resposta existe (`expected_behavior: answer` em todos). A candidatura promete avaliar recusas corretas: é preciso criar casos de recusa durante o Evento (a Fase 1 já inclui um caso sem contexto). Em 43 das 50 perguntas o excerto certo está em 1.º lugar, pelo que o contexto é fácil e as diferenças entre modelos podem ser pequenas.
+- Dados pessoais no corpus: **tratado em 26-10-2026** (commit `7b29ff7`): o número do cartão de cidadão e a morada pessoal de um gerente foram substituídos por marcadores em 9 ficheiros de `data/`. O texto original continua no histórico do Git (decisão: manter o histórico, não o reescrever). Ver secção 10. Pesquisa feita por padrões de texto, não por leitura de todos os excertos: não garante que não haja outros dados pessoais.
+- O conjunto de 50 perguntas só tem casos em que a resposta existe. Passa a ser um **desafio** (secção 9, D1), não só um risco.
 - Custo: a Fase 1 corre sem limite de tokens de saída. Definir um antes de escalar para as 50 perguntas.
 - Dois eixos de avaliação podem discordar (a métrica favorece um sistema e o utilizador outro). Isso não é falha, mas o relatório deve mostrar ambos e não fundi-los numa nota única.
 - Avaliação qualitativa com poucos avaliadores é frágil: indicar o número de avaliadores e de perguntas em qualquer conclusão.
+
+## 9. Desafios para a equipa de programação / Challenges for the dev team
+
+Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a superar. / Weaknesses found on 26-10-2026, turned into requirements.
+
+**D1. Recusas corretas / Correct refusals.**
+- PT: o conjunto de referência tem 50 perguntas e **todas** esperam resposta. A candidatura promete avaliar recusas. Criar casos de recusa durante o Evento (pergunta sem resposta no contexto; pergunta fora do âmbito; contexto com excertos parecidos mas insuficientes), definir "recusa correta" e medir também as recusas indevidas (recusar quando a resposta existe). A Fase 1 já tem um caso sem contexto (`refuse-empty`); é o ponto de partida, não o desafio completo.
+- EN: all 50 reference questions expect an answer, yet our application promises to evaluate refusals. Build refusal cases during the Event (answer absent from context; out of scope; near-miss context), define "correct refusal", and also measure wrongful refusals. The existing `refuse-empty` case is only a starting point.
+
+**D2. Fundamentação e citações / Grounding and citations.**
+- PT: estes dois critérios da candidatura ainda não têm código (só latência, recusa e fuga do bloco de raciocínio). Definir e implementar de raiz: o que conta como afirmação suportada pelo contexto, e quando uma citação é exata (aponta para o excerto que contém a afirmação). Validar o método à mão em algumas respostas antes de o aplicar às 50.
+- EN: these two criteria have no code yet. Define and build, from scratch, what counts as a claim supported by the context and when a citation is exact; check the method by hand on a few answers before running all 50.
+
+**D3. Origem do texto dos prompts / Provenance of prompt text.**
+- PT: confirmar que os prompts e a frase de recusa foram escritos neste repositório e não copiados do PC-IA (secção 6, declaração, ponto 4). Se houver cópia, declarar ou reescrever.
+- EN: confirm the prompts and the refusal sentence were written here, not copied from the previous internal system; if copied, declare or rewrite.
+
+**D4. Perguntas fáceis / Easy questions (proposta do assistente, por validar).**
+- PT: em 43 das 50 perguntas o excerto certo está em 1.º lugar, pelo que as diferenças entre modelos podem ser pequenas. Acrescentar casos mais difíceis (excerto certo mais abaixo, respostas em lista) e indicar sempre o número de perguntas nas conclusões.
+- EN: the right chunk is ranked first in 43 of 50 questions, so model differences may be small. Add harder cases and always state the sample size.
+
+## 10. Histórico e evolução / History and evolution
+
+O histórico do Git mantém-se: não se reescreve. Esta secção explica as mudanças. / Git history is kept, not rewritten; this section gives the context.
+
+| Data / Date | O que mudou / What changed |
+|---|---|
+| 26-10-2026 | Primeira proposta: reutilizar código do PC-IA. **Superada**: não cumpre as Regras TAIKAI §7 e §8 (trabalho de raiz, durante o Evento). / First proposal: reuse PC-IA code. Superseded: it does not meet Rules §7 and §8. |
+| 26-10-2026 | Regra de trabalho (secção 0): construir de raiz, PC-IA só como referência. Regras e Termos lidos e resumidos em `RULES.md`. / Build-from-scratch rule; rules read and summarised in `RULES.md`. |
+| 26-10-2026 | Decisão sobre a chave da API: fica no repositório, risco assumido; ver `DECISAO-CHAVE-API.md`. / API key decision: kept in the repo, risk accepted. |
+| 26-10-2026 | Objetivo realinhado com a candidatura (secção 1); declaração de elementos pré-existentes (secção 6). / Objective aligned with the application; pre-existing elements declaration. |
+| 26-10-2026 | Dados pessoais redigidos em `data/` (commit `7b29ff7`). Os commits anteriores `369374c` e `ba05d9b` (pasta `data/`) ainda contêm o texto original; mantidos por decisão. / Personal data redacted in `data/` (`7b29ff7`); earlier commits `369374c` and `ba05d9b` still contain the original text, kept by decision. |
+
+## 11. Estado do bilinguismo / Bilingual status
+
+| Documento / Document | PT | EN |
+|---|---|---|
+| `README.md` | sim | parcial: secção 1 e secções 9 a 11; declaração da secção 6 já em inglês / partial |
+| `ORIENTACAO.md` | sim | por fazer, ao próximo update / to do |
+| `DECISAO-CHAVE-API.md` | sim | por fazer / to do |
+| `RULES.md` | sim | por fazer (é da Kerolayne) / to do (owned by Kerolayne) |
