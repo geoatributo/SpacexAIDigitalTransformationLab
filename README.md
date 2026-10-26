@@ -263,14 +263,31 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 
 | Desafio / Challenge | Estado / Status | O que falta / What is missing |
 |---|---|---|
-| D1 Recusas / Refusals | parcial / partial | P4 no repositório; falta merge, retrieval novo, código para seguimentos, confirmar recusas contra os 86 documentos |
-| D2 Fundamentação e citações / Grounding | parcial / partial | PR #2 fundido: métricas lexicais e juiz opcional (`evaluate.py`, `judge.py`, `metrics.py`). Falta validar o método à mão em algumas respostas. O juiz por defeito é `gemini-3.5-flash` (valor em `.env.example`, não verificado), do mesmo fornecedor que um dos modelos em teste: risco de enviesamento por avaliar |
+| D1 Recusas / Refusals | parcial / partial | P4 fundido com as 50 perguntas (62 casos: 56 com resposta e 6 recusas) e `retrieval.json` regenerado (`a259f91`). Falta: código para sequências de seguimento (multi-turno, não suportado); confirmar as recusas contra os 86 documentos; o excerto-armadilha do caso `p4-R3` não é recuperado (medição do assistente, 26-10-2026, não repetida hoje) |
+| D2 Fundamentação e citações / Grounding | parcial / partial | PR #2 fundido: métricas lexicais e juiz opcional (`evaluate.py`, `judge.py`, `metrics.py`). Falta validar o método à mão em algumas respostas. O juiz por defeito é `gemini-3.5-flash` (valor em `.env.example`, não verificado), do mesmo fornecedor que um dos modelos em teste: risco de enviesamento por avaliar. PR #4 fundido (Kerolayne): juiz de 3 chamadas por caso (correção, fundamentação, completude; `rag_judge.py`) e avaliação cruzada às cegas com `--cross-judge` (Gemini↔Grok). Lido pelo assistente na descrição e na estrutura do código, **não executado**; por avaliar: se os dois juízes dão notas comparáveis entre si |
 | D3 Origem dos prompts / Provenance | aberto / open | confirmar que não foram copiados do PC-IA |
-| D4 Perguntas fáceis / Easy questions | parcial / partial | P4 acrescenta casos difíceis; falta retrieval para eles |
+| D4 Perguntas fáceis / Easy questions | parcial / partial | P4 acrescenta casos difíceis e o retrieval já cobre os 62 casos. Em cerca de 80% dos casos com resposta o excerto certo está em 1.º lugar (medição anterior do assistente, não repetida hoje): faltam casos mais difíceis |
 | D5 Propostas de clientes / Client proposals | cumprido / done (excertos) | 41 excertos retirados (1037 para 996, 86 para 84 documentos) e retrieval regenerado (`a259f91`). Por confirmar: se o repositório partiu do corpus da opção B |
 | D6 Parâmetros / Parameters | parcial / partial | PR #1 fundido: modos de contexto `top_n`, `top_n_adjacent` e `full_top1`, `--top-n`, `--adjacent-m`, `--max-chars`, `--dry-run`. PR #3 (varrimento paralelo de configurações) aberto. Não encontrei cache dos resultados nem dimensionamento das configurações face ao tempo do Evento |
 | D7 Modelos / Models | por decidir / to decide | escolher a comparação principal; verificar versões e preços |
 
+
+## 9c. Painel de resultados e avaliação humana / Results dashboard and human evaluation
+
+Decisões do Ricardo de 26-10-2026. Requisitos completos: [`REQUISITOS-PAINEL-AVALIACAO.md`](REQUISITOS-PAINEL-AVALIACAO.md) (rascunho, PT e EN, inclui o termo de utilização, **não revisto juridicamente**). / Ricardo's decisions of 26-10-2026. Full requirements in the file above (draft, PT and EN, includes the terms of use, **not legally reviewed**).
+
+**Divisão de trabalho / Work split.**
+- PT: Kerolayne Bianeck desenvolve o painel (*front-end*): cartões visuais por métrica, com cor indicativa de maior ou menor desempenho e os dados técnicos da aplicação da métrica, para leitura rápida ou atenta, e componente de avaliação humana. Eduardo continua com mais métricas, processos de controlo de contexto e a aplicação das métricas de medição já identificadas pela Liliana.
+- EN: Kerolayne Bianeck builds the front-end dashboard: visual cards per metric, colour-coded for higher or lower performance with the technical data on how the metric was applied, for a quick or close reading, plus a human evaluation component. Eduardo continues with more metrics, context-control processes and applying the measurement metrics previously identified by Liliana.
+
+**Avaliação humana às cegas / Blind human evaluation.**
+- PT: para cada pergunta, o utilizador vê as respostas dos dois sistemas sem identificação e dá uma nota de **0 (muito mau) a 10 (excelente)** a cada uma, só com base na leitura. O utilizador identifica-se por declaração simples no início e pode escolher só ver as métricas. As perguntas aparecem a seguir aos cartões, quando aplicável. As respostas ficam numa base de dados com o nome e as notas; um quadro resumo mostra o número de utilizadores que responderam e permite descarregar as respostas. A descarga está aberta a quem tiver o link público do site, que em princípio só existe durante o Evento.
+- EN: for each question the user sees both systems' answers unlabelled and gives each a score from **0 (very bad) to 10 (excellent)** based on reading alone. Users identify themselves by simple declaration at the start and may choose to view metrics only. Questions appear after the cards where applicable. Answers are stored in a database with the name and scores; a summary panel shows how many users responded and allows download. Download is open to anyone with the site's public link, expected to exist only during the Event.
+- **Decisão do Ricardo / Ricardo's decision:** a questão de dados pessoais dos avaliadores é desconsiderada por ser um sistema de experimentação e teste de uso autorizado. / The evaluators' personal-data concern is disregarded: experimental, authorised-use test system.
+
+**Pontos em aberto, propostos pelo assistente / Open points proposed by the assistant.**
+- PT: (1) ordem A/B sorteada por avaliação e gravada, para corrigir o efeito de posição; (2) formatação igual nas duas respostas, para não revelar o sistema; (3) cada nota ligada ao caso, às duas execuções e à configuração de contexto; (4) cores só com limiares acordados, porque os de `CRITERIOS-AVALIACAO.md` são propostas, e sempre com o n (número de casos); (5) com link público e sem autenticação, qualquer pessoa pode submeter notas repetidas ou falsas e o nome dos avaliadores fica acessível a quem descarregar: decidir entre um identificador em vez do nome na descarga ou aceitar o risco, e ler os resultados como indicativos; (6) base de dados fora do Git, porque o histórico é permanente; (7) prazo para desligar o site e a base de dados depois do Evento.
+- EN: (1) A/B order randomised per evaluation and stored; (2) identical formatting on both answers; (3) each score tied to the case, both runs and the context configuration; (4) colours only with agreed thresholds (those in `CRITERIOS-AVALIACAO.md` are proposals) and always with n; (5) with a public link and no authentication anyone can submit repeated or fake scores, and evaluators' names are accessible to anyone who downloads: decide between an identifier instead of the name in the download or accepting the risk, and read results as indicative; (6) database outside Git, since history is permanent; (7) a deadline to shut down the site and database after the Event.
 
 ## 10. Histórico e evolução / History and evolution
 
@@ -290,6 +307,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Dados pessoais redigidos de novo em 4 excertos de `data/chunk_data/chunks.json` após a regeneração do corpus; criado `ALTERACOES-DO-ASSISTENTE.md` (registo das alterações diretas do assistente, um capítulo por ficheiro). / Personal data redacted again in 4 chunks after corpus regeneration; `ALTERACOES-DO-ASSISTENTE.md` created. |
 | 26-10-2026 | Criado `CRITERIOS-AVALIACAO.md`: cardápio de parâmetros e indicadores para seleção pela equipa (não imperativo), referenciado em D2, D6 e D7. / `CRITERIOS-AVALIACAO.md` created: menu of parameters and indicators for the team to select (not mandatory), referenced in D2, D6 and D7. |
 | 26-10-2026 | Tabela de estado atualizada (D2 parcial, D5 cumprido nos excertos, D6 parcial) após os PR #1 e #2 fundidos e o PR #3 aberto. / Status table updated (D2 partial, D5 done for chunks, D6 partial) after PR #1 and #2 merged and PR #3 open. |
+| 26-10-2026 | Tabela de estado: D1, D2 e D4 atualizados após os PR #3 e #4 fundidos e o merge do P4. Nova secção 9c (painel e avaliação humana) e `REQUISITOS-PAINEL-AVALIACAO.md`. / Status table: D1, D2, D4 updated after PR #3 and #4 merged and the P4 merge. New section 9c and requirements file. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
@@ -299,4 +317,5 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | `ORIENTACAO.md` | sim | sim (26-10-2026) / done |
 | `DECISAO-CHAVE-API.md` | sim | por fazer / to do |
 | `ALTERACOES-DO-ASSISTENTE.md` | sim | sim (26-10-2026) / done |
+| `REQUISITOS-PAINEL-AVALIACAO.md` | sim | sim (26-10-2026) / done |
 | `RULES.md` | sim | por fazer (é da Kerolayne) / to do (owned by Kerolayne) |
