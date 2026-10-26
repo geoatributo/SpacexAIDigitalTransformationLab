@@ -5,9 +5,9 @@ One-page summary for the team. The [README](README.md) is the reference text; if
 
 ## Objetivo / Objective
 
-**PT.** Medir, de forma simples e com números, se trocar o modelo de geração (Gemini, em uso, por Grok) melhora a fundamentação nas fontes, a exatidão das citações e as recusas corretas, e a que custo em tokens e latência. Está por decidir se a pergunta central é esta ou a do plano de trabalhos (volume e forma do contexto entregue ao modelo); ver README, secção 1. As duas são compatíveis se os dois modelos correrem sempre com a mesma configuração.
+**PT.** Medir, de forma simples e com números, o que muda ao usar o Grok como modelo alternativo ao Gemini (em uso): fundamentação nas fontes, exatidão das citações e recusas corretas, e a que custo em tokens e latência. É uma comparação, não uma substituição. Esta é a pergunta central (decisão do Ricardo, 26-10-2026). O volume e a forma do contexto (pergunta do plano de trabalhos) são um parâmetro da comparação; ver README, secções 1 e 9 (D6). Os dois modelos correm sempre com a mesma configuração.
 
-**EN.** Measure, simply and with numbers, whether switching the generation model (Gemini, in use, to Grok) improves grounding in sources, citation accuracy and correct refusals, and at what token and latency cost. Whether this or the work-plan question (volume and form of context given to the model) is the central one is undecided; see README, section 1. Both are compatible if both models always run with the same configuration.
+**EN.** Measure, simply and with numbers, what changes when Grok is used as an alternative model next to Gemini (in use): grounding in sources, citation accuracy and correct refusals, and at what token and latency cost. It is a comparison, not a replacement. This is the central question (Ricardo's decision, 26-10-2026). Context volume and form (the work-plan question) are a parameter of the comparison; see README, sections 1 and 9 (D6). Both models always run with the same configuration.
 
 ## O que fazemos / What we do
 
