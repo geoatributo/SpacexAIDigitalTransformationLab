@@ -19,5 +19,10 @@ A chave foi acrescentada em 26-10-2026 às 12:09 (commit `fdd22d2`), no ficheiro
 - Não confirmado: se as condições da xAI ou do evento permitem partilhar a chave.
 - O PC-IA não limita o tamanho da resposta no caminho OpenAI, o que pode gastar créditos mais depressa.
 
+## Atualização de 26-10-2026 (decisão do Ricardo, 18:41, hora de Lisboa)
+- A solução do ficheiro `CHAVE-API.md` era **temporária**. O ficheiro foi **removido** do repositório. Cada pessoa passa a pôr `XAI_API_KEY` no seu `.env`.
+- **A chave continua no histórico do Git** (commit `fdd22d2`) e ninguém a revogou até agora, pelo que o que está acima sobre o histórico continua a valer. Só o Ricardo pode revogá-la na xAI.
+- O código (`src/lab/config.py`) ainda tenta ler `CHAVE-API.md` se o ficheiro existir, e a mensagem de erro ainda o menciona. Não foi alterado: sem o ficheiro, falta apenas definir `XAI_API_KEY`.
+
 ## Recomendação (não decidida)
-Revogar a chave quando o Lab terminar.
+Revogar a chave, e criar outra para o `.env`, quando o Lab terminar, ou já, dado que está no histórico.

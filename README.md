@@ -125,7 +125,7 @@ Decisão do Ricardo (26-10-2026): assume o risco de o §8 das Regras TAIKAI ("ap
 
 O código vive só neste repositório (`src/lab`). O PC-IA não se altera.
 
-1. Copiar `.env.example` para `.env` e preencher `GEMINI_API_KEY`. A chave xAI é lida de `CHAVE-API.md` (decisão do Ricardo, ver `DECISAO-CHAVE-API.md`); `XAI_API_KEY` no ambiente ou no `.env` tem prioridade. Não partilhar a chave fora do repositório (chat, email).
+1. Copiar `.env.example` para `.env` e preencher `GEMINI_API_KEY`. Preencher também `XAI_API_KEY` no `.env`: o ficheiro `CHAVE-API.md` foi removido em 26-10-2026 (ver `DECISAO-CHAVE-API.md`). Não partilhar a chave fora do repositório (chat, email).
 2. Instalar dependências: `pip install -r requirements.txt`
 3. Correr, com `src` no `PYTHONPATH`:
 
@@ -201,7 +201,7 @@ Por defeito é **dry-run** (não chama os modelos). `--live` chama Gemini e Grok
 
 ## 8. Riscos e pendências
 
-- A chave da API xAI está neste repositório privado, por decisão do Ricardo (`DECISAO-CHAVE-API.md`): quem tem acesso ao repositório ou a um clone pode gastar os créditos, e a chave fica no histórico do Git. Se o link do repositório for dado ao júri ou a terceiros, retirar ou revogar a chave antes.
+- A chave da API xAI esteve neste repositório privado, por decisão do Ricardo (`DECISAO-CHAVE-API.md`). O ficheiro `CHAVE-API.md` foi removido em 26-10-2026, mas **a chave continua no histórico do Git** (commit `fdd22d2`) e não foi revogada (só o Ricardo o pode fazer, na xAI): quem tem acesso ao repositório ou a um clone pode gastar os créditos. Se o link do repositório for dado ao júri ou a terceiros, revogar a chave antes.
 - Créditos finitos: definir o limite de resposta antes da primeira chamada.
 - Dados: confirmar que os dados usados podem ir para uma API externa. Copiar para este repositório só o mínimo necessário; o resto permanece no PC-IA, sem o modificar.
 - Dados pessoais no corpus: **tratado em 26-10-2026** (commit `7b29ff7`): o número do cartão de cidadão e a morada pessoal de um gerente foram substituídos por marcadores em 9 ficheiros de `data/`. O texto original continua no histórico do Git (decisão: manter o histórico, não o reescrever). Ver secção 10. Pesquisa feita por padrões de texto, não por leitura de todos os excertos: não garante que não haja outros dados pessoais.
@@ -320,6 +320,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Primeira proposta: reutilizar código do PC-IA. **Superada**: não cumpre as Regras TAIKAI §7 e §8 (trabalho de raiz, durante o Evento). / First proposal: reuse PC-IA code. Superseded: it does not meet Rules §7 and §8. |
 | 26-10-2026 | Regra de trabalho (secção 0): construir de raiz, PC-IA só como referência. Regras e Termos lidos e resumidos em `RULES.md`. / Build-from-scratch rule; rules read and summarised in `RULES.md`. |
 | 26-10-2026 | Decisão sobre a chave da API: fica no repositório, risco assumido; ver `DECISAO-CHAVE-API.md`. / API key decision: kept in the repo, risk accepted. |
+| 26-10-2026 | `CHAVE-API.md` removido por decisão do Ricardo (solução temporária); a chave passa a ir no `.env` e continua no histórico do Git, sem revogação. / `CHAVE-API.md` removed on Ricardo's decision (temporary solution); the key now goes in `.env` and remains in Git history, not revoked. |
 | 26-10-2026 | Objetivo realinhado com a candidatura (secção 1); declaração de elementos pré-existentes (secção 6). / Objective aligned with the application; pre-existing elements declaration. |
 | 26-10-2026 | Conversa da equipa de 23-10 lida como contexto: em parte ultrapassada. Dela vêm a pergunta do plano, a base P4 de 30 perguntas, a decisão de excluir duas propostas de clientes e a regra da mesma configuração (secções 1, 9 e 9b). / Team chat of 23-10 read as context, partly outdated; it supplies the plan question, the P4 base, the exclusion of two client proposals and the same-configuration rule. |
 | 26-10-2026 | Dados pessoais redigidos em `data/` (commit `7b29ff7`). Os commits anteriores `369374c` e `ba05d9b` (pasta `data/`) ainda contêm o texto original; mantidos por decisão. / Personal data redacted in `data/` (`7b29ff7`); earlier commits `369374c` and `ba05d9b` still contain the original text, kept by decision. |
