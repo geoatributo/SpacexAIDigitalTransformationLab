@@ -167,6 +167,18 @@ python -m lab --dry-run --context-mode top_n_adjacent --top-n 5 --adjacent-m 2
 ```
 
 O JSON da corrida inclui `context_policy`, e por caso `chunk_ids`, `chunk_count` e `char_count`.
+
+#### Várias configurações em paralelo
+
+A lista está em `scripts/context_configs.json`. O script lança um `python -m lab` por entrada, em paralelo (`--jobs`):
+
+```text
+python scripts/run_context_configs.py
+python scripts/run_context_configs.py --jobs 4 --limit 1
+python scripts/run_context_configs.py --live
+```
+
+Por defeito é **dry-run** (não chama os modelos). `--live` chama Gemini e Grok para **todas** as configs — gasta créditos em paralelo. O resumo vai para `data/runs/context_sweep_*.json`.
 - **Fase 2**: aumentar o volume de contexto e comparar o sistema atual (base) com o Grok em paralelo.
 - **Fase 3**: interface e relatório de métricas.
 
