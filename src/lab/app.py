@@ -24,6 +24,7 @@ from lab.compare import (
 from lab.config import Settings, load_settings
 from lab.context import ContextPolicy, ContextStore
 from lab.providers.base import ChatProvider
+from lab.sweep_report import build_report, list_runs, resolve_run_dir
 
 
 class EvaluationRequest(BaseModel):
@@ -176,6 +177,20 @@ def rerun(case_id: str) -> dict[str, Any]:
         evaluations=evaluations,
         models=models,
     )
+
+
+@app.get("/metrics/runs")
+def metrics_runs() -> list[dict[str, Any]]:
+    return list_runs(state.settings.runs_dir)
+
+
+@app.get("/metrics/runs/{run_id}")
+def metrics_run(run_id: str) -> dict[str, Any]:
+    try:
+        folder = resolve_run_dir(state.settings.runs_dir, run_id)
+        return build_report(folder, run_id=run_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=f"Corrida desconhecida: {run_id}") from exc
 
 
 @app.get("/evaluations")

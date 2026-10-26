@@ -29,10 +29,19 @@ def load_chunk_texts(path: Path | None = None) -> dict[str, str]:
     return {str(row["chunk_id"]): str(row.get("text") or "") for row in rows}
 
 
+def _is_run_file(path: Path) -> bool:
+    name = path.name
+    if name.endswith(".eval.json"):
+        return False
+    if name.startswith("context_sweep") or name.startswith("metrics"):
+        return False
+    return True
+
+
 def latest_run(runs_dir: Path | None = None) -> Path:
     folder = runs_dir or _runs_dir()
-    files = sorted(folder.glob("phase1_*.json"), key=lambda item: item.stat().st_mtime)
-    files = [path for path in files if not path.name.endswith(".eval.json")]
+    files = [path for path in folder.rglob("*.json") if _is_run_file(path)]
+    files.sort(key=lambda item: item.stat().st_mtime)
     if not files:
         raise SystemExit(f"Nenhuma run em {folder}")
     return files[-1]
@@ -290,10 +299,8 @@ def main(argv: list[str] | None = None) -> None:
         use_cross_judge=args.cross_judge,
         pass_threshold=args.pass_threshold,
     )
-    report = json.loads(out_path.read_text(encoding="utf-8"))
     print(f"Run: {run_path}")
     print(f"Eval: {out_path}")
-    print(format_summary(report))
 
 
 if __name__ == "__main__":
