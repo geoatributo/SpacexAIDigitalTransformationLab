@@ -27,7 +27,8 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `4de1db3` | Tabela de estado: D2 parcial, D5 cumprido nos excertos, D6 parcial; linha de histórico. / Status table: D2 partial, D5 done for chunks, D6 partial; history row. |
 | `9c37bed` | Tabela de estado: D1, D2 e D4 atualizados (PR #3 e #4 fundidos, merge do P4); nova secção 9c (painel e avaliação humana, divisão de trabalho, decisões do Ricardo, pontos em aberto); linha de histórico; estado do bilinguismo. / Status table D1, D2, D4 updated; new section 9c; history row; bilingual status. |
 | `98c7482` | Decisões do Ricardo de 26-10-2026 18:38: secção 9c reescrita (avaliação humana secundária, créditos aceites, descarga com identificador); tabela de estado (D2, D7, nova linha da interface); novo risco na secção 8; linha de histórico. / Ricardo's decisions: section 9c rewritten; status table (D2, D7, new interface row); new risk in section 8; history row. |
-| (este commit / this commit) | Secções sobre a chave xAI (passo 1 do «Como correr» e riscos): `CHAVE-API.md` removido, chave continua no histórico; linha de histórico. / Key sections updated: `CHAVE-API.md` removed, key remains in history; history row. |
+| `751f032` | Secções sobre a chave xAI (passo 1 do «Como correr» e riscos): `CHAVE-API.md` removido, chave continua no histórico; linha de histórico. / Key sections updated: `CHAVE-API.md` removed, key remains in history; history row. |
+| (este commit / this commit) | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
 
 ## `REQUISITOS-PAINEL-AVALIACAO.md`
 
