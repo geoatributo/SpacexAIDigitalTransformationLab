@@ -25,6 +25,10 @@ O que se constrói no Lab é só o **módulo de geração e a avaliação** (a c
 
 > **EN.** Question: does switching the generation model (Gemini to Grok), on the **same retrieved context**, measurably improve grounding in sources, citation accuracy and correct refusals, and at what cost and latency? What we build at the Event is only the generation module and the evaluation; the ingestion, chunking and retrieval pipeline is described in our application as existing and unchanged. Measured quantitatively: grounding, citation accuracy, refusal correctness, latency and cost per question. A qualitative side-by-side review by users is a secondary addition.
 
+**Pergunta do plano de trabalhos (a confirmar pelo Ricardo).** Segundo a conversa da equipa de 23-10-2026 (o plano em si não foi lido por quem escreveu esta secção), a pergunta central do plano é: *qual é o volume e a forma de contexto entregue ao modelo que maximiza respostas corretas e recusas corretas, sem aumentar as afirmações não suportadas, e a que custo em tokens e latência?* A hipótese de partida é que o modelo recusa em excesso por receber pouco contexto. As duas perguntas são compatíveis desde que se respeite a **regra da mesma configuração**: em cada comparação, os dois modelos correm com o mesmo prompt, o mesmo contexto, os mesmos parâmetros e a mesma temperatura. O que varia é o contexto (k, vizinhos, limite de caracteres, corte de relevância) e, em separado, o modelo. Estado: **por decidir** qual das duas é a pergunta central; o código da Fase 1 só cobre a troca de modelo com 6 excertos e 9000 caracteres fixos.
+
+> **EN.** Work-plan question (to be confirmed by Ricardo), as quoted in the team chat of 23-10-2026; the plan itself was not read here: what volume and form of context given to the model maximises correct answers and correct refusals, without increasing unsupported claims, and at what token and latency cost? Starting hypothesis: the model over-refuses because it gets too little context. Both questions are compatible under the **same-configuration rule**: in every comparison both models run with the same prompt, context, parameters and temperature. Which one is the central question is **undecided**; Phase 1 code only covers the model swap with fixed 6 chunks and 9000 characters.
+
 - Usar o PC-IA só como referência: os mesmos mecanismos e critérios, reescritos neste repositório.
 - Construir de raiz uma interface simples, com o serviço mínimo para interação com o utilizador.
 - Avaliar em dois eixos, com o Gemini (em uso) como base:
@@ -153,6 +157,8 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 **D1. Recusas corretas / Correct refusals.**
 - PT: o conjunto de referência tem 50 perguntas e **todas** esperam resposta. A candidatura promete avaliar recusas. Criar casos de recusa durante o Evento (pergunta sem resposta no contexto; pergunta fora do âmbito; contexto com excertos parecidos mas insuficientes), definir "recusa correta" e medir também as recusas indevidas (recusar quando a resposta existe). A Fase 1 já tem um caso sem contexto (`refuse-empty`); é o ponto de partida, não o desafio completo.
 - EN: all 50 reference questions expect an answer, yet our application promises to evaluate refusals. Build refusal cases during the Event (answer absent from context; out of scope; near-miss context), define "correct refusal", and also measure wrongful refusals. The existing `refuse-empty` case is only a starting point.
+- PT (atualização, conversa de 23-10): já existe uma base de **30 perguntas** (`2026_10_23_P4_Base_Perguntas_SGQ_v00_01.md`, na Drive da equipa) classificadas em factual, lista ou tabela, recusa esperada e seguimento, construída a partir do Golden Set e dos relatórios de QA de 04-10 e 22-10, com as falhas conhecidas. **Não está neste repositório** e o snapshot em `data/chunk_data/` foi gerado com as 50 perguntas de referência, que só esperam resposta. Desafio: trazer essa base para o repositório, gerar o retrieval para ela e usá-la nos casos de recusa e de seguimento.
+- EN (update, chat of 23-10): a 30-question base with four types (factual, list or table, expected refusal, follow-up) already exists on the team Drive. It is not in this repository, and the current snapshot was generated from the 50 reference questions. Challenge: bring it in, generate retrieval for it, and use it for the refusal and follow-up cases.
 
 **D2. Fundamentação e citações / Grounding and citations.**
 - PT: estes dois critérios da candidatura ainda não têm código (só latência, recusa e fuga do bloco de raciocínio). Definir e implementar de raiz: o que conta como afirmação suportada pelo contexto, e quando uma citação é exata (aponta para o excerto que contém a afirmação). Validar o método à mão em algumas respostas antes de o aplicar às 50.
@@ -166,6 +172,33 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 - PT: em 43 das 50 perguntas o excerto certo está em 1.º lugar, pelo que as diferenças entre modelos podem ser pequenas. Acrescentar casos mais difíceis (excerto certo mais abaixo, respostas em lista) e indicar sempre o número de perguntas nas conclusões.
 - EN: the right chunk is ranked first in 43 of 50 questions, so model differences may be small. Add harder cases and always state the sample size.
 
+**D5. Propostas de clientes fora dos dados / Client proposals out of the dataset.**
+- PT: a equipa decidiu em 23-10 que duas propostas comerciais para clientes (dados de terceiros) não entram no conjunto de dados. Em 26-10 ainda há 41 excertos delas em `data/chunk_data/chunks.json` (de 1037) e os respetivos documentos em texto. Desafio: retirá-las, regenerar `retrieval.json` (as posições mudam) e confirmar que nenhum contexto enviado às APIs as contém. Confirmar também se o repositório partiu do conjunto da opção B (manual de procedimentos, anexos e modelos).
+- EN: the team decided on 23-10 that two client proposals (third-party data) stay out of the dataset. On 26-10 they are still in `data/` (41 of 1037 chunks plus the text documents). Challenge: remove them, regenerate `retrieval.json`, and verify no context sent to the APIs contains them. Also confirm the repository started from the option B corpus.
+
+**D6. Parâmetros configuráveis / Configurable parameters.**
+- PT: o código fixa 6 excertos e 9000 caracteres. A curva de k (3 a 20) e o limite de caracteres têm de ser parâmetros, aplicados da mesma forma aos dois modelos, com cache dos resultados intermédios para não repetir configurações. Dimensionar primeiro quantas configurações cabem nas cerca de 7 h 15 úteis do Evento (valor dito na conversa; não verificado) e quanto custam em tokens.
+- EN: the code fixes 6 chunks and 9000 characters. The k curve (3 to 20) and the character limit must be parameters, applied identically to both models, with caching of intermediate results. First size how many configurations fit in the roughly 7h15 of working time (stated in the chat; unverified) and what they cost in tokens.
+
+## 9b. Termos / Glossary
+
+Definições de trabalho para uso comum. As marcadas (proposta) são do assistente e precisam de validação; as restantes vêm do plano e da candidatura, como citados na conversa. / Working definitions. Those marked (proposal) are the assistant's and need validation.
+
+| Termo / Term | Definição / Definition |
+|---|---|
+| Contexto / context | Excertos de documentos entregues ao modelo com a pergunta. / Chunks given to the model with the question. |
+| Volume do contexto / context volume | Quantos excertos (k) e quantos caracteres. / Number of chunks (k) and characters. |
+| Forma do contexto / context form | Como os excertos são escolhidos e montados: vizinhos, ordem, corte de relevância. / How chunks are selected and assembled: neighbours, order, relevance cutoff. |
+| Configuração / configuration | Um conjunto fixo de parâmetros antes do modelo. Dois modelos só se comparam na mesma configuração. / A fixed parameter set applied before the model; models are compared only under the same one. |
+| Resposta correta / correct answer | A resposta coincide com a de referência nos factos pedidos (proposta: verificada à mão numa amostra). / Matches the reference on the requested facts (proposal: hand-checked on a sample). |
+| Recusa correta / correct refusal | O modelo recusa quando a resposta não está no contexto ou o tipo da pergunta é "recusa esperada". / The model refuses when the answer is not in the context or the type is "expected refusal". |
+| Recusa indevida / wrongful refusal | O modelo recusa quando a resposta existe no contexto (proposta). / The model refuses although the answer is in the context (proposal). |
+| Afirmação não suportada / unsupported claim | Afirmação na resposta que não consta de nenhum excerto entregue (proposta de definição; o método de medição está por desenhar, ver D2). / Statement in the answer found in none of the given chunks (proposed; measurement method not yet designed, see D2). |
+| Fundamentação / grounding | Proporção de afirmações suportadas pelo contexto. / Share of claims supported by the context. |
+| Citação exata / citation accuracy | A citação aponta para o excerto que contém a afirmação. / The citation points to the chunk that holds the claim. |
+| Tipos de pergunta / question types | Factual, lista ou tabela, recusa esperada, seguimento (do plano). / Factual, list or table, expected refusal, follow-up. |
+| Custo / cost | Tokens e latência por pergunta; o preço em euros só com os preços oficiais dos modelos (por verificar). / Tokens and latency per question; money only with official model prices (unverified). |
+
 ## 10. Histórico e evolução / History and evolution
 
 O histórico do Git mantém-se: não se reescreve. Esta secção explica as mudanças. / Git history is kept, not rewritten; this section gives the context.
@@ -176,13 +209,14 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Regra de trabalho (secção 0): construir de raiz, PC-IA só como referência. Regras e Termos lidos e resumidos em `RULES.md`. / Build-from-scratch rule; rules read and summarised in `RULES.md`. |
 | 26-10-2026 | Decisão sobre a chave da API: fica no repositório, risco assumido; ver `DECISAO-CHAVE-API.md`. / API key decision: kept in the repo, risk accepted. |
 | 26-10-2026 | Objetivo realinhado com a candidatura (secção 1); declaração de elementos pré-existentes (secção 6). / Objective aligned with the application; pre-existing elements declaration. |
+| 26-10-2026 | Conversa da equipa de 23-10 lida como contexto: em parte ultrapassada. Dela vêm a pergunta do plano, a base P4 de 30 perguntas, a decisão de excluir duas propostas de clientes e a regra da mesma configuração (secções 1, 9 e 9b). / Team chat of 23-10 read as context, partly outdated; it supplies the plan question, the P4 base, the exclusion of two client proposals and the same-configuration rule. |
 | 26-10-2026 | Dados pessoais redigidos em `data/` (commit `7b29ff7`). Os commits anteriores `369374c` e `ba05d9b` (pasta `data/`) ainda contêm o texto original; mantidos por decisão. / Personal data redacted in `data/` (`7b29ff7`); earlier commits `369374c` and `ba05d9b` still contain the original text, kept by decision. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
 | Documento / Document | PT | EN |
 |---|---|---|
-| `README.md` | sim | parcial: secção 1 e secções 9 a 11; declaração da secção 6 já em inglês / partial |
+| `README.md` | sim | parcial: secção 1 e secções 9 a 11 (incluindo 9b); declaração da secção 6 já em inglês / partial |
 | `ORIENTACAO.md` | sim | por fazer, ao próximo update / to do |
 | `DECISAO-CHAVE-API.md` | sim | por fazer / to do |
 | `RULES.md` | sim | por fazer (é da Kerolayne) / to do (owned by Kerolayne) |
