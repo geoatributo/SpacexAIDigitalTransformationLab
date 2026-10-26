@@ -1,0 +1,18 @@
+# gcloud usa .gitignore por omissão e excluía data/runs (cartões do painel).
+.git
+.github
+.venv
+.cursor
+.env
+CHAVE-API.md
+**/__pycache__
+**/*.pyc
+.pytest_cache
+web/node_modules
+web/dist
+web/.vite
+data/geoatributo_base2_teste_rag_pronto
+data/human_eval.sqlite
+data/evaluations.json
+*-firebase-adminsdk-*.json
+serviceAccount*.json

@@ -1,23 +1,54 @@
-import { useState } from "react";
-import Chat from "./Chat";
+import { useEffect, useState } from "react";
+import BlindEval from "./BlindEval";
 import Compare from "./Compare";
+import Gate from "./Gate";
+import { api } from "./api";
+import { clearSession, loadSession, type Session } from "./session";
 
 export default function App() {
-  const [view, setView] = useState<"compare" | "chat">("compare");
+  const [session, setSession] = useState<Session | null>(() => loadSession());
+  const [allowGeneration, setAllowGeneration] = useState(false);
+
+  useEffect(() => {
+    api<{ allow_generation?: boolean }>("/health")
+      .then((payload) => setAllowGeneration(Boolean(payload.allow_generation)))
+      .catch(() => setAllowGeneration(false));
+  }, []);
+
+  if (!session) {
+    return (
+      <div className="app-root">
+        <header className="app-bar">
+          <strong>Goldilocks RAG</strong>
+        </header>
+        <Gate onEnter={setSession} />
+      </div>
+    );
+  }
+
   return (
     <div className="app-root">
       <header className="app-bar">
         <strong>Goldilocks RAG</strong>
-        <nav>
-          <button type="button" className={view === "compare" ? "ghost active" : "ghost"} onClick={() => setView("compare")}>
-            Comparar
+        <span className="muted">
+          {session.mode === "rate" ? session.name : "consulta"}
+          <button
+            type="button"
+            className="ghost"
+            onClick={() => {
+              clearSession();
+              setSession(null);
+            }}
+          >
+            Sair
           </button>
-          <button type="button" className={view === "chat" ? "ghost active" : "ghost"} onClick={() => setView("chat")}>
-            Chat
-          </button>
-        </nav>
+        </span>
       </header>
-      {view === "compare" ? <Compare /> : <Chat />}
+      {session.mode === "rate" ? (
+        <BlindEval session={session} />
+      ) : (
+        <Compare allowGeneration={allowGeneration} />
+      )}
     </div>
   );
 }

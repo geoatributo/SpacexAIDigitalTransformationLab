@@ -152,7 +152,62 @@ npm install
 npm run dev
 ```
 
-Abrir http://localhost:5173. Comparação é o ecrã inicial; o chat livre continua no separador Chat. Avaliações humanas: `data/evaluations.json` e `GET /evaluations.csv`. Detalhe em [web/README.md](web/README.md).
+Abrir http://localhost:5173. O ecrã inicial pede o nome e o termo de utilização: avaliar às cegas (A/B, 0–10) ou só ver as métricas. Os cartões vêm da última `phase1_*.eval.json`. As notas humanas vão para o **Firestore** do projeto Firebase/GCP (`FIREBASE_PROJECT_ID`); a API escreve com a conta de serviço, o browser não fala com o Firebase. A descarga pública (`GET /human/export.csv`) usa `rater_id`, não o nome. A leitura técnica identificada e o chat ficam no modo «só métricas». Detalhe em [web/README.md](web/README.md).
+
+#### Cloud Run: configuração e deploy
+
+Um serviço: FastAPI + `web/dist`. Projeto **`pc-ai-poc`** (tem faturação), região **`europe-west1`**, serviço **`goldilocks-rag`**. O `pciapoc` é outro projeto (Firebase no plano Spark) e não é este deploy. URL: https://goldilocks-rag-142223459429.europe-west1.run.app
+
+No contentor **não** se geram respostas (`ALLOW_GENERATION=0` no `Dockerfile`): só se leem os JSON em `data/runs/` e se grava o parecer humano no Firestore. Não são precisas chaves Gemini/xAI neste serviço. O `.gcloudignore` deixa copiar `data/runs/` para os cartões; o Git continua a ignorar essa pasta. O browser não fala com o Firebase.
+
+> **EN.** One Cloud Run service (FastAPI + `web/dist`) on project `pc-ai-poc`, region `europe-west1`. The image does not call Gemini or xAI (`ALLOW_GENERATION=0`). Human scores go to Firestore in that same project. Deploy does not set environment variables; configuration is a separate step.
+
+**Configuração local** (PowerShell, na raiz). O `.env` não vai para o Git. As chaves Gemini/xAI servem para `python -m lab` neste PC, não para o Cloud Run.
+
+```text
+copy .env.example .env
+```
+
+No `.env`: `FIREBASE_PROJECT_ID=pc-ai-poc`, mais `GEMINI_API_KEY` e `XAI_API_KEY` se fores gerar respostas. Credenciais do Firestore neste PC (conta com acesso ao projeto):
+
+```text
+gcloud auth login
+gcloud config set project pc-ai-poc
+gcloud auth application-default login
+gcloud auth application-default set-quota-project pc-ai-poc
+```
+
+Sem estas credenciais, e sem `FIREBASE_PROJECT_ID`, a API local guarda as notas só em memória (perdem-se ao reiniciar). Conta de serviço em ficheiro: `GOOGLE_APPLICATION_CREDENTIALS` no `.env` (o JSON fica de fora do Git).
+
+**Configuração do projeto** (uma vez). Liga as APIs e cria a base Firestore em modo nativo. Se a base já existir, salta o segundo comando.
+
+```text
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com firestore.googleapis.com --project=pc-ai-poc
+gcloud firestore databases create --project=pc-ai-poc --location=europe-west1
+```
+
+Coleções escritas pela API: `human_eval_sessions`, `human_eval_assignments`, `human_eval_ratings`.
+
+**Deploy** (na raiz; não leva variáveis nem segredos):
+
+```text
+gcloud run deploy goldilocks-rag --source . --project pc-ai-poc --region europe-west1 --allow-unauthenticated
+```
+
+Imagem local, sem chaves: `docker build -t goldilocks-rag .`
+
+**Variáveis e permissão, depois do deploy.** O comando de deploy não as define. Na consola: Cloud Run → `goldilocks-rag` → Editar e implementar nova revisão → Variáveis e segredos → `FIREBASE_PROJECT_ID` = `pc-ai-poc`. Ou no terminal:
+
+```text
+gcloud run services update goldilocks-rag --project pc-ai-poc --region europe-west1 --update-env-vars FIREBASE_PROJECT_ID=pc-ai-poc
+```
+
+A conta de serviço do serviço precisa de **Cloud Datastore User** para gravar o parecer. Se o `describe` não devolver conta, usa a predefinida `NUMERO_DO_PROJETO-compute@developer.gserviceaccount.com`.
+
+```text
+$sa = gcloud run services describe goldilocks-rag --project pc-ai-poc --region europe-west1 --format="value(spec.template.spec.serviceAccountName)"
+gcloud projects add-iam-policy-binding pc-ai-poc --member="serviceAccount:$sa" --role="roles/datastore.user"
+```
 
 #### Flags de contexto
 
@@ -325,6 +380,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Criado `CRITERIOS-AVALIACAO.md`: cardápio de parâmetros e indicadores para seleção pela equipa (não imperativo), referenciado em D2, D6 e D7. / `CRITERIOS-AVALIACAO.md` created: menu of parameters and indicators for the team to select (not mandatory), referenced in D2, D6 and D7. |
 | 26-10-2026 | Tabela de estado atualizada (D2 parcial, D5 cumprido nos excertos, D6 parcial) após os PR #1 e #2 fundidos e o PR #3 aberto. / Status table updated (D2 partial, D5 done for chunks, D6 partial) after PR #1 and #2 merged and PR #3 open. |
 | 26-10-2026 | Tabela de estado: D1, D2 e D4 atualizados após os PR #3 e #4 fundidos e o merge do P4. Nova secção 9c (painel e avaliação humana) e `REQUISITOS-PAINEL-AVALIACAO.md`. / Status table: D1, D2, D4 updated after PR #3 and #4 merged and the P4 merge. New section 9c and requirements file. |
+| 26-10-2026 | Secção 7: scripts de configuração e deploy do painel no Cloud Run (`pc-ai-poc`, `europe-west1`). O deploy não leva variáveis; `FIREBASE_PROJECT_ID` e o papel Firestore ficam à parte. / Section 7: Cloud Run config and deploy scripts. Deploy sets no env vars. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
