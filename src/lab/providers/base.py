@@ -31,5 +31,7 @@ class ChatProvider(Protocol):
         user: str,
         model: str | None = None,
         temperature: float | None = None,
+        top_p: float | None = None,
         max_output_tokens: int | None = None,
+        timeout: float | None = None,
     ) -> CompletionResult: ...

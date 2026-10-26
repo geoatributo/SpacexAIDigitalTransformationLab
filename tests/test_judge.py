@@ -1,28 +1,22 @@
 from lab.evaluate import evaluate_payload
-from lab.judge import parse_judge_json, scores_from_judge_payload
 from lab.providers.base import CompletionResult
+from lab.rag_judge import JUDGE_SYSTEM_PROMPT
 
 
 class FakeJudge:
     name = "gemini"
 
-    def complete(self, *, system: str, user: str, model: str | None = None, temperature=None, max_output_tokens=None):
-        assert model == "gemini-3.5-flash"
-        assert "Resposta visível" in user
-        return CompletionResult(
-            text='{"correctness": 0.9, "completeness": 0.8, "grounded_rate": 1, "rationale": "Cobre o limite de 25 MB."}',
-            latency_ms=12,
-        )
-
-
-def test_parse_judge_json_strips_fences() -> None:
-    raw = '```json\n{"correctness": 1, "completeness": 0.5, "grounded_rate": 0.2, "rationale": "ok"}\n```'
-    parsed = parse_judge_json(raw)
-    assert parsed["correctness"] == 1.0
-    assert parsed["completeness"] == 0.5
-    scores = scores_from_judge_payload(parsed)
-    assert scores.passed is True
-    assert scores.completeness == 0.5
+    def complete(self, **kwargs):
+        assert kwargs["model"] == "gemini-3.5-flash"
+        assert kwargs["system"] == JUDGE_SYSTEM_PROMPT
+        user = kwargs["user"].lower()
+        assert "gemini" not in user
+        assert "grok" not in user
+        if "key facts" in kwargs["user"]:
+            return CompletionResult(text="90", latency_ms=12)
+        if "factual claims" in kwargs["user"]:
+            return CompletionResult(text="100", latency_ms=12)
+        return CompletionResult(text="80", latency_ms=12)
 
 
 def test_evaluate_payload_records_judge_scores() -> None:
@@ -50,6 +44,9 @@ def test_evaluate_payload_records_judge_scores() -> None:
     )
     judged = report["cases"][0]["providers"][0]["judge"]
     assert judged["correctness"] == 0.9
+    assert judged["grounded"] == 1.0
+    assert judged["completeness"] == 0.8
     assert judged["error"] is None
+    assert len(judged["calls"]) == 3
     assert report["summary_judge"]["gemini"]["pass_rate"] == 1.0
     assert report["judge"]["model"] == "gemini-3.5-flash"
