@@ -6,7 +6,7 @@ from typing import Any
 from openai import OpenAI
 
 from lab.config import Settings
-from lab.providers.base import CompletionResult
+from lab.providers.base import CompletionResult, format_provider_error
 
 
 class XaiProvider:
@@ -59,7 +59,7 @@ class XaiProvider:
             return CompletionResult(
                 text="",
                 latency_ms=latency_ms,
-                error=type(exc).__name__,
+                error=format_provider_error(exc, secrets=(self._settings.xai_api_key,)),
                 extra={"responses_api_supported": self.responses_api_supported},
             )
 

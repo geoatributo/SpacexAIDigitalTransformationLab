@@ -58,8 +58,8 @@ def load_settings() -> Settings:
     return Settings(
         gemini_api_key=_require_key("GEMINI_API_KEY"),
         xai_api_key=_require_key("XAI_API_KEY"),
-        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite").strip(),
-        xai_model=os.getenv("XAI_MODEL", "grok-4").strip(),
+        gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest").strip(),
+        xai_model=os.getenv("XAI_MODEL", "grok-latest").strip(),
         xai_base_url=os.getenv("XAI_BASE_URL", "https://api.x.ai/v1").rstrip("/"),
         max_output_tokens=_optional_int("MAX_OUTPUT_TOKENS"),
         temperature=0.1,

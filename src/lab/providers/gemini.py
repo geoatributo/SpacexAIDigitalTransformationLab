@@ -7,7 +7,7 @@ from google import genai
 from google.genai import types
 
 from lab.config import Settings
-from lab.providers.base import CompletionResult
+from lab.providers.base import CompletionResult, format_provider_error
 
 
 class GeminiProvider:
@@ -40,7 +40,11 @@ class GeminiProvider:
             )
         except Exception as exc:
             latency_ms = int((time.perf_counter() - started) * 1000)
-            return CompletionResult(text="", latency_ms=latency_ms, error=type(exc).__name__)
+            return CompletionResult(
+                text="",
+                latency_ms=latency_ms,
+                error=format_provider_error(exc, secrets=(self._settings.gemini_api_key,)),
+            )
 
 
 def _usage_from_gemini(metadata: Any) -> dict[str, Any]:

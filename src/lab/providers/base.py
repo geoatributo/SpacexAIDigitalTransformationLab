@@ -4,6 +4,14 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 
+def format_provider_error(exc: BaseException, *, secrets: tuple[str, ...] = ()) -> str:
+    text = f"{type(exc).__name__}: {exc}"
+    for secret in secrets:
+        if secret:
+            text = text.replace(secret, "[REDACTED]")
+    return text[:800]
+
+
 @dataclass
 class CompletionResult:
     text: str
