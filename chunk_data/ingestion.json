@@ -1,0 +1,16 @@
+{
+  "tenant_id": "23f1ac5d-e0df-47f3-b2ef-8ae3bce19988",
+  "tenant_slug": "snapshot-e598a709",
+  "corpus_dir": "C:/Users/eduar/Desktop/xAiData/geoatributo_base2_teste",
+  "chunking_strategy": "geoatributo_structural",
+  "job_status_counts": {
+    "completed": 86
+  },
+  "review_outcomes": {
+    "bypassed_to_indexed": 86
+  },
+  "document_status_counts": {
+    "indexed": 86
+  },
+  "note": "Ingestion queued by build_retrieval_snapshot.py; review bypass finished in-container after the API recycled mid-poll."
+}
