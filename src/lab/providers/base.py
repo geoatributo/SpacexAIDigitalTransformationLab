@@ -24,4 +24,12 @@ class CompletionResult:
 class ChatProvider(Protocol):
     name: str
 
-    def complete(self, *, system: str, user: str) -> CompletionResult: ...
+    def complete(
+        self,
+        *,
+        system: str,
+        user: str,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_output_tokens: int | None = None,
+    ) -> CompletionResult: ...

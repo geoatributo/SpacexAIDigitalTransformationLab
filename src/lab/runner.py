@@ -254,16 +254,47 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Monta o contexto e grava um JSON, sem chamar os modelos.",
     )
+    parser.add_argument(
+        "--eval",
+        nargs="?",
+        const="",
+        default=None,
+        help="Avaliar uma run já gravada (sem chamar as APIs, salvo --judge). Sem caminho, usa a mais recente.",
+    )
+    parser.add_argument(
+        "--judge",
+        action="store_true",
+        help="Avaliar com um terceiro modelo (JUDGE_PROVIDER/JUDGE_MODEL). Por omissão só corre a métrica lexical.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:
     configure_logging()
     args = parse_args(argv)
+    from lab.evaluate import evaluate_path, format_summary, latest_run
+
+    if args.eval is not None:
+        run_path = Path(args.eval) if args.eval else latest_run()
+        settings = load_settings(require_keys=True) if args.judge else None
+        out_path = evaluate_path(run_path, settings=settings, use_judge=args.judge)
+        report = json.loads(out_path.read_text(encoding="utf-8"))
+        log.info("Run: %s", run_path)
+        log.info("Eval: %s", out_path)
+        for line in format_summary(report).splitlines():
+            log.info("%s", line)
+        return
+
     policy = policy_from_args(args)
     log.info("A validar configuração…")
     settings = load_settings(require_keys=not args.dry_run)
     path = run_phase1(settings, limit=args.limit, policy=policy, dry_run=args.dry_run)
+    if not args.dry_run:
+        out_path = evaluate_path(path, settings=settings, use_judge=args.judge)
+        report = json.loads(out_path.read_text(encoding="utf-8"))
+        log.info("Métricas: %s", out_path)
+        for line in format_summary(report).splitlines():
+            log.info("%s", line)
     log.info("Concluído: %s", path)
 
 
