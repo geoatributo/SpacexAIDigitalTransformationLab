@@ -228,6 +228,6 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | Documento / Document | PT | EN |
 |---|---|---|
 | `README.md` | sim | parcial: secção 1 e secções 9 a 11 (incluindo 9b); declaração da secção 6 já em inglês / partial |
-| `ORIENTACAO.md` | sim | por fazer, ao próximo update / to do |
+| `ORIENTACAO.md` | sim | sim (26-10-2026) / done |
 | `DECISAO-CHAVE-API.md` | sim | por fazer / to do |
 | `RULES.md` | sim | por fazer (é da Kerolayne) / to do (owned by Kerolayne) |
