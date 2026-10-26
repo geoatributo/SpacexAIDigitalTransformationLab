@@ -15,7 +15,7 @@
 - **Fase 3:** interface e relatório com os resultados.
 
 ## Regras da equipa
-- A chave da API é da Liliana. Pede-se a ela, e nunca vai para o repositório nem para o chat.
+- A chave da API foi criada pela Liliana e, por decisão do Ricardo (ver DECISAO-CHAVE-API.md), fica guardada neste repositório privado para toda a equipa. Não partilhar a chave fora do repositório (chat, email, outros repositórios).
 - Não colocar dados de clientes no que enviamos ao Grok.
 - A decisão final é do Ricardo.
 
