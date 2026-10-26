@@ -135,7 +135,7 @@ $env:PYTHONPATH="src"
 python -m lab --limit 5
 ```
 
-Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). Testes sem rede: `python -m pytest`.
+Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). No fim da run (ou com `python -m lab --eval`) calculam-se métricas lexicais (`correctness`, `grounded_rate`, `completeness`, `pass_rate`, limiar 0.8) para `data/runs/*.eval.json`. Juiz opcional com um terceiro modelo: `python -m lab --eval --judge` (`JUDGE_PROVIDER=gemini`, `JUDGE_MODEL=gemini-3.5-flash` por omissão). Testes sem rede: `python -m pytest`.
 
 #### Flags de contexto
 

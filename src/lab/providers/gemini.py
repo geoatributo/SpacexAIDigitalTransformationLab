@@ -17,18 +17,27 @@ class GeminiProvider:
         self._settings = settings
         self._client = genai.Client(api_key=settings.gemini_api_key)
 
-    def complete(self, *, system: str, user: str) -> CompletionResult:
+    def complete(
+        self,
+        *,
+        system: str,
+        user: str,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_output_tokens: int | None = None,
+    ) -> CompletionResult:
         started = time.perf_counter()
         try:
             config_kwargs: dict[str, Any] = {
                 "system_instruction": system,
-                "temperature": self._settings.temperature,
+                "temperature": self._settings.temperature if temperature is None else temperature,
                 "top_p": self._settings.top_p,
             }
-            if self._settings.max_output_tokens is not None:
-                config_kwargs["max_output_tokens"] = self._settings.max_output_tokens
+            token_cap = self._settings.max_output_tokens if max_output_tokens is None else max_output_tokens
+            if token_cap is not None:
+                config_kwargs["max_output_tokens"] = token_cap
             response = self._client.models.generate_content(
-                model=self._settings.gemini_model,
+                model=model or self._settings.gemini_model,
                 contents=user,
                 config=types.GenerateContentConfig(**config_kwargs),
             )

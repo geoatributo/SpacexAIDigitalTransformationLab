@@ -78,6 +78,8 @@ class Settings:
     gold_path: Path
     retrieval_path: Path
     chunks_path: Path
+    judge_provider: str
+    judge_model: str
 
 
 def load_settings(*, require_keys: bool = True) -> Settings:
@@ -101,4 +103,6 @@ def load_settings(*, require_keys: bool = True) -> Settings:
         gold_path=data_dir / "geoatributo_base2_gold_questions_p4_merged.json",
         retrieval_path=data_dir / "chunk_data" / "retrieval.json",
         chunks_path=data_dir / "chunk_data" / "chunks.json",
+        judge_provider=(os.getenv("JUDGE_PROVIDER") or "gemini").strip().lower() or "gemini",
+        judge_model=(os.getenv("JUDGE_MODEL") or "gemini-3.5-flash").strip() or "gemini-3.5-flash",
     )

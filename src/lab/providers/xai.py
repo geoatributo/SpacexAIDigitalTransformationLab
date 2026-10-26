@@ -31,20 +31,29 @@ class XaiProvider:
             self.responses_api_supported = False
         return self.responses_api_supported
 
-    def complete(self, *, system: str, user: str) -> CompletionResult:
+    def complete(
+        self,
+        *,
+        system: str,
+        user: str,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_output_tokens: int | None = None,
+    ) -> CompletionResult:
         started = time.perf_counter()
         try:
             kwargs: dict[str, Any] = {
-                "model": self._settings.xai_model,
+                "model": model or self._settings.xai_model,
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
-                "temperature": self._settings.temperature,
+                "temperature": self._settings.temperature if temperature is None else temperature,
                 "top_p": self._settings.top_p,
             }
-            if self._settings.max_output_tokens is not None:
-                kwargs["max_tokens"] = self._settings.max_output_tokens
+            token_cap = self._settings.max_output_tokens if max_output_tokens is None else max_output_tokens
+            if token_cap is not None:
+                kwargs["max_tokens"] = token_cap
             response = self._client.chat.completions.create(**kwargs)
             latency_ms = int((time.perf_counter() - started) * 1000)
             choice = response.choices[0].message.content if response.choices else ""
