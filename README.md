@@ -203,6 +203,13 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 - PT: o conjunto P4 ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) tem 30 perguntas (37 turnos) já tipificadas: 10 factuais, 9 de lista ou tabela, 6 recusas esperadas (R1–R6, três com armadilha de contexto próximo) e 5 sequências de seguimento, com resposta esperada e fonte. Inclui as recusas indevidas F9 e L9 e os casos difíceis das rondas de QA. Vai ser feito um *merge* deste ficheiro com o golden set global de 50 perguntas (não uma soma: as perguntas comuns ficam uma só vez) (`data/geoatributo_base2_gold_questions.json`), ficando assim respondidos os desafios D1 a D4.
 - EN: the P4 set ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) has 30 typed questions (37 turns): 10 factual, 9 list/table, 6 expected refusals and 5 follow-up sequences, each with expected answer and source. It will be merged (not simply added) with the global 50-question golden set, with overlapping questions kept once, which addresses challenges D1 to D4.
 
+**D5. Comparabilidade dos modelos / Model comparability (recomendação, por decidir).**
+- PT: a configuração atual compara `gemini-flash-lite-latest` (gama ligeira) com `grok-latest`, que em 26-10-2026 aponta para `grok-4.7` (gama de topo, com raciocínio). Assim, a diferença mistura fornecedor e categoria do modelo. Recomendação:
+  - **Comparação principal (ligeiro vs ligeiro):** Gemini Flash-Lite vs `grok-4.20-non-reasoning` ou `grok-4.3` com `reasoning_effort: none`. Espelha o sistema em uso. Pelos preços devolvidos pela API da xAI, custam cerca de metade do `grok-4.7` na entrada e menos de metade na saída.
+  - **Referência extra (topo vs topo), se os créditos chegarem:** `grok-4.7` vs Gemini Pro.
+  - Fixar versões concretas em vez de aliases `latest`; usar o mesmo limite de tokens de resposta e a mesma temperatura; registar se o raciocínio está ligado (afeta latência e custo).
+- EN: the current setup compares a lightweight Gemini model with Grok's flagship reasoning model, so differences mix provider and model tier. Recommended: main comparison Flash-Lite vs `grok-4.20-non-reasoning` (or `grok-4.3` with reasoning off); optional flagship-vs-flagship reference `grok-4.7` vs Gemini Pro. Pin versions, match output-token cap and temperature, and record whether reasoning is on.
+
 ## 10. Histórico e evolução / History and evolution
 
 O histórico do Git mantém-se: não se reescreve. Esta secção explica as mudanças. / Git history is kept, not rewritten; this section gives the context.
