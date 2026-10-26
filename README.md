@@ -252,11 +252,11 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 | Desafio / Challenge | Estado / Status | O que falta / What is missing |
 |---|---|---|
 | D1 Recusas / Refusals | parcial / partial | P4 no repositório; falta merge, retrieval novo, código para seguimentos, confirmar recusas contra os 86 documentos |
-| D2 Fundamentação e citações / Grounding | aberto / open | definir e implementar a medição |
+| D2 Fundamentação e citações / Grounding | parcial / partial | PR #2 fundido: métricas lexicais e juiz opcional (`evaluate.py`, `judge.py`, `metrics.py`). Falta validar o método à mão em algumas respostas. O juiz por defeito é `gemini-3.5-flash` (valor em `.env.example`, não verificado), do mesmo fornecedor que um dos modelos em teste: risco de enviesamento por avaliar |
 | D3 Origem dos prompts / Provenance | aberto / open | confirmar que não foram copiados do PC-IA |
 | D4 Perguntas fáceis / Easy questions | parcial / partial | P4 acrescenta casos difíceis; falta retrieval para eles |
-| D5 Propostas de clientes / Client proposals | aberto / open | retirar 41 excertos de `data/` (a tratar pelo Eduardo) e regenerar retrieval |
-| D6 Parâmetros / Parameters | aberto / open | parametrizar k e limite de caracteres |
+| D5 Propostas de clientes / Client proposals | cumprido / done (excertos) | 41 excertos retirados (1037 para 996, 86 para 84 documentos) e retrieval regenerado (`a259f91`). Por confirmar: se o repositório partiu do corpus da opção B |
+| D6 Parâmetros / Parameters | parcial / partial | PR #1 fundido: modos de contexto `top_n`, `top_n_adjacent` e `full_top1`, `--top-n`, `--adjacent-m`, `--max-chars`, `--dry-run`. PR #3 (varrimento paralelo de configurações) aberto. Não encontrei cache dos resultados nem dimensionamento das configurações face ao tempo do Evento |
 | D7 Modelos / Models | por decidir / to decide | escolher a comparação principal; verificar versões e preços |
 
 
@@ -277,6 +277,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Decisão do Ricardo: a pergunta central é usar o Grok como modelo alternativo e comparar resultados com o Gemini; volume e forma do contexto passam a parâmetro (D6). / Ricardo's decision: the central question is Grok as an alternative model compared with Gemini; context volume and form become a parameter (D6). |
 | 26-10-2026 | Dados pessoais redigidos de novo em 4 excertos de `data/chunk_data/chunks.json` após a regeneração do corpus; criado `ALTERACOES-DO-ASSISTENTE.md` (registo das alterações diretas do assistente, um capítulo por ficheiro). / Personal data redacted again in 4 chunks after corpus regeneration; `ALTERACOES-DO-ASSISTENTE.md` created. |
 | 26-10-2026 | Criado `CRITERIOS-AVALIACAO.md`: cardápio de parâmetros e indicadores para seleção pela equipa (não imperativo), referenciado em D2, D6 e D7. / `CRITERIOS-AVALIACAO.md` created: menu of parameters and indicators for the team to select (not mandatory), referenced in D2, D6 and D7. |
+| 26-10-2026 | Tabela de estado atualizada (D2 parcial, D5 cumprido nos excertos, D6 parcial) após os PR #1 e #2 fundidos e o PR #3 aberto. / Status table updated (D2 partial, D5 done for chunks, D6 partial) after PR #1 and #2 merged and PR #3 open. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 

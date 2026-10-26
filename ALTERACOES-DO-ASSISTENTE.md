@@ -23,6 +23,8 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `09beca4` | «D1 a D4 respondidos» passa a «contribui»; D5 duplicado (modelos) renumerado para D7; D1 atualizado; tabela de estado dos desafios. / "D1 to D4 answered" becomes "contributes"; duplicate D5 renumbered D7; D1 updated; status table. |
 | `915f7c5`, `f67cf88` | D1: medição do corpus (86 documentos, duplicados, ruído, baixo sinal) e declaração do Ricardo sobre os ficheiros a mais. / D1: corpus measurement and Ricardo's statement on the extra files. |
 | `3bbacd4` | Secção 1: pergunta central passa a ser o modelo alternativo e a comparação; volume e forma do contexto passam a parâmetro (D6). / Section 1: central question is the alternative model and comparison; context volume and form become a parameter (D6). |
+| `006a1f8` | Histórico: linha sobre a nova redação e o registo das alterações do assistente; estado do bilinguismo. / History row on the new redaction and this change log; bilingual status. |
+| (este commit / this commit) | Tabela de estado: D2 parcial, D5 cumprido nos excertos, D6 parcial; linha de histórico. / Status table: D2 partial, D5 done for chunks, D6 partial; history row. |
 
 ## `ORIENTACAO.md`
 
