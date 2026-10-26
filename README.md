@@ -157,8 +157,8 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 **D1. Recusas corretas / Correct refusals.**
 - PT: o conjunto de referência tem 50 perguntas e **todas** esperam resposta. A candidatura promete avaliar recusas. Criar casos de recusa durante o Evento (pergunta sem resposta no contexto; pergunta fora do âmbito; contexto com excertos parecidos mas insuficientes), definir "recusa correta" e medir também as recusas indevidas (recusar quando a resposta existe). A Fase 1 já tem um caso sem contexto (`refuse-empty`); é o ponto de partida, não o desafio completo.
 - EN: all 50 reference questions expect an answer, yet our application promises to evaluate refusals. Build refusal cases during the Event (answer absent from context; out of scope; near-miss context), define "correct refusal", and also measure wrongful refusals. The existing `refuse-empty` case is only a starting point.
-- PT (atualização, conversa de 23-10): já existe uma base de **30 perguntas** (`2026_10_23_P4_Base_Perguntas_SGQ_v00_01.md`, na Drive da equipa) classificadas em factual, lista ou tabela, recusa esperada e seguimento, construída a partir do Golden Set e dos relatórios de QA de 04-10 e 22-10, com as falhas conhecidas. **Não está neste repositório** e o snapshot em `data/chunk_data/` foi gerado com as 50 perguntas de referência, que só esperam resposta. Desafio: trazer essa base para o repositório, gerar o retrieval para ela e usá-la nos casos de recusa e de seguimento.
-- EN (update, chat of 23-10): a 30-question base with four types (factual, list or table, expected refusal, follow-up) already exists on the team Drive. It is not in this repository, and the current snapshot was generated from the 50 reference questions. Challenge: bring it in, generate retrieval for it, and use it for the refusal and follow-up cases.
+- PT (atualização, 26-10-2026): a base de **30 perguntas** (P4; factual, lista ou tabela, recusa esperada, seguimento), construída a partir do Golden Set e dos relatórios de QA de 04-10 e 22-10, já está em [`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md). Falta: o *merge* com as 50 perguntas, gerar o `retrieval.json` para as perguntas novas e código para o formato P4 (sequências de seguimento, que o código atual não suporta). As 6 recusas esperadas foram verificadas só contra o conjunto de 162 ficheiros do SGQ; o repositório tem 86 documentos, por isso é preciso confirmar que a resposta continua ausente do contexto disponível aqui.
+- EN (update, 26-10-2026): the 30-question P4 base is now in [`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md). Still missing: the merge with the 50 questions, retrieval for the new questions, and code for the P4 format (follow-up sequences, unsupported by the current code). The 6 expected refusals were checked only against the 162-file SGQ set; this repository has 86 documents, so confirm the answer is still absent from the context available here.
 
 **D2. Fundamentação e citações / Grounding and citations.**
 - PT: estes dois critérios da candidatura ainda não têm código (só latência, recusa e fuga do bloco de raciocínio). Definir e implementar de raiz: o que conta como afirmação suportada pelo contexto, e quando uma citação é exata (aponta para o excerto que contém a afirmação). Validar o método à mão em algumas respostas antes de o aplicar às 50.
@@ -180,6 +180,14 @@ Pontos fracos encontrados na leitura de 26-10-2026, convertidos em requisitos a 
 - PT: o código fixa 6 excertos e 9000 caracteres. A curva de k (3 a 20) e o limite de caracteres têm de ser parâmetros, aplicados da mesma forma aos dois modelos, com cache dos resultados intermédios para não repetir configurações. Dimensionar primeiro quantas configurações cabem nas cerca de 7 h 15 úteis do Evento (valor dito na conversa; não verificado) e quanto custam em tokens.
 - EN: the code fixes 6 chunks and 9000 characters. The k curve (3 to 20) and the character limit must be parameters, applied identically to both models, with caching of intermediate results. First size how many configurations fit in the roughly 7h15 of working time (stated in the chat; unverified) and what they cost in tokens.
 
+**D7. Comparabilidade dos modelos / Model comparability (recomendação, por decidir).**
+- Nota / Note: o texto vem da conta `coopera-web` (commit `3d653cd`); a renumeração de D5 para D7 foi feita a 26-10-2026 para não coincidir com o D5 das propostas de clientes. O alias `grok-latest` apontar para `grok-4.7` e os preços citados **não foram verificados** por quem reviu o repositório; confirmar na API antes de decidir. / Text by `coopera-web`; renumbered D5 to D7 to avoid clashing with the client-proposals D5. The `grok-latest` to `grok-4.7` mapping and the prices are **unverified** by the reviewer; check against the API before deciding.
+- PT: a configuração atual compara `gemini-flash-lite-latest` (gama ligeira) com `grok-latest`, que em 26-10-2026 aponta para `grok-4.7` (gama de topo, com raciocínio). Assim, a diferença mistura fornecedor e categoria do modelo. Recomendação:
+  - **Comparação principal (ligeiro vs ligeiro):** Gemini Flash-Lite vs `grok-4.20-non-reasoning` ou `grok-4.3` com `reasoning_effort: none`. Espelha o sistema em uso. Pelos preços devolvidos pela API da xAI, custam cerca de metade do `grok-4.7` na entrada e menos de metade na saída.
+  - **Referência extra (topo vs topo), se os créditos chegarem:** `grok-4.7` vs Gemini Pro.
+  - Fixar versões concretas em vez de aliases `latest`; usar o mesmo limite de tokens de resposta e a mesma temperatura; registar se o raciocínio está ligado (afeta latência e custo).
+- EN: the current setup compares a lightweight Gemini model with Grok's flagship reasoning model, so differences mix provider and model tier. Recommended: main comparison Flash-Lite vs `grok-4.20-non-reasoning` (or `grok-4.3` with reasoning off); optional flagship-vs-flagship reference `grok-4.7` vs Gemini Pro. Pin versions, match output-token cap and temperature, and record whether reasoning is on.
+
 ## 9b. Termos / Glossary
 
 Definições de trabalho para uso comum. As marcadas (proposta) são do assistente e precisam de validação; as restantes vêm do plano e da candidatura, como citados na conversa. / Working definitions. Those marked (proposal) are the assistant's and need validation.
@@ -200,15 +208,21 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 | Custo / cost | Tokens e latência por pergunta; o preço em euros só com os preços oficiais dos modelos (por verificar). / Tokens and latency per question; money only with official model prices (unverified). |
 
 **Resposta aos desafios / Response to the challenges.**
-- PT: o conjunto P4 ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) tem 30 perguntas (37 turnos) já tipificadas: 10 factuais, 9 de lista ou tabela, 6 recusas esperadas (R1–R6, três com armadilha de contexto próximo) e 5 sequências de seguimento, com resposta esperada e fonte. Inclui as recusas indevidas F9 e L9 e os casos difíceis das rondas de QA. Vai ser feito um *merge* deste ficheiro com o golden set global de 50 perguntas (não uma soma: as perguntas comuns ficam uma só vez) (`data/geoatributo_base2_gold_questions.json`), ficando assim respondidos os desafios D1 a D4.
-- EN: the P4 set ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) has 30 typed questions (37 turns): 10 factual, 9 list/table, 6 expected refusals and 5 follow-up sequences, each with expected answer and source. It will be merged (not simply added) with the global 50-question golden set, with overlapping questions kept once, which addresses challenges D1 to D4.
+- PT: o conjunto P4 ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) tem 30 perguntas (37 turnos) já tipificadas: 10 factuais, 9 de lista ou tabela, 6 recusas esperadas (R1–R6, três com armadilha de contexto próximo) e 5 sequências de seguimento, com resposta esperada e fonte. Inclui as recusas indevidas F9 e L9 e os casos difíceis das rondas de QA. Vai ser feito um *merge* deste ficheiro com o golden set global de 50 perguntas (não uma soma: as perguntas comuns ficam uma só vez) (`data/geoatributo_base2_gold_questions.json`), o que **contribui** para o D1 (recusas e seguimentos) e em parte para o D4 (casos mais difíceis). Os desafios D2, D3, D5, D6 e D7 não dependem deste conjunto e continuam em aberto (ver tabela de estado).
+- EN: the P4 set ([`data/P4-perguntas-avaliacao.md`](data/P4-perguntas-avaliacao.md)) has 30 typed questions (37 turns): 10 factual, 9 list/table, 6 expected refusals and 5 follow-up sequences, each with expected answer and source. It will be merged (not simply added) with the global 50-question golden set, with overlapping questions kept once, which contributes to D1 (refusals, follow-ups) and partly to D4 (harder cases). D2, D3, D5, D6 and D7 do not depend on this set and remain open (see the status table).
 
-**D5. Comparabilidade dos modelos / Model comparability (recomendação, por decidir).**
-- PT: a configuração atual compara `gemini-flash-lite-latest` (gama ligeira) com `grok-latest`, que em 26-10-2026 aponta para `grok-4.7` (gama de topo, com raciocínio). Assim, a diferença mistura fornecedor e categoria do modelo. Recomendação:
-  - **Comparação principal (ligeiro vs ligeiro):** Gemini Flash-Lite vs `grok-4.20-non-reasoning` ou `grok-4.3` com `reasoning_effort: none`. Espelha o sistema em uso. Pelos preços devolvidos pela API da xAI, custam cerca de metade do `grok-4.7` na entrada e menos de metade na saída.
-  - **Referência extra (topo vs topo), se os créditos chegarem:** `grok-4.7` vs Gemini Pro.
-  - Fixar versões concretas em vez de aliases `latest`; usar o mesmo limite de tokens de resposta e a mesma temperatura; registar se o raciocínio está ligado (afeta latência e custo).
-- EN: the current setup compares a lightweight Gemini model with Grok's flagship reasoning model, so differences mix provider and model tier. Recommended: main comparison Flash-Lite vs `grok-4.20-non-reasoning` (or `grok-4.3` with reasoning off); optional flagship-vs-flagship reference `grok-4.7` vs Gemini Pro. Pin versions, match output-token cap and temperature, and record whether reasoning is on.
+**Estado dos desafios / Challenge status (26-10-2026).**
+
+| Desafio / Challenge | Estado / Status | O que falta / What is missing |
+|---|---|---|
+| D1 Recusas / Refusals | parcial / partial | P4 no repositório; falta merge, retrieval novo, código para seguimentos, confirmar recusas contra os 86 documentos |
+| D2 Fundamentação e citações / Grounding | aberto / open | definir e implementar a medição |
+| D3 Origem dos prompts / Provenance | aberto / open | confirmar que não foram copiados do PC-IA |
+| D4 Perguntas fáceis / Easy questions | parcial / partial | P4 acrescenta casos difíceis; falta retrieval para eles |
+| D5 Propostas de clientes / Client proposals | aberto / open | retirar 41 excertos de `data/` (a tratar pelo Eduardo) e regenerar retrieval |
+| D6 Parâmetros / Parameters | aberto / open | parametrizar k e limite de caracteres |
+| D7 Modelos / Models | por decidir / to decide | escolher a comparação principal; verificar versões e preços |
+
 
 ## 10. Histórico e evolução / History and evolution
 
@@ -222,6 +236,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Objetivo realinhado com a candidatura (secção 1); declaração de elementos pré-existentes (secção 6). / Objective aligned with the application; pre-existing elements declaration. |
 | 26-10-2026 | Conversa da equipa de 23-10 lida como contexto: em parte ultrapassada. Dela vêm a pergunta do plano, a base P4 de 30 perguntas, a decisão de excluir duas propostas de clientes e a regra da mesma configuração (secções 1, 9 e 9b). / Team chat of 23-10 read as context, partly outdated; it supplies the plan question, the P4 base, the exclusion of two client proposals and the same-configuration rule. |
 | 26-10-2026 | Dados pessoais redigidos em `data/` (commit `7b29ff7`). Os commits anteriores `369374c` e `ba05d9b` (pasta `data/`) ainda contêm o texto original; mantidos por decisão. / Personal data redacted in `data/` (`7b29ff7`); earlier commits `369374c` and `ba05d9b` still contain the original text, kept by decision. |
+| 26-10-2026 | Correção de coerência: o parágrafo «D1 a D4 respondidos» passa a «contribui»; D5 duplicado (modelos) renumerado para D7; texto do D1 atualizado; tabela de estado. / Coherence fix: «D1 to D4 answered» becomes «contributes»; duplicate D5 (models) renumbered D7; D1 text updated; status table added. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
