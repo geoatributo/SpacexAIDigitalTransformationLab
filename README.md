@@ -81,6 +81,22 @@ Confirmar por escrito com o contacto da organização (`laurence.peghaire@x.ai`)
 ## 7. Fases
 
 - **Fase 1 (curta)**: 3 a 5 perguntas nos dois sistemas. Verificar formato da resposta, fuga de raciocínio interno e suporte da API Responses.
+
+### Como correr a Fase 1
+
+O código vive só neste repositório (`src/lab`). O PC-IA não se altera.
+
+1. Copiar `.env.example` para `.env` e preencher `GEMINI_API_KEY` e `XAI_API_KEY` (a chave xAI pede-se à Liliana; nunca vai para o git nem para o chat).
+2. Instalar dependências: `pip install -r requirements.txt`
+3. Correr, com `src` no `PYTHONPATH`:
+
+```text
+python -m pip install -r requirements.txt
+$env:PYTHONPATH="src"
+python -m lab --limit 5
+```
+
+Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). Testes sem rede: `python -m pytest`.
 - **Fase 2**: aumentar o volume de contexto e comparar o sistema atual (base) com o Grok em paralelo.
 - **Fase 3**: interface e relatório de métricas.
 
