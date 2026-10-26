@@ -6,7 +6,7 @@ Data: 26-10-2026 (data do sistema). Estado: rascunho, nada enviado a ninguém.
 
 ## 0. Regra de trabalho (obrigatória)
 
-Este repositório (`xAiData`) é o único sítio onde se constrói o lab. O projeto **PC-IA** (`geoatributo/pc-ia-cognitive-assistant`) **não se altera**.
+Este repositório (`SpacexAIDigitalTransformationLab`) é o único sítio onde se constrói o lab. O projeto **PC-IA** (`geoatributo/pc-ia-cognitive-assistant`) **não se altera**.
 
 - **O que é:** referência e *baseline* de mecanismos (prompts, política de recusa, orçamento de contexto, métricas, fluxo pergunta → contexto → resposta).
 - **O que não é:** código-base a editar, *fork* a evoluir, nem pasta para *patches*.
@@ -15,13 +15,17 @@ Este repositório (`xAiData`) é o único sítio onde se constrói o lab. O proj
 
 O PC-IA continua a ser o sistema em uso (Gemini) contra o qual se compara o Grok. A comparação usa o mesmo tipo de mecanismos; a implementação nova é independente.
 
-## 1. Ideia (decisão do Ricardo)
+## 1. Objetivo e critérios (decisão do Ricardo; texto da candidatura)
+
+**Pergunta a responder** (candidatura): trocar o modelo de geração (Gemini por Grok), sobre o **mesmo contexto já recuperado**, melhora de forma mensurável a fundamentação nas fontes, a exatidão das citações e as recusas corretas? E a que custo e latência?
+
+O que se constrói no Lab é só o **módulo de geração e a avaliação** (a candidatura descreve o pipeline de ingestão, partição em excertos e pesquisa como já existente e inalterado).
 
 - Usar o PC-IA só como referência: os mesmos mecanismos e critérios, reescritos neste repositório.
 - Construir de raiz uma interface simples, com o serviço mínimo para interação com o utilizador.
-- Avaliar as respostas em dois eixos, comparadas com o sistema que já está em desenvolvimento (Gemini, em uso):
-  1. **Métricas automáticas** equivalentes às do projeto original (reimplementadas aqui, não invocando o código do PC-IA).
-  2. **Avaliação qualitativa pelo utilizador**, sobre respostas dos vários sistemas lado a lado.
+- Avaliar em dois eixos, com o Gemini (em uso) como base:
+  1. **Medições quantitativas automáticas**, reimplementadas aqui (sem invocar código do PC-IA): fundamentação nas fontes, exatidão das citações, recusa correta, **latência** e **custo** (tokens e preço por pergunta, a calcular com os preços oficiais dos modelos, por verificar).
+  2. **Avaliação qualitativa pelo utilizador**, sobre respostas dos dois sistemas lado a lado. É um acrescento da equipa à candidatura e é secundária.
 
 ## 2. Confirmado (leitura de referência, sem alterar o original)
 
@@ -53,7 +57,8 @@ Os nomes sugerem avaliação com RAGAS e conjuntos de referência ("gold"), mas 
 ## 4. Desconhecido
 
 - Que modelos Grok estão disponíveis com os créditos do Lab, e o limite de créditos.
-- Se os blocos de texto da qualidade (SGQ) já estão exportados em JSON.
+- Preços oficiais dos modelos (necessários para o custo por pergunta).
+- (Resolvido) Os excertos do SGQ já estão exportados: `data/chunk_data/chunks.json` (1037 excertos de 86 documentos), mais `retrieval.json` (50 perguntas, 50 candidatos cada, sem texto: só identificadores e pontuações, que se ligam a `chunks.json`).
 
 Texto das Regras (§7, §8, §12) e prazos de submissão: ver [RULES.md](RULES.md). Em resumo: construir de raiz neste repositório durante o Evento; bibliotecas públicas com atribuição; PC-IA só como referência, não como código a entregar.
 
@@ -77,6 +82,32 @@ Ver [RULES.md](RULES.md). Leitura para este lab:
 - Pitch de 5 minutos em inglês; não colocar na plataforma dados que a empresa não queira públicos.
 
 Confirmar por escrito com o contacto da organização (`laurence.peghaire@x.ai`) antes de apresentar.
+
+### Declaração de elementos pré-existentes (rascunho, em inglês para a submissão)
+
+```markdown
+## Pre-existing elements and declaration
+
+**1. Pre-processed organisational data (input only).**
+The files in `data/` come from our own organisation's documents. Before the Event they were transformed and adapted by an internal pipeline into chunks that a RAG-type system can use, and a retrieval snapshot was produced for a fixed set of questions. This preparation is not part of the Project, was described in our application as existing and unchanged, and is not part of what we describe as built during the Event. We hold the rights to use these data. They are used only as test input.
+
+**2. Reference questions and answers (50).**
+Prepared before the Event and described in our application as "a subset of our internal benchmark questions". Used only as input for evaluation.
+
+**3. Public components** (source indicated) [to confirm which are actually used]:
+- OpenAI Python SDK (used with the xAI API endpoint)
+- xAI API
+- Gemini API
+- [any other public library, if used]
+
+**4. Internal reference knowledge.**
+We know from a previous internal system how a RAG assistant is evaluated and which behaviours matter. No code from that system is copied or imported here. [to confirm: prompts and the refusal sentence were written here and not copied]
+
+**5. Built during the Event.**
+The xAI and Gemini adapters, the comparison runner, the evaluation code (automatic and qualitative) and the interface.
+```
+
+Decisão do Ricardo (26-10-2026): assume o risco de o §8 das Regras TAIKAI ("apenas trabalho feito durante o Evento") ser lido contra o uso de `data/`, e clarifica-o por esta declaração. Não está confirmado pela organização.
 
 ## 7. Fases
 
@@ -105,5 +136,8 @@ Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `da
 - A chave da API é um segredo partilhado: variável de ambiente, nunca no repositório nem no chat.
 - Créditos finitos: definir o limite de resposta antes da primeira chamada.
 - Dados: confirmar que os dados usados podem ir para uma API externa. Copiar para este repositório só o mínimo necessário; o resto permanece no PC-IA, sem o modificar.
+- Dados pessoais no corpus: `chunks.json` contém, num documento de proposta, identificação pessoal e morada de um gerente. Não entra no contexto de nenhuma das 50 perguntas (verificado), mas está no repositório e no histórico do Git. Decidir se se remove ou anonimiza antes de partilhar o repositório com o júri. A TAIKAI não garante confidencialidade.
+- O conjunto de 50 perguntas só tem casos em que a resposta existe (`expected_behavior: answer` em todos). A candidatura promete avaliar recusas corretas: é preciso criar casos de recusa durante o Evento (a Fase 1 já inclui um caso sem contexto). Em 43 das 50 perguntas o excerto certo está em 1.º lugar, pelo que o contexto é fácil e as diferenças entre modelos podem ser pequenas.
+- Custo: a Fase 1 corre sem limite de tokens de saída. Definir um antes de escalar para as 50 perguntas.
 - Dois eixos de avaliação podem discordar (a métrica favorece um sistema e o utilizador outro). Isso não é falha, mas o relatório deve mostrar ambos e não fundi-los numa nota única.
 - Avaliação qualitativa com poucos avaliadores é frágil: indicar o número de avaliadores e de perguntas em qualquer conclusão.
