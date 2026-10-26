@@ -1,0 +1,13 @@
+{
+  "limit": 5,
+  "dry_run": true,
+  "configs": [
+    {"name": "top_n_1", "context_mode": "top_n", "top_n": 1},
+    {"name": "top_n_3", "context_mode": "top_n", "top_n": 3},
+    {"name": "top_n_6", "context_mode": "top_n", "top_n": 6},
+    {"name": "top_n_10", "context_mode": "top_n", "top_n": 10},
+    {"name": "adjacent_3x1", "context_mode": "top_n_adjacent", "top_n": 3, "adjacent_m": 1},
+    {"name": "adjacent_5x2", "context_mode": "top_n_adjacent", "top_n": 5, "adjacent_m": 2},
+    {"name": "full_top1", "context_mode": "full_top1"}
+  ]
+}
