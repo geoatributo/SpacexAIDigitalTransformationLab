@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from lab.config import Settings, load_settings
-from lab.context import ContextStore
+from lab.context import CONTEXT_MODES, ContextPolicy, ContextStore
 from lab.prompts import SYSTEM_PROMPT, build_user_prompt
 from lab.providers.base import ChatProvider, CompletionResult
 from lab.scratchpad import strip_scratchpad
@@ -53,6 +53,20 @@ def _preview(text: str, width: int = 80) -> str:
     return compact[: width - 1] + "…"
 
 
+def policy_from_args(args: argparse.Namespace) -> ContextPolicy:
+    policy = ContextPolicy(
+        mode=args.context_mode,
+        top_n=args.top_n,
+        adjacent_m=args.adjacent_m,
+        max_chars=args.max_chars,
+    )
+    try:
+        policy.validate()
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    return policy
+
+
 def _run_case(
     *,
     store: ContextStore,
@@ -61,17 +75,32 @@ def _run_case(
     empty_context: bool,
     index: int,
     total: int,
+    dry_run: bool,
 ) -> dict:
     log.info("[%s/%s] %s — a montar contexto", index, total, case_id)
     built = store.build(case_id if case_id != REFUSE_CASE_ID else "gold-01", empty_context=empty_context)
     log.info(
-        "[%s/%s] %s — %s chunks | %s",
+        "[%s/%s] %s — %s chunks | %s chars | %s",
         index,
         total,
         case_id,
         len(built.chunks),
+        built.char_count,
         _preview(built.question),
     )
+    if dry_run:
+        log.info("[%s/%s] %s — chunk_ids=%s", index, total, case_id, [chunk.chunk_id for chunk in built.chunks])
+        return {
+            "case_id": case_id,
+            "question": built.question,
+            "empty_context": empty_context,
+            "chunk_ids": [chunk.chunk_id for chunk in built.chunks],
+            "chunk_count": len(built.chunks),
+            "char_count": built.char_count,
+            "expected_behavior": "refuse" if empty_context else built.expected_behavior,
+            "reference_answer": None if empty_context else built.reference_answer,
+            "providers": [],
+        }
     user_prompt = build_user_prompt(built.question, built.chunks)
     results = []
     for provider in providers:
@@ -110,33 +139,45 @@ def _run_case(
         "empty_context": empty_context,
         "chunk_ids": [chunk.chunk_id for chunk in built.chunks],
         "chunk_count": len(built.chunks),
+        "char_count": built.char_count,
         "expected_behavior": "refuse" if empty_context else built.expected_behavior,
         "reference_answer": None if empty_context else built.reference_answer,
         "providers": results,
     }
 
 
-def run_phase1(settings: Settings, *, limit: int) -> Path:
+def run_phase1(
+    settings: Settings,
+    *,
+    limit: int,
+    policy: ContextPolicy,
+    dry_run: bool = False,
+) -> Path:
     log.info("A carregar chunks, retrieval e gold…")
-    store = ContextStore(
+    store = ContextStore.from_files(
         chunks_path=settings.chunks_path,
         retrieval_path=settings.retrieval_path,
         gold_path=settings.gold_path,
-        max_chunks=settings.max_chunks,
-        similarity_floor=settings.similarity_floor,
-        context_char_cap=settings.context_char_cap,
+        policy=policy,
     )
     log.info("Dados carregados (%s perguntas gold)", len(store.gold_ids()))
-    from lab.providers.gemini import GeminiProvider
-    from lab.providers.xai import XaiProvider
+    log.info("Contexto: %s", policy.to_dict())
 
-    gemini = GeminiProvider(settings)
-    xai = XaiProvider(settings)
-    log.info("Modelos: gemini=%s | xai=%s", settings.gemini_model, settings.xai_model)
-    log.info("A testar API Responses da xAI…")
-    responses_api_supported = xai.probe_responses_api()
-    log.info("API Responses xAI: %s", "sim" if responses_api_supported else "não (a usar chat completions)")
-    providers: list[ChatProvider] = [gemini, xai]
+    providers: list[ChatProvider] = []
+    responses_api_supported: bool | None = None
+    if not dry_run:
+        from lab.providers.gemini import GeminiProvider
+        from lab.providers.xai import XaiProvider
+
+        gemini = GeminiProvider(settings)
+        xai = XaiProvider(settings)
+        log.info("Modelos: gemini=%s | xai=%s", settings.gemini_model, settings.xai_model)
+        log.info("A testar API Responses da xAI…")
+        responses_api_supported = xai.probe_responses_api()
+        log.info("API Responses xAI: %s", "sim" if responses_api_supported else "não (a usar chat completions)")
+        providers = [gemini, xai]
+    else:
+        log.info("Dry-run: sem chamadas a Gemini/xAI")
 
     gold_ids = [case_id for case_id in PHASE1_GOLD_IDS if case_id in store.gold_ids()][:limit]
     planned = [*gold_ids, REFUSE_CASE_ID]
@@ -152,6 +193,7 @@ def run_phase1(settings: Settings, *, limit: int) -> Path:
                 empty_context=False,
                 index=index,
                 total=total,
+                dry_run=dry_run,
             )
         )
     cases.append(
@@ -162,18 +204,22 @@ def run_phase1(settings: Settings, *, limit: int) -> Path:
             empty_context=True,
             index=total,
             total=total,
+            dry_run=dry_run,
         )
     )
 
     settings.runs_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_path = settings.runs_dir / f"phase1_{stamp}.json"
+    prefix = "phase1_dryrun" if dry_run else "phase1"
+    out_path = settings.runs_dir / f"{prefix}_{stamp}.json"
     payload = {
         "phase": 1,
+        "dry_run": dry_run,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "models": {"gemini": settings.gemini_model, "xai": settings.xai_model},
         "max_output_tokens": settings.max_output_tokens,
         "responses_api_supported": responses_api_supported,
+        "context_policy": policy.to_dict(),
         "cases": cases,
     }
     out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -184,15 +230,40 @@ def run_phase1(settings: Settings, *, limit: int) -> Path:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Fase 1: Gemini vs Grok no mesmo contexto congelado.")
     parser.add_argument("--limit", type=int, default=5, help="Número de perguntas gold (default 5).")
+    parser.add_argument(
+        "--context-mode",
+        choices=CONTEXT_MODES,
+        default="top_n",
+        help="Como montar o contexto a partir do retrieval congelado.",
+    )
+    parser.add_argument("--top-n", type=int, default=6, help="Número de chunks de topo (1–50). Ignorado em full_top1.")
+    parser.add_argument(
+        "--adjacent-m",
+        type=int,
+        default=None,
+        help="Vizinhos ±M por chunk_index no mesmo documento (obrigatório em top_n_adjacent).",
+    )
+    parser.add_argument(
+        "--max-chars",
+        type=int,
+        default=None,
+        help="Teto opcional de caracteres; chunks não são cortados a meio.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Monta o contexto e grava um JSON, sem chamar os modelos.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:
     configure_logging()
     args = parse_args(argv)
+    policy = policy_from_args(args)
     log.info("A validar configuração…")
-    settings = load_settings()
-    path = run_phase1(settings, limit=args.limit)
+    settings = load_settings(require_keys=not args.dry_run)
+    path = run_phase1(settings, limit=args.limit, policy=policy, dry_run=args.dry_run)
     log.info("Concluído: %s", path)
 
 
