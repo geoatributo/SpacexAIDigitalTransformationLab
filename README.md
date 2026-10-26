@@ -241,6 +241,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Correção de coerência: o parágrafo «D1 a D4 respondidos» passa a «contribui»; D5 duplicado (modelos) renumerado para D7; texto do D1 atualizado; tabela de estado. / Coherence fix: «D1 to D4 answered» becomes «contributes»; duplicate D5 (models) renumbered D7; D1 text updated; status table added. |
 | 26-10-2026 | Corpus do repositório (86 documentos) medido contra o do P4 (162 ficheiros): duplicados, ruído e baixo sinal registados no D1; sem alteração aos dados. / Repository corpus (86 documents) measured against the P4 one (162 files): duplicates, noise and low-signal chunks recorded in D1; no data change. |
 | 26-10-2026 | Decisão do Ricardo: a pergunta central é usar o Grok como modelo alternativo e comparar resultados com o Gemini; volume e forma do contexto passam a parâmetro (D6). / Ricardo's decision: the central question is Grok as an alternative model compared with Gemini; context volume and form become a parameter (D6). |
+| 26-10-2026 | Dados pessoais redigidos de novo em 4 excertos de `data/chunk_data/chunks.json` após a regeneração do corpus; criado `ALTERACOES-DO-ASSISTENTE.md` (registo das alterações diretas do assistente, um capítulo por ficheiro). / Personal data redacted again in 4 chunks after corpus regeneration; `ALTERACOES-DO-ASSISTENTE.md` created. |
 
 ## 11. Estado do bilinguismo / Bilingual status
 
@@ -249,4 +250,5 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | `README.md` | sim | parcial: secção 1 e secções 9 a 11 (incluindo 9b); declaração da secção 6 já em inglês / partial |
 | `ORIENTACAO.md` | sim | sim (26-10-2026) / done |
 | `DECISAO-CHAVE-API.md` | sim | por fazer / to do |
+| `ALTERACOES-DO-ASSISTENTE.md` | sim | sim (26-10-2026) / done |
 | `RULES.md` | sim | por fazer (é da Kerolayne) / to do (owned by Kerolayne) |
