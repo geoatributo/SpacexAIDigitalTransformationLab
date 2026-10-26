@@ -25,11 +25,14 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `3bbacd4` | Secção 1: pergunta central passa a ser o modelo alternativo e a comparação; volume e forma do contexto passam a parâmetro (D6). / Section 1: central question is the alternative model and comparison; context volume and form become a parameter (D6). |
 | `006a1f8` | Histórico: linha sobre a nova redação e o registo das alterações do assistente; estado do bilinguismo. / History row on the new redaction and this change log; bilingual status. |
 | `4de1db3` | Tabela de estado: D2 parcial, D5 cumprido nos excertos, D6 parcial; linha de histórico. / Status table: D2 partial, D5 done for chunks, D6 partial; history row. |
-| (este commit / this commit) | Tabela de estado: D1, D2 e D4 atualizados (PR #3 e #4 fundidos, merge do P4); nova secção 9c (painel e avaliação humana, divisão de trabalho, decisões do Ricardo, pontos em aberto); linha de histórico; estado do bilinguismo. / Status table D1, D2, D4 updated; new section 9c; history row; bilingual status. |
+| `9c37bed` | Tabela de estado: D1, D2 e D4 atualizados (PR #3 e #4 fundidos, merge do P4); nova secção 9c (painel e avaliação humana, divisão de trabalho, decisões do Ricardo, pontos em aberto); linha de histórico; estado do bilinguismo. / Status table D1, D2, D4 updated; new section 9c; history row; bilingual status. |
+| `98c7482` | Decisões do Ricardo de 26-10-2026 18:38: secção 9c reescrita (avaliação humana secundária, créditos aceites, descarga com identificador); tabela de estado (D2, D7, nova linha da interface); novo risco na secção 8; linha de histórico. / Ricardo's decisions: section 9c rewritten; status table (D2, D7, new interface row); new risk in section 8; history row. |
+| `751f032` | Secções sobre a chave xAI (passo 1 do «Como correr» e riscos): `CHAVE-API.md` removido, chave continua no histórico; linha de histórico. / Key sections updated: `CHAVE-API.md` removed, key remains in history; history row. |
+| (este commit / this commit) | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
 
 ## `REQUISITOS-PAINEL-AVALIACAO.md`
 
-Criado pelo assistente (este commit, 26-10-2026) por ordem expressa do Ricardo: requisitos para o painel e a avaliação humana (para a Kerolayne) e rascunho do termo de utilização, em PT e EN, a partir das decisões do Ricardo. Não revisto juridicamente. / Created by the assistant on Ricardo's express order: dashboard and human-evaluation requirements (for Kerolayne) and draft terms of use, PT and EN, from Ricardo's decisions. Not legally reviewed.
+Criado pelo assistente (`9c37bed`, 26-10-2026) por ordem expressa do Ricardo e atualizado depois com um bloco das decisões mais recentes (este commit): requisitos para o painel e a avaliação humana (para a Kerolayne) e rascunho do termo de utilização, em PT e EN, a partir das decisões do Ricardo. Não revisto juridicamente. / Created by the assistant on Ricardo's express order: dashboard and human-evaluation requirements (for Kerolayne) and draft terms of use, PT and EN, from Ricardo's decisions. Not legally reviewed.
 
 ## `ORIENTACAO.md`
 
@@ -39,8 +42,15 @@ Criado pelo assistente (commit `f7b76c0`, baseado na proposta inicial, entretant
 |---|---|
 | `57f607b` | Reescrito em PT e EN, alinhado com o README: construir de raiz, mesma configuração, P4, regras da equipa. / Rewritten in PT and EN, aligned with the README. |
 | `3bbacd4` | Objetivo: comparação com modelo alternativo como pergunta central. / Objective: alternative-model comparison as the central question. |
+| (este commit / this commit) | Texto da chave da API: o ficheiro foi removido, a chave vai no `.env`. / API key text: file removed, key goes in `.env`. |
+
+## `CHAVE-API.md` (já não existe / no longer exists)
+
+Removido por ordem expressa do Ricardo (26-10-2026, 18:41, hora de Lisboa), no commit que acompanha este registo. Era uma solução temporária. A chave continua no histórico do Git (commit `fdd22d2`) e não foi revogada. / Removed on Ricardo's express order; it was a temporary solution. The key remains in Git history and was not revoked.
 
 ## `DECISAO-CHAVE-API.md`
+
+Atualização de 26-10-2026 (ordem do Ricardo): secção sobre a remoção de `CHAVE-API.md`, o que continua no histórico e a recomendação de revogar. / Update on Ricardo's order: section on the removal of `CHAVE-API.md`, what stays in history, and the revocation recommendation.
 
 Criado pelo assistente (commit `abbabc5`) para registar a decisão do Ricardo sobre a chave da API e os riscos. Atualizado em `5ba240d`: o estado passa a dizer que a chave foi acrescentada em `CHAVE-API.md` (26-10-2026 12:09) e que o código a lê daí, com `XAI_API_KEY` no ambiente ou em `.env` com prioridade. Os riscos e a recomendação de revogar a chave depois do Lab não mudaram. / Created by the assistant to record Ricardo's decision on the API key and its risks; updated in `5ba240d` to say the code reads the key from `CHAVE-API.md`. Risks and the advice to revoke the key after the Lab are unchanged.
 

@@ -4,6 +4,10 @@
 Estado / Status: **RASCUNHO para decisão do Ricardo / DRAFT for Ricardo's decision**. Não revisto juridicamente / Not legally reviewed.
 Destinatária dos requisitos / Requirements addressee: Kerolayne Bianeck. Origem / Source: decisões do Ricardo, 2026-10-26.
 
+> **DECISÕES MAIS RECENTES (Ricardo, 26-10-2026, 18:38, hora de Lisboa; prevalecem sobre o que contradisserem abaixo) / MOST RECENT DECISIONS (they prevail over anything below that contradicts them):**
+> - PT: a avaliação humana é **secundária e não obrigatória** e mantém-se como está implementada (escolha entre quatro valores, nomes dos sistemas visíveis). Os requisitos R6 a R13 (às cegas, nota de 0 a 10, nome do avaliador, ordem aleatória) passam a **desejáveis, não obrigatórios**. A descarga pública usa um identificador, não o nome (R16). O risco de créditos do site público (`/run`, `/chat`) é aceite.
+> - EN: human evaluation is **secondary and not mandatory** and stays as implemented (choice among four values, system names visible). Requirements R6 to R13 (blind, 0 to 10 score, rater name, random order) become **desirable, not mandatory**. The public download uses an identifier, not the name (R16). The public-site credit risk (`/run`, `/chat`) is accepted.
+
 ---
 
 # PARTE PT

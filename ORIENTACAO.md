@@ -28,8 +28,8 @@ One-page summary for the team. The [README](README.md) is the reference text; if
 
 ## Regras da equipa / Team rules
 
-- **PT.** A chave da API foi criada pela Liliana e, por decisão do Ricardo (ver [DECISAO-CHAVE-API.md](DECISAO-CHAVE-API.md)), fica neste repositório privado. Não a partilhar fora dele (chat, email, outros repositórios).
-  **EN.** The API key was created by Liliana and, by Ricardo's decision (see the decision note), is kept in this private repository. Do not share it outside it.
+- **PT.** A chave da API foi criada pela Liliana e, por decisão do Ricardo (ver [DECISAO-CHAVE-API.md](DECISAO-CHAVE-API.md)), esteve neste repositório privado; o ficheiro foi removido em 26-10-2026 e a chave vai no `.env` (continua no histórico do Git). Não a partilhar fora dele (chat, email, outros repositórios).
+  **EN.** The API key was created by Liliana and, by Ricardo's decision (see the decision note), was kept in this private repository; the file was removed on 26-10-2026 and the key now goes in `.env` (it remains in Git history). Do not share it outside the repository (chat, email).
 - **PT.** Não colocar no que enviamos às APIs dados de clientes nem dados pessoais. Os desafios D5 e D6 do README tratam do que ainda lá está.
   **EN.** Send no client data or personal data to the APIs. Challenges D5 and D6 in the README cover what is still there.
 - **PT.** Os desafios em aberto estão na secção 9 do README. / **EN.** Open challenges are in README section 9.
