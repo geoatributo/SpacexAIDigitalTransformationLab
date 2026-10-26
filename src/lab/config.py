@@ -56,6 +56,10 @@ def _require_key(name: str) -> str:
     return value
 
 
+def _optional_key(name: str) -> str:
+    return (os.getenv(name) or "").strip()
+
+
 @dataclass(frozen=True)
 class Settings:
     gemini_api_key: str
@@ -76,12 +80,13 @@ class Settings:
     chunks_path: Path
 
 
-def load_settings() -> Settings:
+def load_settings(*, require_keys: bool = True) -> Settings:
     _load_env()
     data_dir = REPO_ROOT / "data"
+    key_fn = _require_key if require_keys else _optional_key
     return Settings(
-        gemini_api_key=_require_key("GEMINI_API_KEY"),
-        xai_api_key=_require_key("XAI_API_KEY"),
+        gemini_api_key=key_fn("GEMINI_API_KEY"),
+        xai_api_key=key_fn("XAI_API_KEY"),
         gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest").strip(),
         xai_model=os.getenv("XAI_MODEL", "grok-latest").strip(),
         xai_base_url=os.getenv("XAI_BASE_URL", "https://api.x.ai/v1").rstrip("/"),

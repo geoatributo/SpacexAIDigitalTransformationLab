@@ -136,6 +136,37 @@ python -m lab --limit 5
 ```
 
 Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). Testes sem rede: `python -m pytest`.
+
+#### Flags de contexto
+
+O retrieval não volta a correr: só se escolhe **quanto** texto do ranking congelado vai no prompt. Sem `--max-chars` não há teto de caracteres (chunks nunca são cortados a meio).
+
+| Flag | Default | O que faz |
+|---|---|---|
+| `--context-mode` | `top_n` | `top_n`, `top_n_adjacent` ou `full_top1` |
+| `--top-n` | `6` | Quantos chunks de topo (1–50). Ignorado em `full_top1` |
+| `--adjacent-m` | (obrigatório em `top_n_adjacent`) | Vizinhos ±M no mesmo documento, por `chunk_index` |
+| `--max-chars` | nenhum | Teto opcional; o próximo chunk que não cabe fica de fora |
+| `--dry-run` | off | Monta o contexto e grava JSON, **sem** chamar Gemini/xAI |
+
+```text
+# Top 8 chunks (ordem do ranking)
+python -m lab --limit 5 --context-mode top_n --top-n 8
+
+# Top 3 + o chunk imediatamente antes e depois de cada um
+python -m lab --limit 5 --context-mode top_n_adjacent --top-n 3 --adjacent-m 1
+
+# Os 2 vizinhos de cada lado (M=2)
+python -m lab --limit 5 --context-mode top_n_adjacent --top-n 3 --adjacent-m 2
+
+# Documento inteiro do chunk em 1.º lugar
+python -m lab --limit 5 --context-mode full_top1
+
+# Ver volume (nº de chunks, caracteres, ids) sem gastar créditos
+python -m lab --dry-run --context-mode top_n_adjacent --top-n 5 --adjacent-m 2
+```
+
+O JSON da corrida inclui `context_policy`, e por caso `chunk_ids`, `chunk_count` e `char_count`.
 - **Fase 2**: aumentar o volume de contexto e comparar o sistema atual (base) com o Grok em paralelo.
 - **Fase 3**: interface e relatório de métricas.
 
