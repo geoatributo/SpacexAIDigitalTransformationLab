@@ -1,5 +1,7 @@
 # Lab SpaceXAI — proposta de abordagem (RASCUNHO para revisão)
 
+Regras oficiais do Evento (prazos, entregáveis, PI, pré-existente): [RULES.md](RULES.md).
+
 Data: 26-10-2026 (data do sistema). Estado: rascunho, nada enviado a ninguém.
 
 ## 0. Regra de trabalho (obrigatória)
@@ -50,10 +52,10 @@ Os nomes sugerem avaliação com RAGAS e conjuntos de referência ("gold"), mas 
 
 ## 4. Desconhecido
 
-- Texto das Regras do Lab (§7, §8, §12): quando é permitido usar código pré-existente e como declará-lo.
-- O enunciado do desafio na página da TAIKAI.
 - Que modelos Grok estão disponíveis com os créditos do Lab, e o limite de créditos.
 - Se os blocos de texto da qualidade (SGQ) já estão exportados em JSON.
+
+Texto das Regras (§7, §8, §12) e prazos de submissão: ver [RULES.md](RULES.md). Em resumo: construir de raiz neste repositório durante o Evento; bibliotecas públicas com atribuição; PC-IA só como referência, não como código a entregar.
 
 ## 5. Arquitetura proposta (tudo neste repositório)
 
@@ -67,7 +69,14 @@ Nada disto se acrescenta ao PC-IA. O original fica intacto; aqui cria-se um serv
 
 ## 6. Enquadramento nas Regras
 
-Pendente. A declaração do que é pré-existente (conhecimento e mecanismos observados no PC-IA, *sem* alteração desse código) e do que se constrói no evento (serviço novo neste repositório: adaptador xAI, executor, avaliação, interface) depende do texto das Regras. Recomenda-se confirmar por escrito com o contacto da organização antes de apresentar.
+Ver [RULES.md](RULES.md). Leitura para este lab:
+
+- O entregável é trabalho **deste** repositório, feito **durante** o Evento (TAIKAI §7–§8).
+- Código pré-existente só se for **público** e **atribuído** (Termos SpaceXAI). O PC-IA não o é: fica como referência de comportamento, sem *fork*, *import* nem patches.
+- Na submissão (inglês, até **27-10-2026 13:00** na TAIKAI) declarar: (1) OSS/APIs usadas; (2) o que se observou no PC-IA; (3) o que se construiu aqui (adaptador xAI, executor, avaliação, interface).
+- Pitch de 5 minutos em inglês; não colocar na plataforma dados que a empresa não queira públicos.
+
+Confirmar por escrito com o contacto da organização (`laurence.peghaire@x.ai`) antes de apresentar.
 
 ## 7. Fases
 
