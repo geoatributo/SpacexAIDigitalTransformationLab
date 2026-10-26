@@ -137,6 +137,23 @@ python -m lab --limit 5
 
 Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). `python -m lab --eval` grava métricas lexicais locais. O juiz LLM da equipa (não é `ragas`) corre com `--cross-judge`: três chamadas por caso (correctness, grounded, completeness), notas 0–100, `pass_rate` só em correctness ≥ 0.8 (`--pass-threshold`). Recusas esperadas e casos sem contexto ficam fora das médias. Terceiro modelo opcional: `--judge`. Testes sem rede: `python -m pytest`.
 
+### Goldilocks RAG (comparar xAI vs Gemini)
+
+As perguntas vêm de `data/geoatributo_base2_gold_questions_p4_merged.json` (62 casos). As respostas dos dois modelos são as da última run em `data/runs/phase1_*.json`, geradas por `lab.runner.run_case` (mesmo `ContextStore.build` + `build_user_prompt` + `complete` nos dois fornecedores). A API não altera esse fluxo; só o expõe.
+
+```text
+$env:PYTHONPATH="src"
+py -m uvicorn lab.app:app --reload --host 127.0.0.1 --port 8000
+```
+
+```text
+cd web
+npm install
+npm run dev
+```
+
+Abrir http://localhost:5173. Comparação é o ecrã inicial; o chat livre continua no separador Chat. Avaliações humanas: `data/evaluations.json` e `GET /evaluations.csv`. Detalhe em [web/README.md](web/README.md).
+
 #### Flags de contexto
 
 O retrieval não volta a correr: só se escolhe **quanto** texto do ranking congelado vai no prompt. Sem `--max-chars` não há teto de caracteres (chunks nunca são cortados a meio).

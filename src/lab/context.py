@@ -161,6 +161,13 @@ class ContextStore:
     def gold_ids(self) -> list[str]:
         return list(self._gold.keys())
 
+    def gold_case(self, case_id: str) -> dict[str, Any] | None:
+        return self._gold.get(case_id)
+
+    def gold_question(self, case_id: str) -> str:
+        row = self._gold.get(case_id) or {}
+        return str(row.get("question") or "")
+
     def _ranked_candidates(self, case_id: str) -> list[tuple[str, float]]:
         record = self._retrieval.get(case_id)
         if record is None:
@@ -300,6 +307,55 @@ class ContextStore:
             )
             for i, chunk in enumerate(kept, start=1)
         ]
+
+    def select_for_query(self, question: str, *, gold_match_floor: float = 0.55) -> tuple[list[ContextChunk], str]:
+        """Frozen retrieval when the question matches gold; otherwise lexical ranking over chunks."""
+        matched = self._match_gold_case(question, floor=gold_match_floor)
+        if matched:
+            return self.select_chunks(matched), f"frozen_gold:{matched}"
+        return self._select_lexical(question), "lexical"
+
+    def _match_gold_case(self, question: str, *, floor: float) -> str | None:
+        from lab.metrics import _content_tokens
+
+        query_tokens = set(_content_tokens(question))
+        if not query_tokens:
+            return None
+        best_id = None
+        best = 0.0
+        for case_id, row in self._gold.items():
+            gold_tokens = set(_content_tokens(str(row.get("question") or "")))
+            if not gold_tokens:
+                continue
+            score = len(query_tokens & gold_tokens) / len(query_tokens | gold_tokens)
+            if score > best:
+                best = score
+                best_id = case_id
+        return best_id if best_id is not None and best >= floor else None
+
+    def _select_lexical(self, question: str) -> list[ContextChunk]:
+        from lab.metrics import _content_tokens
+
+        query_tokens = set(_content_tokens(question))
+        if not query_tokens:
+            return []
+        ranked: list[tuple[float, str]] = []
+        for chunk_id, row in self._chunks.items():
+            chunk_tokens = set(_content_tokens(str(row.get("text") or "")))
+            if not chunk_tokens:
+                continue
+            overlap = len(query_tokens & chunk_tokens)
+            if overlap == 0:
+                continue
+            ranked.append((overlap / len(query_tokens), chunk_id))
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        top_n = self.policy.top_n if self.policy.mode != "full_top1" else 1
+        chosen = ranked[:top_n]
+        chunks = [
+            self._to_context_chunk(chunk_id, score=score, index=index)
+            for index, (score, chunk_id) in enumerate(chosen, start=1)
+        ]
+        return self._fit_char_cap(chunks)
 
     def build(self, case_id: str, *, empty_context: bool = False) -> BuiltContext:
         gold = self._gold.get(case_id)
