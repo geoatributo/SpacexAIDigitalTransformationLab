@@ -146,6 +146,25 @@ def _run_case(
     }
 
 
+def run_case(
+    *,
+    store: ContextStore,
+    providers: list[ChatProvider],
+    case_id: str,
+    empty_context: bool = False,
+) -> dict:
+    """Gera xAI e Gemini no mesmo contexto congelado. Não altera o retrieval."""
+    return _run_case(
+        store=store,
+        providers=providers,
+        case_id=case_id,
+        empty_context=empty_context,
+        index=1,
+        total=1,
+        dry_run=False,
+    )
+
+
 def run_phase1(
     settings: Settings,
     *,
