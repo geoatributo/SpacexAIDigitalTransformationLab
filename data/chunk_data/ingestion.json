@@ -1,16 +1,16 @@
 {
-  "tenant_id": "23f1ac5d-e0df-47f3-b2ef-8ae3bce19988",
-  "tenant_slug": "snapshot-e598a709",
-  "corpus_dir": "C:/Users/eduar/Desktop/xAiData/geoatributo_base2_teste",
+  "tenant_id": "94bf37f4-8a69-4d9f-b577-3f472f49019d",
+  "tenant_slug": "snapshot-01189090",
+  "corpus_dir": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\geoatributo_base2_teste_rag_pronto",
   "chunking_strategy": "geoatributo_structural",
+  "bundle_id": "3a6764f5-161a-4829-8f9e-775eccadf387",
+  "documents_uploaded": 84,
+  "jobs_queued": 84,
+  "ingestion_skipped": [],
   "job_status_counts": {
-    "completed": 86
+    "completed": 84
   },
   "review_outcomes": {
-    "bypassed_to_indexed": 86
-  },
-  "document_status_counts": {
-    "indexed": 86
-  },
-  "note": "Ingestion queued by build_retrieval_snapshot.py; review bypass finished in-container after the API recycled mid-poll."
+    "bypassed_to_indexed": 84
+  }
 }

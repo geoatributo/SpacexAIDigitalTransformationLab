@@ -1,0 +1,12 @@
+{
+  "contract_status": "draft",
+  "contract_version": "v0.1",
+  "bundle_dir": ".",
+  "document_results_path": "document_results.jsonl",
+  "manifest_path": "manifest.jsonl",
+  "contract_path": "downstream_contract.jsonl",
+  "document_root": "documents",
+  "markdown_only_root": "documents_md_only",
+  "record_count": 84,
+  "ready_document_count": 84
+}

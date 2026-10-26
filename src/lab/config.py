@@ -93,7 +93,7 @@ def load_settings() -> Settings:
         context_char_cap=9000,
         data_dir=data_dir,
         runs_dir=data_dir / "runs",
-        gold_path=data_dir / "geoatributo_base2_gold_questions.json",
+        gold_path=data_dir / "geoatributo_base2_gold_questions_p4_merged.json",
         retrieval_path=data_dir / "chunk_data" / "retrieval.json",
         chunks_path=data_dir / "chunk_data" / "chunks.json",
     )

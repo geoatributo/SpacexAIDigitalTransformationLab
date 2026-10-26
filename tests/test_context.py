@@ -7,7 +7,7 @@ def _store() -> ContextStore:
     return ContextStore(
         chunks_path=data / "chunk_data" / "chunks.json",
         retrieval_path=data / "chunk_data" / "retrieval.json",
-        gold_path=data / "geoatributo_base2_gold_questions.json",
+        gold_path=data / "geoatributo_base2_gold_questions_p4_merged.json",
         max_chunks=6,
         similarity_floor=0.45,
         context_char_cap=9000,
