@@ -11,8 +11,32 @@ REFUSAL_SENTENCE = "O manual não especifica a resposta para essa questão."
 PLACEHOLDER_KEYS = frozenset({"", "abcd", "changeme", "your-key", "xxx"})
 
 
+KEY_FILE = REPO_ROOT / "CHAVE-API.md"
+
+
+def _read_key_file(path: Path) -> str:
+    """Devolve a chave do primeiro bloco de código de CHAVE-API.md (decisão em DECISAO-CHAVE-API.md)."""
+    if not path.is_file():
+        return ""
+    inside = False
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip().startswith("```"):
+            if inside:
+                break
+            inside = True
+            continue
+        if inside and line.strip():
+            return line.strip()
+    return ""
+
+
 def _load_env() -> None:
+    # Ordem: variável de ambiente, depois .env, depois CHAVE-API.md (só para a chave xAI).
     load_dotenv(REPO_ROOT / ".env")
+    if (os.getenv("XAI_API_KEY") or "").strip().lower() in PLACEHOLDER_KEYS:
+        key = _read_key_file(KEY_FILE)
+        if key:
+            os.environ["XAI_API_KEY"] = key
 
 
 def _optional_int(name: str) -> int | None:
@@ -27,7 +51,7 @@ def _require_key(name: str) -> str:
     if value.lower() in PLACEHOLDER_KEYS or len(value) < 8:
         raise SystemExit(
             f"{name} está em falta ou é um placeholder. "
-            "Pede a chave à Liliana e coloca-a no .env (nunca no repositório nem no chat)."
+            "A chave xAI está em CHAVE-API.md (decisão em DECISAO-CHAVE-API.md); a do Gemini pede-se e põe-se no .env. Não a partilhar fora do repositório (chat, email)."
         )
     return value
 

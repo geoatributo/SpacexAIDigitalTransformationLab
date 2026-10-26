@@ -125,7 +125,7 @@ Decisão do Ricardo (26-10-2026): assume o risco de o §8 das Regras TAIKAI ("ap
 
 O código vive só neste repositório (`src/lab`). O PC-IA não se altera.
 
-1. Copiar `.env.example` para `.env` e preencher `GEMINI_API_KEY` e `XAI_API_KEY` (a chave xAI pede-se à Liliana; nunca vai para o git nem para o chat).
+1. Copiar `.env.example` para `.env` e preencher `GEMINI_API_KEY`. A chave xAI é lida de `CHAVE-API.md` (decisão do Ricardo, ver `DECISAO-CHAVE-API.md`); `XAI_API_KEY` no ambiente ou no `.env` tem prioridade. Não partilhar a chave fora do repositório (chat, email).
 2. Instalar dependências: `pip install -r requirements.txt`
 3. Correr, com `src` no `PYTHONPATH`:
 
@@ -141,7 +141,7 @@ Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `da
 
 ## 8. Riscos e pendências
 
-- A chave da API é um segredo partilhado: variável de ambiente, nunca no repositório nem no chat.
+- A chave da API xAI está neste repositório privado, por decisão do Ricardo (`DECISAO-CHAVE-API.md`): quem tem acesso ao repositório ou a um clone pode gastar os créditos, e a chave fica no histórico do Git. Se o link do repositório for dado ao júri ou a terceiros, retirar ou revogar a chave antes.
 - Créditos finitos: definir o limite de resposta antes da primeira chamada.
 - Dados: confirmar que os dados usados podem ir para uma API externa. Copiar para este repositório só o mínimo necessário; o resto permanece no PC-IA, sem o modificar.
 - Dados pessoais no corpus: **tratado em 26-10-2026** (commit `7b29ff7`): o número do cartão de cidadão e a morada pessoal de um gerente foram substituídos por marcadores em 9 ficheiros de `data/`. O texto original continua no histórico do Git (decisão: manter o histórico, não o reescrever). Ver secção 10. Pesquisa feita por padrões de texto, não por leitura de todos os excertos: não garante que não haja outros dados pessoais.

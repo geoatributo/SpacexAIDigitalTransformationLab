@@ -10,7 +10,7 @@ Neste Lab, a chave da API da xAI vai ser guardada neste repositório privado, em
 Garantir eficácia durante o Lab: toda a equipa tem a chave logo ao clonar o repositório.
 
 ## Estado
-A chave ainda não existe. Esta nota foi escrita antes dela. A chave só será adicionada depois de criada.
+A chave foi acrescentada em 26-10-2026 às 12:09 (commit `fdd22d2`), no ficheiro `CHAVE-API.md`. O código lê-a de lá (`src/lab/config.py`), com `XAI_API_KEY` no ambiente ou no `.env` a ter prioridade.
 
 ## Riscos conhecidos e aceites
 - Quem tem acesso ao repositório (membros da organização `geoatributo` e colaboradores) ou a um clone pode usar os créditos do evento.
