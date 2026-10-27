@@ -56,7 +56,7 @@ export default function Gate({ onEnter }: Props) {
             Aceitar e avaliar
           </button>
           <button type="button" className="ghost" disabled={busy} onClick={() => void enter("metrics_only")}>
-            Só ver as respostas
+            Ver métricas e gráficos
           </button>
         </div>
       </form>
