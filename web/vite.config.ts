@@ -12,6 +12,7 @@ export default defineConfig({
       "/results": "http://127.0.0.1:8000",
       "/run": "http://127.0.0.1:8000",
       "/evaluations": "http://127.0.0.1:8000",
+      "/metrics": "http://127.0.0.1:8000",
     },
   },
 });

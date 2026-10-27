@@ -137,7 +137,7 @@ $env:PYTHONPATH="src"
 python -m lab --limit 5
 ```
 
-Isto envia as perguntas `gold-01` … `gold-05` (mesmo contexto congelado em `data/chunk_data/`) a Gemini e a Grok, mais um caso `refuse-empty` sem contexto. Os resultados vão para `data/runs/` (pasta ignorada pelo git). `python -m lab --eval` grava métricas lexicais locais. O juiz LLM da equipa (não é `ragas`) corre com `--cross-judge`: três chamadas por caso (correctness, grounded, completeness), notas 0–100, `pass_rate` só em correctness ≥ 0.8 (`--pass-threshold`). Recusas esperadas e casos sem contexto ficam fora das médias. Terceiro modelo opcional: `--judge`. Testes sem rede: `python -m pytest`.
+`--limit` corta as primeiras N perguntas de `data/geoatributo_base2_gold_questions_p4_merged.json`, pela ordem do ficheiro, e acrescenta o caso `refuse-empty` sem contexto. O mesmo contexto congelado em `data/chunk_data/` vai a Gemini e a Grok. Os resultados vão para `data/runs/` (pasta ignorada pelo git). `python -m lab --eval` grava métricas lexicais locais. O juiz LLM da equipa (não é `ragas`) corre com `--cross-judge`: três chamadas por caso (correctness, grounded, completeness), notas 0–100, `pass_rate` só em correctness ≥ 0.8 (`--pass-threshold`). Recusas esperadas e casos sem contexto ficam fora das médias. Terceiro modelo opcional: `--judge`. Testes sem rede: `python -m pytest`.
 
 ### Goldilocks RAG (comparar xAI vs Gemini)
 
@@ -195,9 +195,13 @@ A lista está em `scripts/context_configs.json`. O script lança um `python -m l
 python scripts/run_context_configs.py
 python scripts/run_context_configs.py --jobs 4 --limit 1
 python scripts/run_context_configs.py --live
+python scripts/run_context_configs.py --metrics
+python scripts/run_context_configs.py --live --metrics
 ```
 
-Por defeito é **dry-run** (não chama os modelos). `--live` chama Gemini e Grok para **todas** as configs — gasta créditos em paralelo. O resumo vai para `data/runs/context_sweep_*.json`.
+`temperature` (0–2) e `top_p` (maior que 0, no máximo 1) definem-se **em cada entrada** do JSON, iguais nos dois modelos dessa corrida. Não há valor na raiz do ficheiro nem flag do script que os aplique a todas. `top_k` numa entrada é o número de chunks, o mesmo que `top_n`.
+
+Por defeito é **dry-run** (não chama os modelos). `--live` chama Gemini e Grok para **todas** as configs — gasta créditos em paralelo. Cada corrida fica em `data/runs/<timestamp>/` (`<config>.json`, `<config>.eval.json`, `context_sweep.json`, `metrics.json`). `--metrics` sem `--live` lê a pasta mais recente. Os gráficos dessa corrida vão para `plots/out/<timestamp>/`.
 - **Fase 2**: aumentar o volume de contexto e comparar o sistema atual (base) com o Grok em paralelo.
 - **Fase 3**: interface e relatório de métricas.
 
