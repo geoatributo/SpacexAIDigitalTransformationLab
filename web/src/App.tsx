@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import BlindEval from "./BlindEval";
 import Chat from "./Chat";
 import Compare from "./Compare";
@@ -9,6 +9,22 @@ import { api } from "./api";
 import { clearSession, loadSession, type Session } from "./session";
 
 type View = "eval" | "compare" | "metrics" | "chat";
+
+function AppBar({ children }: { children?: ReactNode }) {
+  return (
+    <header className="app-bar">
+      <div className="app-bar-banner">
+        <img
+          src="/banner.png"
+          alt="Goldilocks RAG — SpaceXAI Digital Transform Lab · GeoAtributo"
+          width={1920}
+          height={360}
+        />
+      </div>
+      {children ? <div className="app-bar-controls">{children}</div> : null}
+    </header>
+  );
+}
 
 export default function App() {
   const [passedStart, setPassedStart] = useState(false);
@@ -31,9 +47,7 @@ export default function App() {
   if (!passedStart) {
     return (
       <div className="app-root">
-        <header className="app-bar">
-          <strong>Goldilocks RAG</strong>
-        </header>
+        <AppBar />
         <Start
           onUseExisting={() => {
             setPreferredRunId("");
@@ -57,9 +71,7 @@ export default function App() {
   if (!session) {
     return (
       <div className="app-root">
-        <header className="app-bar">
-          <strong>Goldilocks RAG</strong>
-        </header>
+        <AppBar />
         <Gate onEnter={enter} />
       </div>
     );
@@ -67,8 +79,7 @@ export default function App() {
 
   return (
     <div className="app-root">
-      <header className="app-bar">
-        <strong>Goldilocks RAG</strong>
+      <AppBar>
         <nav>
           {session.mode === "rate" ? (
             <button type="button" className={view === "eval" ? "ghost active" : "ghost"} onClick={() => setView("eval")}>
@@ -87,7 +98,7 @@ export default function App() {
             </button>
           ) : null}
         </nav>
-        <span className="muted">
+        <span className="muted app-bar-session">
           {session.mode === "rate" ? session.name : "consulta"}
           <button
             type="button"
@@ -102,7 +113,7 @@ export default function App() {
             Sair
           </button>
         </span>
-      </header>
+      </AppBar>
       {view === "eval" && session.mode === "rate" ? <BlindEval session={session} /> : null}
       {view === "metrics" ? <Plots preferredRunId={preferredRunId} /> : null}
       {view === "compare" ? <Compare allowGeneration={allowGeneration} /> : null}

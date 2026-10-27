@@ -121,18 +121,52 @@ body,
 
 .app-bar {
   display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 0;
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--line);
+  background: #132a45;
+}
+
+.app-bar-banner {
+  width: 100%;
+  line-height: 0;
+  overflow: hidden;
+  background: #132a45;
+}
+
+.app-bar-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1920 / 360;
+  /* Cap height so chrome stays usable; cover crops top/bottom only, never the side icons. */
+  max-height: min(240px, 28vh);
+  object-fit: cover;
+  object-position: center;
+}
+
+.app-bar-controls {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
   padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
-  padding-top: max(10px, env(safe-area-inset-top));
-  border-bottom: 1px solid var(--line);
   background: var(--rail);
+  border-top: 1px solid var(--line);
 }
 
 .app-bar nav {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.app-bar-session {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
 }
 
@@ -694,7 +728,10 @@ a.ghost {
   :root {
     --fs-lg: 16px;
   }
-  .app-bar {
+  .app-bar-banner img {
+    max-height: min(120px, 18vh);
+  }
+  .app-bar-controls {
     padding: 8px 12px;
   }
   .ghost,
