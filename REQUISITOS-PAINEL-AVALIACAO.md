@@ -8,6 +8,8 @@ Destinatária dos requisitos / Requirements addressee: Kerolayne Bianeck. Origem
 > - PT: a avaliação humana é **secundária e não obrigatória** e mantém-se como está implementada (escolha entre quatro valores, nomes dos sistemas visíveis). Os requisitos R6 a R13 (às cegas, nota de 0 a 10, nome do avaliador, ordem aleatória) passam a **desejáveis, não obrigatórios**. A descarga pública usa um identificador, não o nome (R16). O risco de créditos do site público (`/run`, `/chat`) é aceite.
 > - EN: human evaluation is **secondary and not mandatory** and stays as implemented (choice among four values, system names visible). Requirements R6 to R13 (blind, 0 to 10 score, rater name, random order) become **desirable, not mandatory**. The public download uses an identifier, not the name (R16). The public-site credit risk (`/run`, `/chat`) is accepted.
 
+> **27-10-2026 (manhã do dia 2) / day 2 morning:** PT: acrescentada a secção «Ecrã de entrada» (R19 a R22), só visual, por decisão do Ricardo. O PR #7 da Kerolayne (aberto) implementa em grande parte R6 a R16; a revisão e a decisão de o fundir ficam por fazer. EN: section "Entry screen" (R19 to R22) added, visual only, on Ricardo's decision. Kerolayne's PR #7 (open) implements most of R6 to R16; its review and the merge decision are pending.
+
 ---
 
 # PARTE PT
@@ -51,6 +53,12 @@ Painel de resultados da avaliação comparada (dois sistemas, Gemini e Grok) com
 ### 3.4 Armazenamento
 - R17. Base de dados fora do repositório Git (o histórico do Git é permanente). Local e acesso por definir.
 - R18. Cópia de segurança antes do Evento.
+
+### 3.5 Ecrã de entrada (início) — só visual
+- R19. Ecrã inicial com duas opções: **analisar os ficheiros já carregados** (leva ao fluxo atual de comparação) ou **carregar ficheiros novos**.
+- R20. «Carregar ficheiros novos» pode abrir o seletor de ficheiros, mas **não executa nenhuma análise nem envia nada**. É demonstração.
+- R21. O ecrã diz claramente que o carregamento não está ativo (por exemplo, «demonstração: carregamento não ativo»), para não ser lido como funcionalidade existente.
+- R22. O ecrã diz em uma frase o objetivo prático: avaliar que modelos de linguagem servem melhor os processos internos de uma organização, com os seus documentos.
 
 ## 4. Pontos em aberto
 - Critérios de leitura da escala 0-10 (R10).
@@ -118,6 +126,12 @@ Results dashboard for the comparative evaluation (two systems, Gemini and Grok) 
 ### 3.4 Storage
 - R17. Database outside the Git repository (Git history is permanent). Location and access to be defined.
 - R18. Backup before the Event.
+
+### 3.5 Entry screen (start) — visual only
+- R19. Start screen with two options: **analyse the already loaded files** (leads to the current comparison flow) or **upload new files**.
+- R20. "Upload new files" may open the file picker but **runs no analysis and sends nothing**. It is a demonstration.
+- R21. The screen states clearly that upload is not active (for example, "demonstration: upload not active"), so it is not read as an existing feature.
+- R22. The screen states the practical goal in one sentence: evaluating which language models best serve an organisation's internal processes, on its own documents.
 
 ## 4. Open points
 - Reading criteria for the 0-10 scale (R10).

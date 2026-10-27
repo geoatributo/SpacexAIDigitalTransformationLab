@@ -3,7 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
+import re
 import sys
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,8 +18,9 @@ from lab.scratchpad import strip_scratchpad
 
 log = logging.getLogger("lab")
 
-PHASE1_GOLD_IDS = ["gold-01", "gold-02", "gold-03", "gold-04", "gold-05"]
 REFUSE_CASE_ID = "refuse-empty"
+# Set by scripts/run_context_configs.py so child jobs emit only step counters.
+PROGRESS_ONLY = os.environ.get("LAB_PROGRESS_ONLY") == "1"
 
 
 def _serialize_completion(provider: ChatProvider, result: CompletionResult) -> dict:
@@ -39,18 +43,41 @@ def _serialize_completion(provider: ChatProvider, result: CompletionResult) -> d
 def configure_logging() -> None:
     if log.handlers:
         return
+    # Windows consoles often use cp1252; force UTF-8 so arrows/accents don't crash logging.
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S"))
-    log.setLevel(logging.INFO)
+    # Sweep jobs only want step counters; keep warnings/errors visible.
+    log.setLevel(logging.WARNING if PROGRESS_ONLY else logging.INFO)
     log.addHandler(handler)
     log.propagate = False
+
+
+def _emit_progress(index: int, total: int) -> None:
+    """Machine-readable step line for the config sweep relay."""
+    if PROGRESS_ONLY:
+        print(f"PROGRESS {index}/{total}", flush=True)
 
 
 def _preview(text: str, width: int = 80) -> str:
     compact = " ".join(text.split())
     if len(compact) <= width:
         return compact
-    return compact[: width - 1] + "…"
+    return compact[: width - 1] + "..."
+
+
+def apply_generation(settings: Settings, *, temperature: float, top_p: float) -> Settings:
+    if temperature < 0 or temperature > 2:
+        raise ValueError("--temperature deve estar entre 0 e 2")
+    if not 0 < top_p <= 1:
+        raise ValueError("--top-p deve ser maior que 0 e no máximo 1")
+    return replace(settings, temperature=temperature, top_p=top_p)
 
 
 def policy_from_args(args: argparse.Namespace) -> ContextPolicy:
@@ -77,10 +104,11 @@ def _run_case(
     total: int,
     dry_run: bool,
 ) -> dict:
-    log.info("[%s/%s] %s — a montar contexto", index, total, case_id)
+    _emit_progress(index, total)
+    log.info("[%s/%s] %s - a montar contexto", index, total, case_id)
     built = store.build(case_id if case_id != REFUSE_CASE_ID else "gold-01", empty_context=empty_context)
     log.info(
-        "[%s/%s] %s — %s chunks | %s chars | %s",
+        "[%s/%s] %s - %s chunks | %s chars | %s",
         index,
         total,
         case_id,
@@ -89,7 +117,7 @@ def _run_case(
         _preview(built.question),
     )
     if dry_run:
-        log.info("[%s/%s] %s — chunk_ids=%s", index, total, case_id, [chunk.chunk_id for chunk in built.chunks])
+        log.info("[%s/%s] %s - chunk_ids=%s", index, total, case_id, [chunk.chunk_id for chunk in built.chunks])
         return {
             "case_id": case_id,
             "question": built.question,
@@ -104,13 +132,13 @@ def _run_case(
     user_prompt = build_user_prompt(built.question, built.chunks)
     results = []
     for provider in providers:
-        log.info("[%s/%s] %s → %s …", index, total, case_id, provider.name)
+        log.info("[%s/%s] %s -> %s ...", index, total, case_id, provider.name)
         completion = provider.complete(system=SYSTEM_PROMPT, user=user_prompt)
         serialized = _serialize_completion(provider, completion)
         results.append(serialized)
         if serialized["error"]:
             log.warning(
-                "[%s/%s] %s ← %s erro=%s (%sms)",
+                "[%s/%s] %s <- %s erro=%s (%sms)",
                 index,
                 total,
                 case_id,
@@ -123,7 +151,7 @@ def _run_case(
         tokens = usage.get("total_tokens")
         token_bit = f" | tokens={tokens}" if tokens is not None else ""
         log.info(
-            "[%s/%s] %s ← %s ok %sms | recusa=%s | fuga_scratchpad=%s%s",
+            "[%s/%s] %s <- %s ok %sms | recusa=%s | fuga_scratchpad=%s%s",
             index,
             total,
             case_id,
@@ -165,14 +193,41 @@ def run_case(
     )
 
 
+_RUN_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,80}")
+
+
+def select_gold_ids(gold_ids: list[str], *, limit: int) -> list[str]:
+    """First `limit` questions, in the order of the merged gold file."""
+    if limit < 1:
+        raise ValueError("--limit deve ser >= 1")
+    return list(gold_ids[:limit])
+
+
+def run_output_path(runs_dir: Path, *, dry_run: bool, run_name: str | None, stamp: str) -> Path:
+    """Config runs use the config name. A plain `python -m lab` keeps the timestamped name."""
+    if run_name is not None and run_name.strip():
+        cleaned = run_name.strip()
+        if _RUN_NAME.fullmatch(cleaned) is None:
+            raise ValueError(f"--run-name inválido: {run_name}")
+        return runs_dir / f"{cleaned}.json"
+    prefix = "phase1_dryrun" if dry_run else "phase1"
+    return runs_dir / f"{prefix}_{stamp}.json"
+
+
 def run_phase1(
     settings: Settings,
     *,
     limit: int,
     policy: ContextPolicy,
     dry_run: bool = False,
+    run_name: str | None = None,
 ) -> Path:
-    log.info("A carregar chunks, retrieval e gold…")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    try:
+        out_path = run_output_path(settings.runs_dir, dry_run=dry_run, run_name=run_name, stamp=stamp)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    log.info("A carregar chunks, retrieval e gold...")
     store = ContextStore.from_files(
         chunks_path=settings.chunks_path,
         retrieval_path=settings.retrieval_path,
@@ -191,17 +246,26 @@ def run_phase1(
         gemini = GeminiProvider(settings)
         xai = XaiProvider(settings)
         log.info("Modelos: gemini=%s | xai=%s", settings.gemini_model, settings.xai_model)
-        log.info("A testar API Responses da xAI…")
+        log.info("A testar API Responses da xAI...")
         responses_api_supported = xai.probe_responses_api()
-        log.info("API Responses xAI: %s", "sim" if responses_api_supported else "não (a usar chat completions)")
+        log.info("API Responses xAI: %s", "sim" if responses_api_supported else "nao (chat completions)")
         providers = [gemini, xai]
     else:
         log.info("Dry-run: sem chamadas a Gemini/xAI")
 
-    gold_ids = [case_id for case_id in PHASE1_GOLD_IDS if case_id in store.gold_ids()][:limit]
+    available = store.gold_ids()
+    try:
+        gold_ids = select_gold_ids(available, limit=limit)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     planned = [*gold_ids, REFUSE_CASE_ID]
     total = len(planned)
-    log.info("Fase 1: %s casos (%s gold + recusa vazia)", total, len(gold_ids))
+    log.info(
+        "Fase 1: %s casos (%s de %s gold + recusa vazia)",
+        total,
+        len(gold_ids),
+        len(available),
+    )
     cases = []
     for index, case_id in enumerate(gold_ids, start=1):
         cases.append(
@@ -228,14 +292,14 @@ def run_phase1(
     )
 
     settings.runs_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    prefix = "phase1_dryrun" if dry_run else "phase1"
-    out_path = settings.runs_dir / f"{prefix}_{stamp}.json"
     payload = {
         "phase": 1,
         "dry_run": dry_run,
         "created_at": datetime.now(timezone.utc).isoformat(),
+        "config_name": run_name.strip() if run_name and run_name.strip() else None,
         "models": {"gemini": settings.gemini_model, "xai": settings.xai_model},
+        "temperature": settings.temperature,
+        "top_p": settings.top_p,
         "max_output_tokens": settings.max_output_tokens,
         "responses_api_supported": responses_api_supported,
         "context_policy": policy.to_dict(),
@@ -248,14 +312,49 @@ def run_phase1(
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Fase 1: Gemini vs Grok no mesmo contexto congelado.")
-    parser.add_argument("--limit", type=int, default=5, help="Número de perguntas gold (default 5).")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=5,
+        help="Quantas perguntas do gold fundido, pela ordem do ficheiro (default 5).",
+    )
+    parser.add_argument(
+        "--run-name",
+        default=None,
+        help="Nome do ficheiro dentro da pasta da corrida. Usado quando a corrida vem de uma config.",
+    )
+    parser.add_argument(
+        "--runs-dir",
+        type=Path,
+        default=None,
+        help="Pasta desta corrida. Por defeito data/runs/<timestamp>/.",
+    )
     parser.add_argument(
         "--context-mode",
         choices=CONTEXT_MODES,
         default="top_n",
         help="Como montar o contexto a partir do retrieval congelado.",
     )
-    parser.add_argument("--top-n", type=int, default=6, help="Número de chunks de topo (1–50). Ignorado em full_top1.")
+    parser.add_argument(
+        "--top-n",
+        "--top-k",
+        dest="top_n",
+        type=int,
+        default=6,
+        help="Número de chunks de topo, o k (1–50). --top-k é o mesmo parâmetro. Ignorado em full_top1.",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.1,
+        help="Temperatura igual nos dois modelos (0–2, default 0.1).",
+    )
+    parser.add_argument(
+        "--top-p",
+        type=float,
+        default=0.9,
+        help="top_p igual nos dois modelos (maior que 0 e no máximo 1, default 0.9).",
+    )
     parser.add_argument(
         "--adjacent-m",
         type=int,
@@ -302,7 +401,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> None:
     configure_logging()
     args = parse_args(argv)
-    from lab.evaluate import evaluate_path, format_summary, latest_run
+    from lab.evaluate import evaluate_path, latest_run
 
     if args.eval is not None:
         run_path = Path(args.eval) if args.eval else latest_run()
@@ -315,17 +414,29 @@ def main(argv: list[str] | None = None) -> None:
             use_cross_judge=args.cross_judge,
             pass_threshold=args.pass_threshold,
         )
-        report = json.loads(out_path.read_text(encoding="utf-8"))
         log.info("Run: %s", run_path)
         log.info("Eval: %s", out_path)
-        for line in format_summary(report).splitlines():
-            log.info("%s", line)
         return
 
     policy = policy_from_args(args)
-    log.info("A validar configuração…")
+    log.info("A validar configuracao...")
     settings = load_settings(require_keys=not args.dry_run)
-    path = run_phase1(settings, limit=args.limit, policy=policy, dry_run=args.dry_run)
+    if args.runs_dir is not None:
+        settings = replace(settings, runs_dir=args.runs_dir)
+    else:
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        settings = replace(settings, runs_dir=settings.runs_dir / stamp)
+    try:
+        settings = apply_generation(settings, temperature=args.temperature, top_p=args.top_p)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    path = run_phase1(
+        settings,
+        limit=args.limit,
+        policy=policy,
+        dry_run=args.dry_run,
+        run_name=args.run_name,
+    )
     if not args.dry_run:
         out_path = evaluate_path(
             path,
@@ -334,11 +445,9 @@ def main(argv: list[str] | None = None) -> None:
             use_cross_judge=args.cross_judge,
             pass_threshold=args.pass_threshold,
         )
-        report = json.loads(out_path.read_text(encoding="utf-8"))
-        log.info("Métricas: %s", out_path)
-        for line in format_summary(report).splitlines():
-            log.info("%s", line)
-    log.info("Concluído: %s", path)
+        log.info("Metricas: %s", out_path)
+    log.info("Concluido: %s", path)
+
 
 
 if __name__ == "__main__":

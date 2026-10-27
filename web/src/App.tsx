@@ -26,6 +26,10 @@ export default function App() {
     );
   }
 
+import Plots from "./Plots";
+
+export default function App() {
+  const [view, setView] = useState<"compare" | "chat" | "metrics">("compare");
   return (
     <div className="app-root">
       <header className="app-bar">
@@ -49,6 +53,12 @@ export default function App() {
       ) : (
         <Compare allowGeneration={allowGeneration} />
       )}
+          <button type="button" className={view === "metrics" ? "ghost active" : "ghost"} onClick={() => setView("metrics")}>
+            Métricas
+          </button>
+        </nav>
+      </header>
+      {view === "compare" ? <Compare /> : view === "chat" ? <Chat /> : <Plots />}
     </div>
   );
 }
