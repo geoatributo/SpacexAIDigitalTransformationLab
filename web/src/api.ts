@@ -1,7 +1,8 @@
-export const API_URL = (import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? "" : "http://localhost:8000")).replace(
-  /\/$/,
-  "",
-);
+export const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+
+export function sessionHeaders(sessionId?: string | null): HeadersInit {
+  return sessionId ? { "X-Session-Id": sessionId } : {};
+}
 
 async function readError(response: Response): Promise<string> {
   let detail = `A API devolveu ${response.status}.`;

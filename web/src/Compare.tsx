@@ -121,7 +121,9 @@ function citedBy(index: number, xai: number[], gemini: number[]): string {
   return "não citado";
 }
 
-export default function Compare() {
+type Props = { allowGeneration?: boolean };
+
+export default function Compare({ allowGeneration = false }: Props) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -394,11 +396,13 @@ export default function Compare() {
                 >
                   Seguinte
                 </button>
-                <button type="button" className="ghost" onClick={() => void rerun()} disabled={busy}>
-                  {busy ? "A gerar…" : "Gerar os dois modelos"}
-                </button>
-                <a className="ghost" href={`${API_URL}/evaluations.csv`}>
-                  Exportar CSV
+                {allowGeneration ? (
+                  <button type="button" className="ghost" onClick={() => void rerun()} disabled={busy}>
+                    {busy ? "A gerar…" : "Gerar os dois modelos"}
+                  </button>
+                ) : null}
+                <a className="ghost" href={`${API_URL}/human/export.csv`}>
+                  Exportar pareceres
                 </a>
               </div>
             </header>
@@ -446,7 +450,7 @@ export default function Compare() {
                         <Markdown>{row.visible_text}</Markdown>
                       </div>
                     ) : (
-                      <p className="muted">Ainda não há resposta. Use «Gerar os dois modelos».</p>
+                      <p className="muted">Não há resposta neste JSON de execução.</p>
                     )}
                   </article>
                 );
@@ -480,30 +484,34 @@ export default function Compare() {
               </ul>
             </details>
 
-            <section className="panel judge">
-              <h2>Avaliação humana</h2>
-              <div className="verdicts">
-                {VERDICTS.map((item) => (
-                  <button
-                    type="button"
-                    key={item.id}
-                    className={verdict === item.id ? "ghost active" : "ghost"}
-                    disabled={busy}
-                    onClick={() => void save(item.id)}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-              <textarea
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-                onKeyDown={onNotesKey}
-                placeholder="Notas (opcional)"
-                rows={3}
-              />
-              <p className="hint">Setas esquerda/direita mudam de pergunta. A escolha grava já as notas.</p>
-            </section>
+            {allowGeneration ? (
+              <section className="panel judge">
+                <h2>Avaliação humana</h2>
+                <div className="verdicts">
+                  {VERDICTS.map((item) => (
+                    <button
+                      type="button"
+                      key={item.id}
+                      className={verdict === item.id ? "ghost active" : "ghost"}
+                      disabled={busy}
+                      onClick={() => void save(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value)}
+                  onKeyDown={onNotesKey}
+                  placeholder="Notas (opcional)"
+                  rows={3}
+                />
+                <p className="hint">Setas esquerda/direita mudam de pergunta. A escolha grava já as notas.</p>
+              </section>
+            ) : (
+              <p className="muted">O parecer humano (0–10, às cegas) grava-se no Firestore, no modo avaliar.</p>
+            )}
           </>
         )}
       </main>

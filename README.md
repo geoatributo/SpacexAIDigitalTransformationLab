@@ -117,7 +117,7 @@ The xAI and Gemini adapters, the comparison runner, the evaluation code (automat
 
 Decisão do Ricardo (26-10-2026): assume o risco de o §8 das Regras TAIKAI ("apenas trabalho feito durante o Evento") ser lido contra o uso de `data/`, e clarifica-o por esta declaração. Não está confirmado pela organização.
 
-**Verificação de 27-10-2026 sobre o ponto 4 (origem dos prompts).** Comparação literal, só leitura, de 8 expressões de `src/lab/prompts.py` com `adapters/llm/service.py` do PC-IA: a frase de recusa «O manual não especifica a resposta para essa questão.» é **idêntica** à do PC-IA (`NO_ANSWER_TEXT`); a convenção «REGRA DE OURO» e o bloco `<scratchpad>` também existem no PC-IA; outras 5 expressões não aparecem lá. Portanto a frase «[to confirm: prompts and the refusal sentence were written here and not copied]» **não se confirma** para a frase de recusa. Proposta de texto para o ponto 4, por decidir pelo Ricardo antes da submissão (EN): *"We know from a previous internal system how a RAG assistant is evaluated and which behaviours matter. No code from that system is copied or imported here. Two conventions were carried over and are written again in this repository: the Portuguese refusal sentence, which is identical, and the 'golden rule' and reasoning-block convention in the prompt."* / **Check of 27-10-2026 on point 4:** a literal read-only comparison shows the refusal sentence is identical to the previous system's and two prompt conventions also exist there; the "written here" claim is not confirmed for the refusal sentence. Proposed wording above, for Ricardo to decide before submission. Não confirmado: se o PC-IA tirou a frase de outro sítio, e se a frase também consta dos dados de referência (`data/`).
+**Verificação de 27-10-2026 sobre o ponto 4 (origem dos prompts).** Comparação literal, só leitura, de 8 expressões de `src/lab/prompts.py` com `adapters/llm/service.py` do PC-IA: a frase de recusa «O manual não especifica a resposta para essa questão.» é **idêntica** à do PC-IA (`NO_ANSWER_TEXT`); a convenção «REGRA DE OURO» e o bloco `<scratchpad>` também existem no PC-IA; outras 5 expressões não aparecem lá. Portanto a frase «[to confirm: prompts and the refusal sentence were written here and not copied]» **não se confirma** para a frase de recusa. **Decisão do Ricardo (27-10-2026):** o que se pretende é aplicar os mesmos conceitos que já se aplicam no PC-IA, e não é uma questão de código. O ponto 4 deve por isso declarar a reutilização de conceitos (não de código). Texto proposto (EN), por ele confirmar antes da submissão: *"We know from a previous internal system how a RAG assistant is evaluated and which behaviours matter. No code from that system is copied or imported here. The same concepts are deliberately applied here as in that system, and are written again in this repository: a fixed refusal sentence for questions the documents do not answer (identical wording in Portuguese), a 'golden rule' of answering only from the retrieved context, and a reasoning-block convention in the prompt."* / **Check of 27-10-2026 on point 4:** a literal read-only comparison shows the refusal sentence is identical to the previous system's and two prompt conventions also exist there; the "written here" claim is not confirmed for the refusal sentence. Proposed wording above, for Ricardo to decide before submission. Não confirmado: se o PC-IA tirou a frase de outro sítio, e se a frase também consta dos dados de referência (`data/`).
 
 ## 7. Fases
 
@@ -154,7 +154,62 @@ npm install
 npm run dev
 ```
 
-Abrir http://localhost:5173. Comparação é o ecrã inicial; o chat livre continua no separador Chat. Avaliações humanas: `data/evaluations.json` e `GET /evaluations.csv`. Detalhe em [web/README.md](web/README.md).
+Abrir http://localhost:5173. O ecrã inicial pede o nome e o termo de utilização: avaliar às cegas (A/B, 0–10) ou só ver as métricas. Os cartões vêm da última `phase1_*.eval.json`. As notas humanas vão para o **Firestore** do projeto Firebase/GCP (`FIREBASE_PROJECT_ID`); a API escreve com a conta de serviço, o browser não fala com o Firebase. A descarga pública (`GET /human/export.csv`) usa `rater_id`, não o nome. A leitura técnica identificada e o chat ficam no modo «só métricas». Detalhe em [web/README.md](web/README.md).
+
+#### Cloud Run: configuração e deploy
+
+Um serviço: FastAPI + `web/dist`. Projeto **`pc-ai-poc`** (tem faturação), região **`europe-west1`**, serviço **`goldilocks-rag`**. O `pciapoc` é outro projeto (Firebase no plano Spark) e não é este deploy. URL: https://goldilocks-rag-142223459429.europe-west1.run.app
+
+No contentor **não** se geram respostas (`ALLOW_GENERATION=0` no `Dockerfile`): só se leem os JSON em `data/runs/` e se grava o parecer humano no Firestore. Não são precisas chaves Gemini/xAI neste serviço. O `.gcloudignore` deixa copiar `data/runs/` para os cartões; o Git continua a ignorar essa pasta. O browser não fala com o Firebase.
+
+> **EN.** One Cloud Run service (FastAPI + `web/dist`) on project `pc-ai-poc`, region `europe-west1`. The image does not call Gemini or xAI (`ALLOW_GENERATION=0`). Human scores go to Firestore in that same project. Deploy does not set environment variables; configuration is a separate step.
+
+**Configuração local** (PowerShell, na raiz). O `.env` não vai para o Git. As chaves Gemini/xAI servem para `python -m lab` neste PC, não para o Cloud Run.
+
+```text
+copy .env.example .env
+```
+
+No `.env`: `FIREBASE_PROJECT_ID=pc-ai-poc`, mais `GEMINI_API_KEY` e `XAI_API_KEY` se fores gerar respostas. Credenciais do Firestore neste PC (conta com acesso ao projeto):
+
+```text
+gcloud auth login
+gcloud config set project pc-ai-poc
+gcloud auth application-default login
+gcloud auth application-default set-quota-project pc-ai-poc
+```
+
+Sem estas credenciais, e sem `FIREBASE_PROJECT_ID`, a API local guarda as notas só em memória (perdem-se ao reiniciar). Conta de serviço em ficheiro: `GOOGLE_APPLICATION_CREDENTIALS` no `.env` (o JSON fica de fora do Git).
+
+**Configuração do projeto** (uma vez). Liga as APIs e cria a base Firestore em modo nativo. Se a base já existir, salta o segundo comando.
+
+```text
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com firestore.googleapis.com --project=pc-ai-poc
+gcloud firestore databases create --project=pc-ai-poc --location=europe-west1
+```
+
+Coleções escritas pela API: `human_eval_sessions`, `human_eval_assignments`, `human_eval_ratings`.
+
+**Deploy** (na raiz; não leva variáveis nem segredos):
+
+```text
+gcloud run deploy goldilocks-rag --source . --project pc-ai-poc --region europe-west1 --allow-unauthenticated
+```
+
+Imagem local, sem chaves: `docker build -t goldilocks-rag .`
+
+**Variáveis e permissão, depois do deploy.** O comando de deploy não as define. Na consola: Cloud Run → `goldilocks-rag` → Editar e implementar nova revisão → Variáveis e segredos → `FIREBASE_PROJECT_ID` = `pc-ai-poc`. Ou no terminal:
+
+```text
+gcloud run services update goldilocks-rag --project pc-ai-poc --region europe-west1 --update-env-vars FIREBASE_PROJECT_ID=pc-ai-poc
+```
+
+A conta de serviço do serviço precisa de **Cloud Datastore User** para gravar o parecer. Se o `describe` não devolver conta, usa a predefinida `NUMERO_DO_PROJETO-compute@developer.gserviceaccount.com`.
+
+```text
+$sa = gcloud run services describe goldilocks-rag --project pc-ai-poc --region europe-west1 --format="value(spec.template.spec.serviceAccountName)"
+gcloud projects add-iam-policy-binding pc-ai-poc --member="serviceAccount:$sa" --role="roles/datastore.user"
+```
 
 #### Flags de contexto
 
@@ -207,7 +262,7 @@ Por defeito é **dry-run** (não chama os modelos). `--live` chama Gemini e Grok
 
 ## 8. Riscos e pendências
 
-- A chave da API xAI esteve neste repositório privado, por decisão do Ricardo (`DECISAO-CHAVE-API.md`). O ficheiro `CHAVE-API.md` foi removido em 26-10-2026, mas **a chave continua no histórico do Git** (commit `fdd22d2`) e não foi revogada (só o Ricardo o pode fazer, na xAI): quem tem acesso ao repositório ou a um clone pode gastar os créditos. Se o link do repositório for dado ao júri ou a terceiros, revogar a chave antes.
+- A chave da API xAI esteve neste repositório privado, por decisão do Ricardo (`DECISAO-CHAVE-API.md`). O ficheiro `CHAVE-API.md` foi removido em 26-10-2026, mas **a chave continua no histórico do Git** (commit `fdd22d2`) e, até 26-10-2026, não tinha sido revogada (**atualização de 27-10-2026: o Ricardo declara que a chave foi anulada; o assistente não o verificou**; o risco do histórico passa a ser só o de uma chave inativa, e a nova chave não pode entrar no repositório) (só o Ricardo o pode fazer, na xAI): quem tem acesso ao repositório ou a um clone pode gastar os créditos. Se o link do repositório for dado ao júri ou a terceiros, revogar a chave antes.
 - Créditos finitos: definir o limite de resposta antes da primeira chamada.
 - Dados: confirmar que os dados usados podem ir para uma API externa. Copiar para este repositório só o mínimo necessário; o resto permanece no PC-IA, sem o modificar.
 - Dados pessoais no corpus: **tratado em 26-10-2026** (commit `7b29ff7`): o número do cartão de cidadão e a morada pessoal de um gerente foram substituídos por marcadores em 9 ficheiros de `data/`. O texto original continua no histórico do Git (decisão: manter o histórico, não o reescrever). Ver secção 10. Pesquisa feita por padrões de texto, não por leitura de todos os excertos: não garante que não haja outros dados pessoais.
@@ -289,12 +344,12 @@ Definições de trabalho para uso comum. As marcadas (proposta) são do assisten
 |---|---|---|
 | D1 Recusas / Refusals | parcial / partial | P4 fundido com as 50 perguntas (62 casos: 56 com resposta e 6 recusas) e `retrieval.json` regenerado (`a259f91`). Falta: código para sequências de seguimento (multi-turno, não suportado); confirmar as recusas contra os 86 documentos; o excerto-armadilha do caso `p4-R3` não é recuperado (medição do assistente, 26-10-2026, não repetida hoje) |
 | D2 Fundamentação e citações / Grounding | parcial / partial | PR #2 fundido: métricas lexicais e juiz opcional (`evaluate.py`, `judge.py`, `metrics.py`). Falta validar o método à mão em algumas respostas. O juiz por defeito é `gemini-3.5-flash` (valor em `.env.example`, não verificado), do mesmo fornecedor que um dos modelos em teste: risco de enviesamento por avaliar. PR #4 fundido (Kerolayne): juiz de 3 chamadas por caso (correção, fundamentação, completude; `rag_judge.py`) e avaliação cruzada às cegas com `--cross-judge` (Gemini↔Grok). Lido pelo assistente na descrição e na estrutura do código, **não executado**; por avaliar: se os dois juízes dão notas comparáveis entre si. Decisão do Ricardo (26-10-2026): a avaliação ponderada do juiz faz-se no fim da primeira implementação completa da equipa (Eduardo) |
-| D3 Origem dos prompts / Provenance | parcial / partial | Verificado a 27-10-2026 por comparação literal de 8 expressões de `src/lab/prompts.py` com `adapters/llm/service.py` do PC-IA (só leitura): a **frase de recusa é igual** à do PC-IA (`NO_ANSWER_TEXT`, linha 27); «REGRA DE OURO» (5 ocorrências) e `scratchpad` (28) também aparecem lá; as outras 5 expressões não aparecem. Comparação literal, não semântica. A declaração da secção 6, ponto 4, não pode afirmar que a frase foi escrita aqui (ver nota nessa secção) |
+| D3 Origem dos prompts / Provenance | parcial / partial | Verificado a 27-10-2026 por comparação literal de 8 expressões de `src/lab/prompts.py` com `adapters/llm/service.py` do PC-IA (só leitura): a **frase de recusa é igual** à do PC-IA (`NO_ANSWER_TEXT`, linha 27); «REGRA DE OURO» (5 ocorrências) e `scratchpad` (28) também aparecem lá; as outras 5 expressões não aparecem. Comparação literal, não semântica. Decisão do Ricardo (27-10-2026): a reutilização é de **conceitos**, aplicados de forma idêntica ao PC-IA, não de código; a declaração da secção 6, ponto 4, passa a dizê-lo (ver nota nessa secção) |
 | D4 Perguntas fáceis / Easy questions | parcial / partial | P4 acrescenta casos difíceis e o retrieval já cobre os 62 casos. Em cerca de 80% dos casos com resposta o excerto certo está em 1.º lugar (medição anterior do assistente, não repetida hoje): faltam casos mais difíceis |
 | D5 Propostas de clientes / Client proposals | cumprido / done (excertos) | 41 excertos retirados (1037 para 996, 86 para 84 documentos) e retrieval regenerado (`a259f91`). Por confirmar: se o repositório partiu do corpus da opção B |
 | D6 Parâmetros / Parameters | parcial / partial | PR #1 fundido: modos de contexto `top_n`, `top_n_adjacent` e `full_top1`, `--top-n`, `--adjacent-m`, `--max-chars`, `--dry-run`. PR #3 (varrimento paralelo de configurações) aberto. Não encontrei cache dos resultados nem dimensionamento das configurações face ao tempo do Evento |
-| D7 Modelos / Models | parcial / partial | Decisão do Ricardo (26-10-2026): usar as últimas versões, Grok 4.7 e o Gemini mais recente, e **fixar as versões no `.env`**, sem alterar o código (o modelo devolvido pela API continua a não ser gravado). Gemini: `gemini-4-argon`, código de modelo confirmado na [página da API da Google](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon) (modelo de raciocínio de topo, nível de raciocínio configurável: baixo, médio ou alto). Grok: `grok-4.7` confirmado em [docs.x.ai/docs/models](https://docs.x.ai/docs/models) (27-10-2026), com preço listado de 2,00 USD por milhão de tokens de entrada e 6,00 USD de saída para prompts abaixo de 200 mil tokens. Falta: `.env.example` ainda tem `gemini-flash-lite-latest` e `grok-latest` (versões não fixadas no repositório); fixar e registar o nível de raciocínio dos dois modelos (afeta latência e custo); preço do Gemini por verificar (os valores colados na conversa vêm de um blogue da Google que não li); a comparação é de gama de topo, diferente da recomendação acima (ligeiro contra ligeiro) |
-| Interface e painel / Interface and dashboard | em curso / in progress | PR #5 fundido (interface web). Abertos a 27-10-2026 e **não fundidos nem testados pelo assistente**: PR #7 (Kerolayne): sessão com nome ou «só métricas», ordem A/B sorteada por sessão e caso, nota de 0 a 10 por resposta, identificador do avaliador (hash do nome) na exportação, armazenamento em Firestore, painel e termo de utilização (rascunho), para Cloud Run; PR #6 (Eduardo): página de métricas com gráficos, Docker e script de implementação no GCP. O PR #7 cobre em grande parte R6 a R16 do ficheiro de requisitos, embora a decisão de 26-10 os tornasse só desejáveis. `/run` e `/chat` continuam sem controlo de créditos (risco aceite). Ver secção 9d |
+| D7 Modelos / Models | parcial / partial | Decisão do Ricardo (26-10-2026): usar as últimas versões, Grok 4.7 e o Gemini mais recente, e **fixar as versões no `.env`**, sem alterar o código (o modelo devolvido pela API continua a não ser gravado). Gemini: `gemini-4-argon`, código de modelo confirmado na [página da API da Google](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon) (modelo de raciocínio de topo, nível de raciocínio configurável: baixo, médio ou alto). Grok: `grok-4.7` confirmado em [docs.x.ai/docs/models](https://docs.x.ai/docs/models) (27-10-2026), com preço listado de 2,00 USD por milhão de tokens de entrada e 6,00 USD de saída para prompts abaixo de 200 mil tokens. Falta: `.env.example` ainda tem `gemini-flash-lite-latest` e `grok-latest` (versões não fixadas no repositório); definir e fixar o nível de raciocínio de cada modelo (tarefa atribuída ao Eduardo por decisão do Ricardo, 27-10-2026; afeta latência e custo); preço do Gemini por verificar (os valores colados na conversa vêm de um blogue da Google que não li); a comparação é de gama de topo, diferente da recomendação acima (ligeiro contra ligeiro) |
+| Interface e painel / Interface and dashboard | em curso / in progress | PR #5 fundido (interface web). PR #6 (Eduardo, página de métricas com gráficos, Docker e script de implementação no GCP) já fundido. Em aberto a 27-10-2026 e **não testado pelo assistente**: PR #7 (Kerolayne), aprovado mas com **conflitos** com `main` a resolver por quem o escreveu; decisão do Ricardo (27-10-2026): fundir-se. Conteúdo: sessão com nome ou «só métricas», ordem A/B sorteada por sessão e caso, nota de 0 a 10 por resposta, identificador do avaliador (hash do nome) na exportação, armazenamento em Firestore, painel e termo de utilização (rascunho), para Cloud Run. O PR #7 cobre em grande parte R6 a R16 do ficheiro de requisitos, embora a decisão de 26-10 os tornasse só desejáveis. `/run` e `/chat` continuam sem controlo de créditos (risco aceite). Ver secção 9d |
 
 
 ## 9c. Painel de resultados e avaliação humana / Results dashboard and human evaluation
@@ -331,7 +386,11 @@ Reflexões e decisões do Ricardo, 27-10-2026 (manhã do segundo dia do Evento).
 - EN: the tool is very focused on one problem of our own organisation. The framing becomes: **a tool that lets organisations evaluate which large language models (LLMs) serve them best in their internal processes**, on their own documents, with the same configuration for every model, automatic metrics and human reading. The GeoAtributo case (quality-management documents, Grok against Gemini) is the demonstrated example.
 - Nota do assistente / Assistant's note: PT: é um enquadramento, não uma generalidade demonstrada. O que existe testa um corpus de uma organização (84 documentos) e dois modelos, com um adaptador por fornecedor; acrescentar um terceiro modelo exige escrever o adaptador. Dizer «permite avaliar os LLM» sem esta ressalva promete mais do que foi mostrado. Convém dizer «avalia dois modelos, com arquitetura pensada para outros». EN: this is a framing, not a demonstrated generality: one corpus (84 documents), two models, one adapter per provider; adding a model means writing its adapter. Say it evaluates two models, with an architecture meant for more.
 
-**3. Prazo / Deadline.** Submissão a 27-10-2026 às 13:00, hora de Lisboa. / Submission 27-10-2026 at 13:00 Lisbon time.
+**3. Decisões de 27-10-2026 sobre risco e integração / Decisions on risk and integration.**
+- PT: (a) fundir o PR #7 (está em conflito com `main`, por resolver pela autora); (b) a chave xAI atual será anulada e criada uma nova, distribuída fora do repositório; (c) o nível de raciocínio de cada modelo é tarefa do Eduardo; (d) depois de fechar esta atualização, discutir alternativas de implementação rápida para o acesso por ligação pública. Estes pontos são decisões, ainda não concluídos.
+- EN: (a) merge PR #7 (conflicts with `main`, to be resolved by its author); (b) the current xAI key will be invalidated and a new one created, distributed outside the repository; (c) each model's reasoning level is Eduardo's task; (d) after this update, discuss quick implementation alternatives for public-link access. These are decisions, not yet completed.
+
+**4. Prazo / Deadline.** Submissão a 27-10-2026 às 13:00, hora de Lisboa. / Submission 27-10-2026 at 13:00 Lisbon time.
 
 ## 10. Histórico e evolução / History and evolution
 
@@ -345,6 +404,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | `CHAVE-API.md` removido por decisão do Ricardo (solução temporária); a chave passa a ir no `.env` e continua no histórico do Git, sem revogação. / `CHAVE-API.md` removed on Ricardo's decision (temporary solution); the key now goes in `.env` and remains in Git history, not revoked. |
 | 26-10-2026 | D7: versão do Gemini registada (`gemini-4-argon`, confirmada na documentação da Google). / D7: Gemini version recorded (`gemini-4-argon`, confirmed in Google's documentation). |
 | 27-10-2026 | Decisões do Ricardo (manhã do dia 2): aplicação com início, meio e fim (ecrã de entrada para carregar ou escolher ficheiros, só visual) e enquadramento prático para organizações (secção 9d). Verificação da origem dos prompts (D3): frase de recusa igual à do PC-IA. D7: `grok-4.7` confirmado. Estado dos PR #6 e #7. / Ricardo's day-2 decisions: entry screen (visual only) and practical framing (section 9d). D3 check: refusal sentence identical to the previous system's. D7: `grok-4.7` confirmed. Status of PR #6 and #7. |
+| 27-10-2026 | Chave xAI anulada, por declaração do Ricardo (não verificada pelo assistente); nova chave a distribuir fora do repositório. / xAI key invalidated, per Ricardo's statement (not verified by the assistant); new key to be distributed outside the repository. |
 | 26-10-2026 | Objetivo realinhado com a candidatura (secção 1); declaração de elementos pré-existentes (secção 6). / Objective aligned with the application; pre-existing elements declaration. |
 | 26-10-2026 | Conversa da equipa de 23-10 lida como contexto: em parte ultrapassada. Dela vêm a pergunta do plano, a base P4 de 30 perguntas, a decisão de excluir duas propostas de clientes e a regra da mesma configuração (secções 1, 9 e 9b). / Team chat of 23-10 read as context, partly outdated; it supplies the plan question, the P4 base, the exclusion of two client proposals and the same-configuration rule. |
 | 26-10-2026 | Dados pessoais redigidos em `data/` (commit `7b29ff7`). Os commits anteriores `369374c` e `ba05d9b` (pasta `data/`) ainda contêm o texto original; mantidos por decisão. / Personal data redacted in `data/` (`7b29ff7`); earlier commits `369374c` and `ba05d9b` still contain the original text, kept by decision. |
@@ -355,6 +415,7 @@ O histórico do Git mantém-se: não se reescreve. Esta secção explica as muda
 | 26-10-2026 | Criado `CRITERIOS-AVALIACAO.md`: cardápio de parâmetros e indicadores para seleção pela equipa (não imperativo), referenciado em D2, D6 e D7. / `CRITERIOS-AVALIACAO.md` created: menu of parameters and indicators for the team to select (not mandatory), referenced in D2, D6 and D7. |
 | 26-10-2026 | Tabela de estado atualizada (D2 parcial, D5 cumprido nos excertos, D6 parcial) após os PR #1 e #2 fundidos e o PR #3 aberto. / Status table updated (D2 partial, D5 done for chunks, D6 partial) after PR #1 and #2 merged and PR #3 open. |
 | 26-10-2026 | Tabela de estado: D1, D2 e D4 atualizados após os PR #3 e #4 fundidos e o merge do P4. Nova secção 9c (painel e avaliação humana) e `REQUISITOS-PAINEL-AVALIACAO.md`. / Status table: D1, D2, D4 updated after PR #3 and #4 merged and the P4 merge. New section 9c and requirements file. |
+| 26-10-2026 | Secção 7: scripts de configuração e deploy do painel no Cloud Run (`pc-ai-poc`, `europe-west1`). O deploy não leva variáveis; `FIREBASE_PROJECT_ID` e o papel Firestore ficam à parte. / Section 7: Cloud Run config and deploy scripts. Deploy sets no env vars. |
 | 26-10-2026 | Decisões do Ricardo (18:38, hora de Lisboa): avaliação humana secundária e mantida como está; risco de créditos do site público aceite; descarga com identificador; versões dos modelos fixadas no `.env`; avaliação do juiz adiada para o fim da primeira implementação completa. Tabela de estado e secção 9c atualizadas. / Ricardo's decisions: human evaluation secondary and kept as is; public-site credit risk accepted; download with identifier; model versions pinned in `.env`; judge assessment deferred to the end of the first complete implementation. Status table and section 9c updated. |
 
 ## 11. Estado do bilinguismo / Bilingual status

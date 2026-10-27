@@ -22,11 +22,12 @@ npm run dev
 
 Abrir http://localhost:5173. A API está em http://localhost:8000.
 
-- `GET /questions` — 62 perguntas gold
-- `GET /results/{id}` — contexto congelado + respostas da última run (`data/runs/phase1_*.json`)
-- `POST /run/{id}` — volta a gerar os dois modelos no mesmo contexto
-- `POST /evaluations` — guarda a avaliação humana em `data/evaluations.json`
-- `GET /evaluations.csv` — exportação
-- `POST /chat` e `POST /chat/stream` — pergunta livre
+- `POST /session` — declaração do nome e modo (`rate` ou `metrics_only`)
+- `GET /dashboard` — cartões das métricas da última run/eval
+- `GET /blind/cases/{id}` — respostas A/B às cegas (sem nomes dos sistemas)
+- `POST /human/ratings` — notas 0–10 por resposta; Firestore (`FIREBASE_PROJECT_ID`)
+- `GET /human/export.csv` — descarga pública com `rater_id`, não o nome
+- `GET /questions` / `GET /results/{id}` — leitura técnica identificada (só no modo métricas)
+- `POST /chat` — pergunta livre (só no modo métricas)
 
-`VITE_API_URL` define o endereço da API (omissão: `http://localhost:8000`). As chaves ficam no `.env`, nunca no código.
+`VITE_API_URL` vazio (defeito) usa o mesmo origin — em `npm run dev` o proxy do Vite, no Cloud Run a própria API. As chaves ficam no `.env`, nunca no código.
