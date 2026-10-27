@@ -2,6 +2,7 @@ import json
 
 from lab.compare import (
     evaluations_csv,
+    generations_by_id,
     latest_run_payload,
     list_questions,
     result_for,
@@ -92,6 +93,24 @@ def test_latest_run_prefers_the_file_with_more_cases(tmp_path) -> None:
     payload = latest_run_payload(tmp_path)
     assert payload is not None
     assert len(payload["cases"]) == 20
+
+
+def test_latest_run_skips_report_packs_with_string_case_ids(tmp_path) -> None:
+    (tmp_path / "report.json").write_text(
+        json.dumps({"cases": [f"gold-{index:02d}" for index in range(1, 63)], "configs": [{}]}),
+        encoding="utf-8",
+    )
+    run = tmp_path / "phase1.json"
+    run.write_text(
+        json.dumps({"cases": [{"case_id": "gold-01", "providers": []}], "models": {"xai": "grok"}}),
+        encoding="utf-8",
+    )
+    payload = latest_run_payload(tmp_path)
+    assert payload is not None
+    assert payload["cases"][0]["case_id"] == "gold-01"
+    found, models = generations_by_id(tmp_path)
+    assert "gold-01" in found
+    assert models["xai"] == "grok"
 
 
 def test_evaluation_writes_json_and_csv(tmp_path) -> None:

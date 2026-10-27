@@ -80,8 +80,17 @@ def _is_generation_file(path: Path) -> bool:
     name = path.name.lower()
     if not name.endswith(".json") or name.endswith(".eval.json"):
         return False
-    skip = ("dryrun", "compare_overrides", "context_sweep")
+    skip = ("dryrun", "compare_overrides", "context_sweep", "report.json", "metrics.json")
     return not any(token in name for token in skip)
+
+
+def _generation_cases(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Ignore metrics packs whose ``cases`` are id strings, not generation objects."""
+    records: list[dict[str, Any]] = []
+    for case in payload.get("cases") or []:
+        if isinstance(case, dict) and case.get("case_id") is not None:
+            records.append(case)
+    return records
 
 
 def latest_run_payload(runs_dir: Path) -> dict[str, Any] | None:
@@ -99,7 +108,7 @@ def latest_run_payload(runs_dir: Path) -> dict[str, Any] | None:
             continue
         if not isinstance(payload, dict):
             continue
-        cases = payload.get("cases") or []
+        cases = _generation_cases(payload)
         if not cases:
             continue
         key = (len(cases), path.stat().st_mtime)
@@ -115,7 +124,7 @@ def generations_by_id(runs_dir: Path, override_path: Path | None = None) -> tupl
     payload = latest_run_payload(runs_dir)
     if payload:
         models = dict(payload.get("models") or {})
-        for case in payload.get("cases") or []:
+        for case in _generation_cases(payload):
             found[str(case.get("case_id"))] = case
     found.update(load_overrides(override_path))
     return found, models
