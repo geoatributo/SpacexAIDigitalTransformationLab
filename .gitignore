@@ -8,6 +8,7 @@ web/node_modules/
 web/dist/
 data/uploads/
 data/evaluations.json
+data/metrics_notes.json
 data/human_eval.sqlite
 web/.vite/
 *-firebase-adminsdk-*.json

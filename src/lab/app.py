@@ -26,6 +26,11 @@ from lab.config import REPO_ROOT, Settings, load_settings
 from lab.context import ContextPolicy, ContextStore
 from lab.dashboard import latest_run_path, metric_cards
 from lab.gold_upload import parse_gold_payload, questions_dir, save_uploaded_gold
+from lab.notes_report import (
+    format_evaluation_report,
+    get_metrics_note,
+    save_metrics_note,
+)
 from lab.human_eval import (
     assignment_for,
     blind_answers,
@@ -51,7 +56,11 @@ from lab.sweep_report import (
 
 class EvaluationRequest(BaseModel):
     case_id: str = Field(min_length=1)
-    verdict: Literal["xai_better", "gemini_better", "tie", "both_weak"]
+    verdict: Literal["xai_better", "gemini_better", "tie", "both_weak"] | None = None
+    notes: str = ""
+
+
+class MetricsNoteRequest(BaseModel):
     notes: str = ""
 
 
@@ -436,13 +445,44 @@ def get_evaluations_csv() -> Response:
     )
 
 
+@app.get("/evaluations/report.txt")
+def get_evaluations_report() -> Response:
+    try:
+        blind = export_rows()
+    except RuntimeError:
+        blind = []
+    text = format_evaluation_report(blind_rows=blind)
+    return Response(
+        content=text,
+        media_type="text/plain; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=relatorio-avaliacoes.txt"},
+    )
+
+
 @app.post("/evaluations")
 def post_evaluation(body: EvaluationRequest) -> dict[str, Any]:
-    _require_generation()
     if state.store.gold_case(body.case_id) is None:
         raise HTTPException(status_code=404, detail=f"Pergunta desconhecida: {body.case_id}")
     try:
         return save_evaluation(body.case_id, verdict=body.verdict, notes=body.notes)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/metrics/runs/{run_id}/notes")
+def metrics_notes_get(run_id: str) -> dict[str, Any]:
+    row = get_metrics_note(run_id)
+    return row or {"run_id": run_id, "notes": "", "updated_at": None}
+
+
+@app.post("/metrics/runs/{run_id}/notes")
+def metrics_notes_post(run_id: str, body: MetricsNoteRequest) -> dict[str, Any]:
+    try:
+        resolve_run_dir(state.settings.runs_dir, run_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=f"Corrida desconhecida: {run_id}") from exc
+    try:
+        return save_metrics_note(run_id, body.notes)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 

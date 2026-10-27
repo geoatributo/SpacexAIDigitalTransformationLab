@@ -159,6 +159,9 @@ export default function BlindEval({ session }: Props) {
                 <a className="ghost" href={`${API_URL}/human/export.csv`}>
                   Exportar CSV
                 </a>
+                <a className="ghost" href={`${API_URL}/evaluations/report.txt`}>
+                  Descarregar relatório
+                </a>
               </div>
             </header>
             <p className="muted">Avalie só com base na leitura. 0 = muito mau, 10 = excelente. Os sistemas não são identificados.</p>

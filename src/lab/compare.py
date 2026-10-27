@@ -37,16 +37,20 @@ def load_evaluations(path: Path | None = None) -> dict[str, Any]:
 def save_evaluation(
     case_id: str,
     *,
-    verdict: str,
+    verdict: str | None = None,
     notes: str = "",
     path: Path | None = None,
 ) -> dict[str, Any]:
-    if verdict not in VERDICTS:
+    if verdict is not None and verdict not in VERDICTS:
         raise ValueError(f"Avaliação inválida: {verdict}")
     store = load_evaluations(path)
+    existing = store.get(case_id) if isinstance(store.get(case_id), dict) else {}
+    final_verdict = verdict if verdict is not None else existing.get("verdict")
+    if final_verdict is None and not str(notes).strip():
+        raise ValueError("Indique um veredicto ou escreva notas.")
     row = {
         "case_id": case_id,
-        "verdict": verdict,
+        "verdict": final_verdict,
         "notes": notes,
         "updated_at": datetime.now(timezone.utc).isoformat(),
     }

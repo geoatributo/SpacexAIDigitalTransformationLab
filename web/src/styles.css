@@ -375,6 +375,16 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 8px;
+  margin-top: 8px;
+  color: var(--text);
+  resize: vertical;
+}
+
+.judge .nav-row {
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .qlist {
