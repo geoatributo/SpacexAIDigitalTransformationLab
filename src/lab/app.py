@@ -25,6 +25,7 @@ from lab.compare import (
 from lab.config import REPO_ROOT, Settings, load_settings
 from lab.context import ContextPolicy, ContextStore
 from lab.dashboard import latest_run_path, metric_cards
+from lab.gold_upload import parse_gold_payload, questions_dir, save_uploaded_gold
 from lab.human_eval import (
     assignment_for,
     blind_answers,
@@ -86,7 +87,9 @@ class ChatResponse(BaseModel):
 
 class AppState:
     settings: Settings
+    base_store: ContextStore
     store: ContextStore
+    uploaded_generations: dict[str, Any]
     providers: dict[str, ChatProvider]
     models: dict[str, str]
     default_provider: str
@@ -137,12 +140,15 @@ def _require_generation() -> None:
 async def lifespan(_app: FastAPI):
     settings = load_settings(require_keys=False)
     state.settings = settings
-    state.store = ContextStore.from_files(
+    store = ContextStore.from_files(
         chunks_path=settings.chunks_path,
         retrieval_path=settings.retrieval_path,
         gold_path=settings.gold_path,
         policy=ContextPolicy(mode="top_n", top_n=6, max_chars=9000),
     )
+    state.base_store = store
+    state.store = store
+    state.uploaded_generations = {}
     state.providers = {}
     state.models = {"gemini": settings.gemini_model, "xai": settings.xai_model}
     if generation_enabled():
@@ -183,8 +189,15 @@ app.add_middleware(
 
 def _snapshot() -> tuple[dict[str, Any], dict[str, str], dict[str, Any]]:
     generations, models = generations_by_id(state.settings.runs_dir)
+    generations = {**generations, **getattr(state, "uploaded_generations", {})}
     models = {**state.models, **models}
     return generations, models, load_evaluations()
+
+
+def _reset_gold() -> dict[str, Any]:
+    state.store = state.base_store
+    state.uploaded_generations = {}
+    return {"ok": True, "n": len(state.store.gold_ids())}
 
 
 @app.get("/health")
@@ -307,6 +320,32 @@ def post_human_rating(
 def questions() -> list[dict[str, Any]]:
     generations, _models, evaluations = _snapshot()
     return list_questions(state.store, generations=generations, evaluations=evaluations)
+
+
+@app.post("/questions/reset")
+def questions_reset() -> dict[str, Any]:
+    return _reset_gold()
+
+
+@app.post("/questions/upload")
+async def questions_upload(file: UploadFile = File(...)) -> dict[str, Any]:
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Ficheiro vazio")
+    if len(raw) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="Ficheiro demasiado grande (máx. 20 MB)")
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="JSON inválido") from exc
+    try:
+        gold, generations = parse_gold_payload(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    saved = save_uploaded_gold(questions_dir(state.settings.gold_path.parent), gold)
+    state.store = state.base_store.with_gold(gold)
+    state.uploaded_generations = generations
+    return {**saved, "with_answers": len(generations)}
 
 
 @app.get("/results/{case_id}")
