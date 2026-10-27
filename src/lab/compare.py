@@ -76,18 +76,37 @@ def save_override(case: dict[str, Any], *, path: Path | None = None) -> None:
     _write_json(path or OVERRIDE_PATH, store)
 
 
+def _is_generation_file(path: Path) -> bool:
+    name = path.name.lower()
+    if not name.endswith(".json") or name.endswith(".eval.json"):
+        return False
+    skip = ("dryrun", "compare_overrides", "context_sweep")
+    return not any(token in name for token in skip)
+
+
 def latest_run_payload(runs_dir: Path) -> dict[str, Any] | None:
-    files = sorted(
-        [
-            path
-            for path in runs_dir.glob("phase1_*.json")
-            if not path.name.endswith(".eval.json") and "dryrun" not in path.name
-        ],
-        key=lambda item: item.stat().st_mtime,
-    )
-    if not files:
+    """Use the run JSON with the most cases (nested sweep folders included)."""
+    if not runs_dir.is_dir():
         return None
-    return json.loads(files[-1].read_text(encoding="utf-8"))
+    best: dict[str, Any] | None = None
+    best_key = (-1, 0.0)
+    for path in runs_dir.rglob("*.json"):
+        if not _is_generation_file(path):
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(payload, dict):
+            continue
+        cases = payload.get("cases") or []
+        if not cases:
+            continue
+        key = (len(cases), path.stat().st_mtime)
+        if key > best_key:
+            best_key = key
+            best = payload
+    return best
 
 
 def generations_by_id(runs_dir: Path, override_path: Path | None = None) -> tuple[dict[str, Any], dict[str, str]]:

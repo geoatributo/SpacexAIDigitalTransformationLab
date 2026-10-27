@@ -1,5 +1,8 @@
+import json
+
 from lab.compare import (
     evaluations_csv,
+    latest_run_payload,
     list_questions,
     result_for,
     save_evaluation,
@@ -75,6 +78,20 @@ def test_list_and_result_use_run_without_regenerating(tmp_path) -> None:
     assert payload["gemini"]["latency_ms"] == 20
     assert "text" not in payload["xai"]
     assert payload["sources"][0]["document"] == "VPN"
+
+
+def test_latest_run_prefers_the_file_with_more_cases(tmp_path) -> None:
+    small = tmp_path / "phase1_old.json"
+    small.write_text(json.dumps({"cases": [{"case_id": "gold-01"}]}), encoding="utf-8")
+    nested = tmp_path / "20261027T100000Z"
+    nested.mkdir()
+    (nested / "top6.json").write_text(
+        json.dumps({"cases": [{"case_id": f"gold-{index:02d}"} for index in range(1, 21)]}),
+        encoding="utf-8",
+    )
+    payload = latest_run_payload(tmp_path)
+    assert payload is not None
+    assert len(payload["cases"]) == 20
 
 
 def test_evaluation_writes_json_and_csv(tmp_path) -> None:
