@@ -26,3 +26,6 @@ A chave foi acrescentada em 26-10-2026 às 12:09 (commit `fdd22d2`), no ficheiro
 
 ## Recomendação (não decidida)
 Revogar a chave, e criar outra para o `.env`, quando o Lab terminar, ou já, dado que está no histórico.
+
+## Atualização de 27-10-2026 (10:20, hora de Lisboa)
+- O Ricardo declara que a chave foi anulada. O assistente não o verificou. A chave antiga continua no histórico do Git (commit `fdd22d2`), agora inativa. A nova chave vai no `.env` de cada pessoa e não entra no repositório.
