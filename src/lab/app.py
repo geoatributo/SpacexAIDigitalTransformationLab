@@ -5,7 +5,7 @@ import os
 from contextlib import asynccontextmanager
 from typing import Any, Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel, Field
@@ -24,7 +24,13 @@ from lab.compare import (
 from lab.config import Settings, load_settings
 from lab.context import ContextPolicy, ContextStore
 from lab.providers.base import ChatProvider
-from lab.sweep_report import build_report, list_runs, resolve_run_dir
+from lab.sweep_report import (
+    MAX_UPLOAD_BYTES,
+    list_runs,
+    load_or_build_report,
+    resolve_run_dir,
+    save_uploaded_report,
+)
 
 
 class EvaluationRequest(BaseModel):
@@ -184,11 +190,30 @@ def metrics_runs() -> list[dict[str, Any]]:
     return list_runs(state.settings.runs_dir)
 
 
+@app.post("/metrics/runs/upload")
+async def metrics_upload(file: UploadFile = File(...)) -> dict[str, Any]:
+    raw = await file.read()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Ficheiro vazio")
+    if len(raw) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="Ficheiro demasiado grande (máx. 20 MB)")
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="JSON inválido") from exc
+    try:
+        return save_uploaded_report(state.settings.runs_dir, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileExistsError as exc:
+        raise HTTPException(status_code=409, detail="Corrida já existe; tente de novo") from exc
+
+
 @app.get("/metrics/runs/{run_id}")
 def metrics_run(run_id: str) -> dict[str, Any]:
     try:
         folder = resolve_run_dir(state.settings.runs_dir, run_id)
-        return build_report(folder, run_id=run_id)
+        return load_or_build_report(folder, run_id=run_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=f"Corrida desconhecida: {run_id}") from exc
 

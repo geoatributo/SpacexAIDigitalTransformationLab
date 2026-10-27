@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +15,10 @@ from lab.judge import CrossJudgePanel, make_cross_panel, make_judge_provider
 from lab.metrics import PASS_THRESHOLD, aggregate, as_payload, score_completion
 from lab.rag_judge import aggregate_llm_cases, score_generated_answer
 from lab.providers.base import ChatProvider
+
+
+def _log(message: str) -> None:
+    print(message, file=sys.stderr, flush=True)
 
 
 def _chunks_path() -> Path:
@@ -101,6 +107,7 @@ def evaluate_payload(
     judge_provider_name: str | None = None,
     cross_panel: CrossJudgePanel | None = None,
     pass_threshold: float = PASS_THRESHOLD,
+    log: bool = False,
 ) -> dict[str, Any]:
     by_provider: dict[str, list] = defaultdict(list)
     by_judge: dict[str, list] = defaultdict(list)
@@ -112,7 +119,17 @@ def evaluate_payload(
             f"O modelo juiz ({judge_model}) coincide com um dos modelos em teste. "
             "Usa --cross-judge (Gemini↔Grok às cegas) ou um JUDGE_MODEL diferente."
         )
-    for case in payload.get("cases") or []:
+    cases = payload.get("cases") or []
+    modes = ["lexical"]
+    if judge and judge_model:
+        modes.append(f"judge={judge_provider_name or getattr(judge, 'name', '?')}/{judge_model}")
+    if cross_panel:
+        modes.append("cross-judge")
+    if log:
+        _log(f"[eval] {len(cases)} casos · {' + '.join(modes)} · limiar={pass_threshold}")
+    started = time.perf_counter()
+    for index, case in enumerate(cases, start=1):
+        case_started = time.perf_counter()
         context_chunks, context_source = resolve_context_chunks(case, chunk_texts, store=store)
         context_text = "\n".join(context_chunks)
         provider_scores = []
@@ -163,24 +180,54 @@ def evaluate_payload(
                 "providers": provider_scores,
             }
         )
+        if log:
+            case_id = case.get("case_id") or "?"
+            elapsed = time.perf_counter() - case_started
+            providers = ", ".join(
+                f"{row.get('provider')}={'pass' if row.get('passed') else 'fail'}"
+                for row in provider_scores
+            )
+            _log(
+                f"[eval] {index}/{len(cases)} {case_id} "
+                f"expected={expected} ctx={context_source}:{len(context_text)}ch "
+                f"{elapsed:.2f}s · {providers}"
+            )
     summary = {name: aggregate(items) for name, items in by_provider.items()}
-    judge_method = (
-        "LLM judge próprio (não ragas): uma chamada por métrica, nota 0–100, ask_score → 0–1. "
-        f"temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=30s. pass_threshold={pass_threshold}."
-    )
-    if cross_panel:
-        judge_method += " Cruzado às cegas: Grok pontua Gemini e Gemini pontua Grok."
-    if judge:
-        judge_method += f" Juiz terceiro: {judge_provider_name or judge.name} / {judge_model}."
-    report: dict[str, Any] = {
-        "evaluated_at": datetime.now(timezone.utc).isoformat(),
-        "method": {
+    if judge or cross_panel:
+        judge_method = (
+            "LLM judge próprio (não ragas): uma chamada JSON com correctness/grounded/completeness (0–100 → 0–1). "
+            f"temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=30s. pass_threshold={pass_threshold}."
+        )
+        if cross_panel:
+            judge_method += " Cruzado às cegas: Grok pontua Gemini e Gemini pontua Grok."
+        if judge:
+            judge_method += f" Juiz terceiro: {judge_provider_name or judge.name} / {judge_model}."
+        method = {
             "correctness": "LLM: mesma key facts que a referência (0–100). Recusa esperada e sem contexto ficam fora.",
             "completeness": "LLM: cobertura de todos os pontos da referência; extra correcto não penaliza.",
             "grounded_rate": "LLM: fracção das afirmações suportadas pelos chunks juntos com \\n\\n---\\n\\n.",
             "pass_rate": f"% dos casos pontuados com correctness ≥ {pass_threshold} (só correctness).",
             "judge": judge_method,
-        },
+            "scoring": "llm_judge",
+        }
+    else:
+        method = {
+            "correctness": "Lexical: number recall + unit coverage vs referência.",
+            "completeness": "Lexical: cobertura de unidades da referência na resposta.",
+            "grounded_rate": "Lexical: fracção de unidades da resposta cobertas pelo contexto.",
+            "pass_rate": f"% dos casos com correctness ≥ {pass_threshold} (só correctness).",
+            "judge": "desligado — só métricas lexicais locais (sem chamadas LLM).",
+            "scoring": "lexical",
+        }
+    if log:
+        parts = [
+            f"{name}=pass_rate={stats.get('pass_rate')}"
+            for name, stats in summary.items()
+        ]
+        _log(f"[eval] concluído em {time.perf_counter() - started:.1f}s · {' '.join(parts)}")
+    report: dict[str, Any] = {
+        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        "method": method,
         "pass_threshold": pass_threshold,
         "models": payload.get("models"),
         "summary": summary,
@@ -224,6 +271,13 @@ def evaluate_path(
             judge_provider_name = settings.judge_provider
         if use_cross_judge:
             cross_panel = make_cross_panel(settings)
+    modes = ["lexical"]
+    if use_judge:
+        modes.append("judge")
+    if use_cross_judge:
+        modes.append("cross-judge")
+    _log(f"[eval] {run_path.name} → scoring={' + '.join(modes)}")
+    started = time.perf_counter()
     report = evaluate_payload(
         payload,
         chunk_texts=load_chunk_texts(chunks_path),
@@ -233,9 +287,11 @@ def evaluate_path(
         judge_provider_name=judge_provider_name,
         cross_panel=cross_panel,
         pass_threshold=pass_threshold,
+        log=True,
     )
     out_path = run_path.with_name(run_path.stem + ".eval.json")
     out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    _log(f"[eval] {run_path.name} gravado em {out_path.name} ({time.perf_counter() - started:.1f}s)")
     return out_path
 
 

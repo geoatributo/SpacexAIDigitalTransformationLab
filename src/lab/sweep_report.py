@@ -14,6 +14,8 @@ from pathlib import Path
 
 METRICS = ("correctness", "grounded_rate", "completeness")
 ROOT_RUN_ID = "runs"
+REPORT_FILENAME = "report.json"
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 _RUN_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,80}")
 
 
@@ -54,6 +56,7 @@ class ConfigView:
     summary: dict
     eval_cases: list = field(default_factory=list)
     run_cases: list = field(default_factory=list)
+    scoring: str = "lexical"
 
     @property
     def label(self) -> str:
@@ -102,15 +105,17 @@ def _view_from_files(name: str, eval_path: Path, metric: dict | None = None) -> 
     report = _load_json(eval_path)
     run_path = eval_path.with_name(eval_path.name.removesuffix(".eval.json") + ".json")
     run = _load_json(run_path) if run_path.is_file() else {}
+    summary, scoring = choose_summary(report, metric)
     return ConfigView(
         name=name,
         policy=run.get("context_policy") or {},
         temperature=run.get("temperature"),
         top_p=run.get("top_p"),
         model_names=report.get("models") or run.get("models") or {},
-        summary=report.get("summary") or (metric or {}).get("summary") or {},
+        summary=summary,
         eval_cases=report.get("cases") or [],
         run_cases=run.get("cases") or [],
+        scoring=scoring,
     )
 
 
@@ -182,6 +187,41 @@ def _providers(case: dict) -> dict[str, dict]:
     return {str(row.get("provider")): row for row in case.get("providers") or []}
 
 
+def _judge_block(row: dict) -> dict | None:
+    for key in ("cross_judge", "judge"):
+        block = row.get(key)
+        if isinstance(block, dict):
+            return block
+    return None
+
+
+def provider_passed(row: dict) -> bool | None:
+    """Prefer LLM judge / cross-judge when present; else lexical ``passed``."""
+    judged = _judge_block(row)
+    if judged is not None:
+        if judged.get("unanswerable_ok") or judged.get("bucket") == "unanswerable_ok":
+            return True
+        if "passed" in judged:
+            return bool(judged["passed"])
+        return False
+    if "passed" not in row:
+        return None
+    return bool(row.get("passed"))
+
+
+def choose_summary(report: dict, metric: dict | None = None) -> tuple[dict, str]:
+    """Pick the richest available summary for charts. Prefer cross-judge, then third judge, then lexical."""
+    if report.get("summary_cross"):
+        return report["summary_cross"], "cross_judge"
+    if report.get("summary_judge"):
+        return report["summary_judge"], "judge"
+    if report.get("summary"):
+        return report["summary"], "lexical"
+    if metric and metric.get("summary"):
+        return metric["summary"], "lexical"
+    return {}, "lexical"
+
+
 def pass_code(gemini_passed: bool | None, xai_passed: bool | None) -> int | None:
     if gemini_passed is None or xai_passed is None:
         return None
@@ -224,9 +264,9 @@ def case_matrix(views: list[ConfigView], *, kind: str) -> tuple[list[str], list[
         for case_id in case_ids:
             providers = _providers(by_id.get(case_id) or {})
             if kind == "pass":
-                gemini = providers.get("gemini", {}).get("passed")
-                xai = providers.get("xai", {}).get("passed")
-                row.append(pass_code(None if gemini is None else bool(gemini), None if xai is None else bool(xai)))
+                gemini = provider_passed(providers.get("gemini") or {})
+                xai = provider_passed(providers.get("xai") or {})
+                row.append(pass_code(gemini, xai))
             else:
                 gemini = providers.get("gemini", {}).get("is_refusal")
                 xai = providers.get("xai", {}).get("is_refusal")
@@ -306,7 +346,84 @@ def _shared_cases(views: list[ConfigView]) -> tuple[list[str], list[list[int | N
     return cases, _align(cases, pass_ids, pass_rows), _align(cases, refusal_ids, refusal_rows)
 
 
+def report_pack_path(folder: Path) -> Path:
+    return folder / REPORT_FILENAME
+
+
+def load_report_pack(folder: Path) -> dict | None:
+    path = report_pack_path(folder)
+    if not path.is_file():
+        return None
+    payload = _load_json(path)
+    try:
+        return validate_report_pack(payload)
+    except ValueError:
+        return None
+
+
+def validate_report_pack(payload: object) -> dict:
+    """Require the shape Plots expects (configs + disagreement matrices)."""
+    if not isinstance(payload, dict):
+        raise ValueError("O relatório tem de ser um objeto JSON")
+    configs = payload.get("configs")
+    if not isinstance(configs, list) or not configs:
+        raise ValueError("O relatório precisa de configs não vazias")
+    cases = payload.get("cases")
+    if not isinstance(cases, list):
+        raise ValueError("O relatório precisa de uma lista cases")
+    disagreement = payload.get("disagreement")
+    if not isinstance(disagreement, dict):
+        raise ValueError("O relatório precisa de disagreement")
+    for key in ("pass", "refusal"):
+        rows = disagreement.get(key)
+        if not isinstance(rows, list):
+            raise ValueError(f"O relatório precisa de disagreement.{key}")
+    return payload
+
+
+def write_report_pack(folder: Path, out_path: Path | None = None, *, run_id: str | None = None) -> Path:
+    """Build the portable Metrics report from a run folder and write it as JSON."""
+    rid = run_id or folder.name
+    report = build_report(folder, run_id=rid)
+    dest = out_path or report_pack_path(folder)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return dest
+
+
+def save_uploaded_report(runs_root: Path, payload: object) -> dict:
+    """Validate a portable report and store it under runs_root/<UTC stamp>/report.json."""
+    report = dict(validate_report_pack(payload))
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    folder = runs_root / stamp
+    folder.mkdir(parents=True, exist_ok=False)
+    created = str(report.get("created_at") or datetime.now(timezone.utc).isoformat())
+    report["id"] = stamp
+    report["created_at"] = created
+    report_pack_path(folder).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"id": stamp, "created_at": created, "config_count": len(report["configs"])}
+
+
+def load_or_build_report(folder: Path, *, run_id: str) -> dict:
+    packed = load_report_pack(folder)
+    if packed is not None:
+        packed = dict(packed)
+        packed["id"] = run_id
+        return packed
+    return build_report(folder, run_id=run_id)
+
+
+def _config_count(folder: Path) -> int:
+    packed = load_report_pack(folder)
+    if packed is not None:
+        return len(packed["configs"])
+    return len(list(folder.glob("*.eval.json")))
+
+
 def _created_at(folder: Path) -> str:
+    packed = load_report_pack(folder)
+    if packed and packed.get("created_at"):
+        return str(packed["created_at"])
     sweeps = sorted(folder.glob("context_sweep*.json"), key=lambda item: item.stat().st_mtime)
     if sweeps:
         created = _load_json(sweeps[-1]).get("created_at")
@@ -314,24 +431,31 @@ def _created_at(folder: Path) -> str:
             return str(created)
         stamp = sweeps[-1].stat().st_mtime
     else:
-        files = list(folder.glob("*.eval.json"))
+        files = list(folder.glob("*.eval.json")) + list(folder.glob(REPORT_FILENAME))
         stamp = max((path.stat().st_mtime for path in files), default=folder.stat().st_mtime)
     return datetime.fromtimestamp(stamp, timezone.utc).isoformat()
 
 
 def _activity(folder: Path) -> float:
     files = list(folder.glob("context_sweep*.json")) + list(folder.glob("*.eval.json"))
+    pack = report_pack_path(folder)
+    if pack.is_file():
+        files.append(pack)
     if not files:
         return folder.stat().st_mtime
     return max(path.stat().st_mtime for path in files)
 
 
 def _has_metrics(folder: Path) -> bool:
-    return any(folder.glob("context_sweep*.json")) or any(folder.glob("*.eval.json"))
+    return (
+        report_pack_path(folder).is_file()
+        or any(folder.glob("context_sweep*.json"))
+        or any(folder.glob("*.eval.json"))
+    )
 
 
 def list_runs(runs_root: Path) -> list[dict]:
-    """Subfolders with a sweep or an eval file, newest first. The flat runs folder is included too."""
+    """Subfolders with a sweep, eval, or report pack, newest first. Flat runs root included too."""
     if not runs_root.is_dir():
         return []
     folders: list[tuple[str, Path]] = []
@@ -347,7 +471,7 @@ def list_runs(runs_root: Path) -> list[dict]:
         {
             "id": run_id,
             "created_at": _created_at(folder),
-            "config_count": len(list(folder.glob("*.eval.json"))),
+            "config_count": _config_count(folder),
         }
         for run_id, folder in folders
     ]
@@ -391,16 +515,19 @@ def build_report(runs_dir: Path, *, run_id: str) -> dict:
                 "temperature": view.temperature,
                 "top_p": view.top_p,
                 "policy": view.policy,
+                "scoring": view.scoring,
                 "n": _case_count(view.summary),
                 "metrics": metrics,
                 "delta": deltas(view),
                 "cost": cost_stats(view),
             }
         )
+    scorings = {view.scoring for view in views}
     return {
         "id": run_id,
         "created_at": _created_at(runs_dir),
         "sampling_note": sampling_note(views),
+        "scoring": next(iter(scorings)) if len(scorings) == 1 else "mixed",
         "models": models,
         "configs": configs,
         "cases": cases,

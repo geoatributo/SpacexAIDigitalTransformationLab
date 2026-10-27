@@ -1,0 +1,149 @@
+[
+  {
+    "name": "top_n_1_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\top_n_1_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.7172,
+        "grounded_rate": 0.8915,
+        "completeness": 0.6621,
+        "pass_rate": 0.6984,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.7976,
+        "grounded_rate": 0.9082,
+        "completeness": 0.7322,
+        "pass_rate": 0.746,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "top_n_3_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\top_n_3_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.9049,
+        "grounded_rate": 0.9013,
+        "completeness": 0.8574,
+        "pass_rate": 0.8889,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9366,
+        "grounded_rate": 0.9416,
+        "completeness": 0.913,
+        "pass_rate": 0.9365,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "top_n_6_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\top_n_6_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.9388,
+        "grounded_rate": 0.9034,
+        "completeness": 0.9205,
+        "pass_rate": 0.9524,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9252,
+        "grounded_rate": 0.9363,
+        "completeness": 0.9081,
+        "pass_rate": 0.9365,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "top_n_10_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\top_n_10_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.8815,
+        "grounded_rate": 0.8777,
+        "completeness": 0.8703,
+        "pass_rate": 0.8889,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9267,
+        "grounded_rate": 0.9339,
+        "completeness": 0.9077,
+        "pass_rate": 0.9365,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "adjacent_3x1_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\adjacent_3x1_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.9262,
+        "grounded_rate": 0.9485,
+        "completeness": 0.9086,
+        "pass_rate": 0.9206,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9548,
+        "grounded_rate": 0.9563,
+        "completeness": 0.9324,
+        "pass_rate": 0.9524,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "adjacent_5x2_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\adjacent_5x2_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.9111,
+        "grounded_rate": 0.9195,
+        "completeness": 0.8946,
+        "pass_rate": 0.9206,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9384,
+        "grounded_rate": 0.9362,
+        "completeness": 0.9173,
+        "pass_rate": 0.9524,
+        "n": 63
+      }
+    }
+  },
+  {
+    "name": "full_top1_t01_p09",
+    "status": "ok",
+    "eval_path": "C:\\Users\\eduar\\Desktop\\xAiData\\data\\runs\\20261027T094650Z\\full_top1_t01_p09.eval.json",
+    "summary": {
+      "gemini": {
+        "correctness": 0.8412,
+        "grounded_rate": 0.9135,
+        "completeness": 0.8173,
+        "pass_rate": 0.8254,
+        "n": 63
+      },
+      "xai": {
+        "correctness": 0.9015,
+        "grounded_rate": 0.9866,
+        "completeness": 0.8729,
+        "pass_rate": 0.8889,
+        "n": 63
+      }
+    }
+  }
+]

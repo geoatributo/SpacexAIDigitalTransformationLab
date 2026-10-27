@@ -1,11 +1,12 @@
 {
-  "evaluated_at": "2026-10-27T10:09:12.913442+00:00",
+  "evaluated_at": "2026-10-27T10:21:47.029234+00:00",
   "method": {
-    "correctness": "LLM: mesma key facts que a referência (0–100). Recusa esperada e sem contexto ficam fora.",
-    "completeness": "LLM: cobertura de todos os pontos da referência; extra correcto não penaliza.",
-    "grounded_rate": "LLM: fracção das afirmações suportadas pelos chunks juntos com \\n\\n---\\n\\n.",
-    "pass_rate": "% dos casos pontuados com correctness ≥ 0.8 (só correctness).",
-    "judge": "LLM judge próprio (não ragas): uma chamada por métrica, nota 0–100, ask_score → 0–1. temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=30s. pass_threshold=0.8."
+    "correctness": "Lexical: number recall + unit coverage vs referência.",
+    "completeness": "Lexical: cobertura de unidades da referência na resposta.",
+    "grounded_rate": "Lexical: fracção de unidades da resposta cobertas pelo contexto.",
+    "pass_rate": "% dos casos com correctness ≥ 0.8 (só correctness).",
+    "judge": "desligado — só métricas lexicais locais (sem chamadas LLM).",
+    "scoring": "lexical"
   },
   "pass_threshold": 0.8,
   "models": {
@@ -14,17 +15,17 @@
   },
   "summary": {
     "gemini": {
-      "correctness": 0.8595,
-      "grounded_rate": 0.9643,
-      "completeness": 0.8371,
-      "pass_rate": 0.8571,
+      "correctness": 0.9262,
+      "grounded_rate": 0.9485,
+      "completeness": 0.9086,
+      "pass_rate": 0.9206,
       "n": 63
     },
     "xai": {
-      "correctness": 0.8595,
+      "correctness": 0.9548,
       "grounded_rate": 0.9563,
-      "completeness": 0.8371,
-      "pass_rate": 0.8571,
+      "completeness": 0.9324,
+      "pass_rate": 0.9524,
       "n": 63
     }
   },
@@ -2109,32 +2110,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
@@ -2146,32 +2147,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
@@ -2183,32 +2184,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
@@ -2220,32 +2221,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
@@ -2257,32 +2258,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
@@ -2294,32 +2295,32 @@
         {
           "provider": "gemini",
           "lexical": {
-            "correctness": 0.8,
-            "grounded_rate": 1.0,
-            "completeness": 0.5,
-            "passed": true,
-            "notes": "resposta vs referência + contexto"
+            "correctness": 0.0,
+            "grounded_rate": 0.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.8,
-          "grounded_rate": 1.0,
-          "completeness": 0.5,
-          "passed": true,
-          "notes": "resposta vs referência + contexto"
+          "correctness": 0.0,
+          "grounded_rate": 0.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "caso de recusa"
         },
         {
           "provider": "xai",
           "lexical": {
-            "correctness": 0.0,
+            "correctness": 1.0,
             "grounded_rate": 1.0,
-            "completeness": 0.0,
-            "passed": false,
-            "notes": "recusa indevida"
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
           },
-          "correctness": 0.0,
+          "correctness": 1.0,
           "grounded_rate": 1.0,
-          "completeness": 0.0,
-          "passed": false,
-          "notes": "recusa indevida"
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
         }
       ]
     },
