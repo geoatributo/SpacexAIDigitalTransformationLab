@@ -290,16 +290,21 @@ export default function Compare({ allowGeneration = false }: Props) {
     setSelectedId(filtered[next].id);
   }
 
-  async function save(nextVerdict: string) {
+  async function save(nextVerdict?: string) {
     if (!selectedId) return;
     setBusy(true);
     setError(null);
     try {
-      await api("/evaluations", {
+      const payload: { case_id: string; notes: string; verdict?: string } = {
+        case_id: selectedId,
+        notes,
+      };
+      if (nextVerdict) payload.verdict = nextVerdict;
+      const saved = await api<{ verdict: string | null }>("/evaluations", {
         method: "POST",
-        body: JSON.stringify({ case_id: selectedId, verdict: nextVerdict, notes }),
+        body: JSON.stringify(payload),
       });
-      setVerdict(nextVerdict);
+      setVerdict(saved.verdict || nextVerdict || verdict);
       await loadQuestions(selectedId);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Não foi possível guardar a avaliação.");
@@ -401,8 +406,8 @@ export default function Compare({ allowGeneration = false }: Props) {
                     {busy ? "A gerar…" : "Gerar os dois modelos"}
                   </button>
                 ) : null}
-                <a className="ghost" href={`${API_URL}/human/export.csv`}>
-                  Exportar pareceres
+                <a className="ghost" href={`${API_URL}/evaluations/report.txt`}>
+                  Descarregar relatório
                 </a>
               </div>
             </header>
@@ -484,34 +489,39 @@ export default function Compare({ allowGeneration = false }: Props) {
               </ul>
             </details>
 
-            {allowGeneration ? (
-              <section className="panel judge">
-                <h2>Avaliação humana</h2>
-                <div className="verdicts">
-                  {VERDICTS.map((item) => (
-                    <button
-                      type="button"
-                      key={item.id}
-                      className={verdict === item.id ? "ghost active" : "ghost"}
-                      disabled={busy}
-                      onClick={() => void save(item.id)}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-                <textarea
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  onKeyDown={onNotesKey}
-                  placeholder="Notas (opcional)"
-                  rows={3}
-                />
-                <p className="hint">Setas esquerda/direita mudam de pergunta. A escolha grava já as notas.</p>
-              </section>
-            ) : (
-              <p className="muted">O parecer humano (0–10, às cegas) grava-se no Firestore, no modo avaliar.</p>
-            )}
+            <section className="panel judge">
+              <h2>A sua avaliação</h2>
+              <p className="muted">Escreva o que observa nesta pergunta. As notas entram no relatório de texto.</p>
+              <div className="verdicts">
+                {VERDICTS.map((item) => (
+                  <button
+                    type="button"
+                    key={item.id}
+                    className={verdict === item.id ? "ghost active" : "ghost"}
+                    disabled={busy}
+                    onClick={() => void save(item.id)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <textarea
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                onKeyDown={onNotesKey}
+                placeholder="Notas da avaliação (obrigatório se não escolher veredicto)"
+                rows={4}
+              />
+              <div className="nav-row">
+                <button type="button" className="ghost" disabled={busy || !notes.trim()} onClick={() => void save()}>
+                  {busy ? "A gravar…" : "Guardar notas"}
+                </button>
+                <a className="ghost" href={`${API_URL}/evaluations/report.txt`}>
+                  Descarregar relatório .txt
+                </a>
+              </div>
+              <p className="hint">Setas esquerda/direita mudam de pergunta. O veredicto grava já as notas escritas.</p>
+            </section>
           </>
         )}
       </main>

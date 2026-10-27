@@ -1,5 +1,5 @@
 import { ChangeEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
-import { api, apiForm } from "./api";
+import { API_URL, api, apiForm } from "./api";
 import { formatPt } from "./metrics";
 
 type RunSummary = {
@@ -500,6 +500,9 @@ export default function Plots({ preferredRunId = "" }: PlotsProps) {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [notes, setNotes] = useState("");
+  const [notesBusy, setNotesBusy] = useState(false);
+  const [notesSavedAt, setNotesSavedAt] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -563,6 +566,47 @@ export default function Plots({ preferredRunId = "" }: PlotsProps) {
       active = false;
     };
   }, [runId]);
+
+  useEffect(() => {
+    if (!runId) {
+      setNotes("");
+      setNotesSavedAt(null);
+      return;
+    }
+    let active = true;
+    api<{ notes?: string; updated_at?: string | null }>(`/metrics/runs/${encodeURIComponent(runId)}/notes`)
+      .then((payload) => {
+        if (!active) return;
+        setNotes(payload.notes || "");
+        setNotesSavedAt(payload.updated_at || null);
+      })
+      .catch(() => {
+        if (!active) return;
+        setNotes("");
+        setNotesSavedAt(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [runId]);
+
+  async function saveNotes() {
+    if (!runId) return;
+    setNotesBusy(true);
+    setError("");
+    try {
+      const saved = await api<{ notes: string; updated_at: string }>(
+        `/metrics/runs/${encodeURIComponent(runId)}/notes`,
+        { method: "POST", body: JSON.stringify({ notes }) },
+      );
+      setNotes(saved.notes);
+      setNotesSavedAt(saved.updated_at);
+    } catch (exc) {
+      setError(exc instanceof Error ? exc.message : String(exc));
+    } finally {
+      setNotesBusy(false);
+    }
+  }
 
   const providers = useMemo(() => (report ? providersOf(report) : []), [report]);
   const deltaValues = report
@@ -628,6 +672,9 @@ export default function Plots({ preferredRunId = "" }: PlotsProps) {
         >
           Informação
         </button>
+        <a className="ghost" href={`${API_URL}/evaluations/report.txt`}>
+          Descarregar relatório
+        </a>
       </div>
       {showInfo ? (
         <section className="panel metrics-wide metrics-info">
@@ -830,6 +877,29 @@ export default function Plots({ preferredRunId = "" }: PlotsProps) {
             cases={report.cases}
             rows={report.disagreement.refusal}
           />
+
+          <section className="panel metrics-wide judge">
+            <h2>A sua avaliação desta corrida</h2>
+            <p className="muted">
+              Escreva observações sobre os gráficos e as métricas. Estas notas entram no relatório de texto junto com
+              Comparar e Avaliar.
+            </p>
+            <textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              placeholder="Notas da avaliação (opcional)"
+              rows={5}
+            />
+            <div className="nav-row">
+              <button type="button" className="ghost" disabled={notesBusy || !runId} onClick={() => void saveNotes()}>
+                {notesBusy ? "A gravar…" : "Guardar notas"}
+              </button>
+              <a className="ghost" href={`${API_URL}/evaluations/report.txt`}>
+                Descarregar relatório .txt
+              </a>
+              {notesSavedAt ? <span className="muted">Guardado: {notesSavedAt}</span> : null}
+            </div>
+          </section>
         </>
       ) : null}
     </div>
