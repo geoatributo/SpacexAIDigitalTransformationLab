@@ -1,7 +1,8 @@
 """Pack a run folder into one portable Metrics report JSON.
 
 The file contains everything the Metrics page needs (scores, deltas, cost,
-pass/refusal disagreement). Upload it via POST /metrics/runs/upload.
+pass/refusal disagreement). Metrics are not preloaded from data/runs — upload
+the packed JSON via POST /metrics/runs/upload (stored under data/metrics/).
 
 Example:
   python scripts/pack_metrics_report.py --run-dir data/runs/20261026T172740Z

@@ -48,7 +48,7 @@ from lab.providers.base import ChatProvider
 from lab.sweep_report import (
     MAX_UPLOAD_BYTES,
     list_runs,
-    load_or_build_report,
+    load_uploaded_report,
     resolve_run_dir,
     save_uploaded_report,
 )
@@ -400,7 +400,7 @@ def rerun(case_id: str) -> dict[str, Any]:
 
 @app.get("/metrics/runs")
 def metrics_runs() -> list[dict[str, Any]]:
-    return list_runs(state.settings.runs_dir)
+    return list_runs(state.settings.metrics_dir)
 
 
 @app.post("/metrics/runs/upload")
@@ -415,7 +415,7 @@ async def metrics_upload(file: UploadFile = File(...)) -> dict[str, Any]:
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise HTTPException(status_code=400, detail="JSON inválido") from exc
     try:
-        return save_uploaded_report(state.settings.runs_dir, payload)
+        return save_uploaded_report(state.settings.metrics_dir, payload)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except FileExistsError as exc:
@@ -425,8 +425,8 @@ async def metrics_upload(file: UploadFile = File(...)) -> dict[str, Any]:
 @app.get("/metrics/runs/{run_id}")
 def metrics_run(run_id: str) -> dict[str, Any]:
     try:
-        folder = resolve_run_dir(state.settings.runs_dir, run_id)
-        return load_or_build_report(folder, run_id=run_id)
+        folder = resolve_run_dir(state.settings.metrics_dir, run_id)
+        return load_uploaded_report(folder, run_id=run_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=f"Corrida desconhecida: {run_id}") from exc
 

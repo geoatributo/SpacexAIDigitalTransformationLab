@@ -93,3 +93,81 @@ def test_evaluate_payload_cross_judge_is_blind_and_swapped() -> None:
     assert report["summary_cross"]["gemini"]["n"] == 1
     assert report["summary_cross"]["gemini"]["n_unanswerable_ok"] == 1
     assert report["cases"][1]["providers"][0]["cross_judge"]["bucket"] == "unanswerable_ok"
+
+
+def test_evaluate_payload_parallel_workers_match_sequential() -> None:
+    def panel_pair():
+        return CrossJudgePanel(
+            judges={
+                "gemini": (RecordingJudge("gemini"), "gemini-flash-lite-latest"),
+                "xai": (RecordingJudge("xai"), "grok-latest"),
+            }
+        )
+
+    payload = {
+        "models": {"gemini": "gemini-flash-lite-latest", "xai": "grok-latest"},
+        "cases": [
+            {
+                "case_id": f"gold-{i:02d}",
+                "question": "Qual o limite?",
+                "expected_behavior": "answer",
+                "reference_answer": "25 MB",
+                "chunk_ids": ["c1"],
+                "providers": [
+                    {"provider": "gemini", "visible_text": "O limite é 25 MB.", "is_refusal": False, "error": None},
+                    {"provider": "xai", "visible_text": "Limite de 25 MB.", "is_refusal": False, "error": None},
+                ],
+            }
+            for i in range(1, 4)
+        ],
+    }
+    sequential = evaluate_payload(
+        payload, chunk_texts={"c1": "O limite é 25 MB."}, cross_panel=panel_pair(), lexical=False, workers=1
+    )
+    parallel = evaluate_payload(
+        payload, chunk_texts={"c1": "O limite é 25 MB."}, cross_panel=panel_pair(), lexical=False, workers=4
+    )
+    assert sequential["summary_cross"]["gemini"]["n"] == parallel["summary_cross"]["gemini"]["n"] == 3
+    assert all(case["providers"][0]["cross_judge"]["passed"] for case in parallel["cases"])
+
+
+def test_evaluate_payload_judge_only_skips_lexical() -> None:
+    gemini = RecordingJudge("gemini")
+    xai = RecordingJudge("xai")
+    panel = CrossJudgePanel(
+        judges={
+            "gemini": (gemini, "gemini-flash-lite-latest"),
+            "xai": (xai, "grok-latest"),
+        }
+    )
+    payload = {
+        "models": {"gemini": "gemini-flash-lite-latest", "xai": "grok-latest"},
+        "cases": [
+            {
+                "case_id": "gold-01",
+                "question": "Qual o limite?",
+                "expected_behavior": "answer",
+                "reference_answer": "25 MB",
+                "chunk_ids": ["c1"],
+                "providers": [
+                    {"provider": "gemini", "visible_text": "O limite é 25 MB.", "is_refusal": False, "error": None},
+                    {"provider": "xai", "visible_text": "Limite de 25 MB.", "is_refusal": False, "error": None},
+                ],
+            }
+        ],
+    }
+    report = evaluate_payload(
+        payload,
+        chunk_texts={"c1": "O limite é 25 MB."},
+        cross_panel=panel,
+        lexical=False,
+    )
+    assert report["summary"] == {}
+    assert report["method"]["scoring"] == "cross_judge"
+    assert report["method"]["lexical"] is False
+    row = report["cases"][0]["providers"][0]
+    assert "lexical" not in row
+    assert "passed" not in row
+    assert row["cross_judge"]["passed"] is True
+    assert len(xai.calls) == 1
+    assert len(gemini.calls) == 1

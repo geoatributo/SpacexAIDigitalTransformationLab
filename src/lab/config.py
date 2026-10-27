@@ -75,6 +75,7 @@ class Settings:
     context_char_cap: int
     data_dir: Path
     runs_dir: Path
+    metrics_dir: Path
     gold_path: Path
     retrieval_path: Path
     chunks_path: Path
@@ -100,6 +101,7 @@ def load_settings(*, require_keys: bool = True) -> Settings:
         context_char_cap=9000,
         data_dir=data_dir,
         runs_dir=data_dir / "runs",
+        metrics_dir=data_dir / "metrics",
         gold_path=data_dir / "geoatributo_base2_gold_questions_p4_merged.json",
         retrieval_path=data_dir / "chunk_data" / "retrieval.json",
         chunks_path=data_dir / "chunk_data" / "chunks.json",

@@ -55,7 +55,14 @@ def _entry_unit_float(entry: dict, key: str, *, low: float, high: float, low_exc
     return value
 
 
-def _lab_argv(entry: dict, *, limit: int, dry_run: bool, runs_dir: Path | None = None) -> list[str]:
+def _lab_argv(
+    entry: dict,
+    *,
+    limit: int,
+    dry_run: bool,
+    runs_dir: Path | None = None,
+    case_workers: int | None = None,
+) -> list[str]:
     argv = [sys.executable, "-m", "lab", "--limit", str(entry.get("limit", limit))]
     argv.extend(["--context-mode", str(entry["context_mode"])])
     resolved_k = _resolve_top_k(entry)
@@ -71,6 +78,9 @@ def _lab_argv(entry: dict, *, limit: int, dry_run: bool, runs_dir: Path | None =
         argv.extend(["--temperature", str(temperature)])
     if top_p is not None:
         argv.extend(["--top-p", str(top_p)])
+    workers = entry.get("case_workers", case_workers)
+    if workers is not None:
+        argv.extend(["--case-workers", str(int(workers))])
     if entry.get("name"):
         argv.extend(["--run-name", str(entry["name"])])
     if runs_dir is not None:
@@ -263,7 +273,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description="Corre várias configurações de contexto em paralelo (python -m lab)."
     )
     parser.add_argument("--configs", type=Path, default=DEFAULT_CONFIGS, help="JSON com a lista de configs.")
-    parser.add_argument("--jobs", type=int, default=os.cpu_count() or 2, help="Processos em paralelo.")
+    parser.add_argument("--jobs", type=int, default=os.cpu_count() or 2, help="Configs em paralelo (processos).")
+    parser.add_argument(
+        "--case-workers",
+        type=int,
+        default=32,
+        help="Perguntas em paralelo dentro de cada config (default 32).",
+    )
     parser.add_argument("--limit", type=int, default=None, help="Override do limit global do JSON.")
     parser.add_argument("--live", action="store_true", help="Chama Gemini/xAI (por defeito é dry-run).")
     parser.add_argument(
@@ -303,7 +319,16 @@ def main(argv: list[str] | None = None) -> int:
         jobs = max(1, min(args.jobs, len(entries) or 1))
         try:
             payloads = [
-                {"name": name, "argv": _lab_argv(entry, limit=limit, dry_run=dry_run, runs_dir=run_dir)}
+                {
+                    "name": name,
+                    "argv": _lab_argv(
+                        entry,
+                        limit=limit,
+                        dry_run=dry_run,
+                        runs_dir=run_dir,
+                        case_workers=args.case_workers,
+                    ),
+                }
                 for name, entry in zip(names, entries, strict=True)
             ]
         except ValueError as exc:

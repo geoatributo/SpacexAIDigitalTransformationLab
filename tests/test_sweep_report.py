@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -8,6 +7,7 @@ from lab.sweep_report import (
     build_report,
     list_runs,
     load_or_build_report,
+    load_uploaded_report,
     resolve_run_dir,
     save_uploaded_report,
     validate_report_pack,
@@ -126,25 +126,10 @@ def _fill(folder: Path) -> None:
 
 
 def test_report_orders_configs_and_scores_disagreement(tmp_path: Path) -> None:
-    root = tmp_path / "runs"
-    older = root / "20260101T000000Z"
-    newer = root / "20260102T000000Z"
-    _fill(older)
-    _fill(newer)
-    _write(root / "flat.eval.json", _eval(1, 1, [_case("gold-01", _passed(True, True))]))
-    _write(root / "flat.json", {"temperature": 0.2, "top_p": 0.5, "context_policy": {"mode": "top_n", "top_n": 6}, "cases": []})
-    for path in older.iterdir():
-        os.utime(path, (1_500_000_000, 1_500_000_000))
-    for path in newer.iterdir():
-        os.utime(path, (2_000_000_000, 2_000_000_000))
-    os.utime(root / "flat.eval.json", (1_400_000_000, 1_400_000_000))
+    folder = tmp_path / "20260102T000000Z"
+    _fill(folder)
 
-    listed = list_runs(root)
-    assert [row["id"] for row in listed] == ["20260102T000000Z", "20260101T000000Z", "runs"]
-    assert listed[0]["config_count"] == 2
-    assert listed[0]["created_at"] == "2026-01-02T00:00:00+00:00"
-
-    report = build_report(resolve_run_dir(root, "20260102T000000Z"), run_id="20260102T000000Z")
+    report = build_report(folder, run_id="20260102T000000Z")
     assert [row["name"] for row in report["configs"]] == ["top1", "adjacent"]
     assert report["configs"][0]["label"] == "Top 1"
     assert report["configs"][1]["title"] == "Top 3 chunks with 1 adjacent, T=0.1, top_p=0.9"
@@ -158,6 +143,12 @@ def test_report_orders_configs_and_scores_disagreement(tmp_path: Path) -> None:
     assert report["disagreement"]["refusal"] == [[0, 2], [0, 3]]
     assert report["configs"][0]["cost"]["gemini"]["median_s"] == 2
     assert "pass_rate" not in report["configs"][0]
+
+
+def test_list_runs_ignores_eval_folders_without_pack(tmp_path: Path) -> None:
+    root = tmp_path / "metrics"
+    _fill(root / "20260102T000000Z")
+    assert list_runs(root) == []
 
 
 def test_unknown_run_is_rejected(tmp_path: Path) -> None:
@@ -183,16 +174,17 @@ def test_write_and_load_report_pack(tmp_path: Path) -> None:
 
 
 def test_list_runs_includes_pack_only_folder(tmp_path: Path) -> None:
-    root = tmp_path / "runs"
+    root = tmp_path / "metrics"
     source = tmp_path / "source"
     _fill(source)
-    report = build_report(source, run_id="source")
+    report = build_report(source, run_id="Gemini vs Grok")
     saved = save_uploaded_report(root, report)
     listed = list_runs(root)
     assert listed[0]["id"] == saved["id"]
+    assert listed[0]["label"] == "Gemini vs Grok"
     assert listed[0]["config_count"] == 2
-    loaded = load_or_build_report(resolve_run_dir(root, saved["id"]), run_id=saved["id"])
-    assert loaded["id"] == saved["id"]
+    loaded = load_uploaded_report(resolve_run_dir(root, saved["id"]), run_id=saved["id"])
+    assert loaded["id"] == "Gemini vs Grok"
     assert loaded["disagreement"]["pass"] == report["disagreement"]["pass"]
 
 

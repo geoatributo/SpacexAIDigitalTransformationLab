@@ -4,6 +4,7 @@ import { formatPt } from "./metrics";
 
 type RunSummary = {
   id: string;
+  label?: string;
   created_at: string;
   config_count: number;
 };
@@ -643,7 +644,7 @@ export default function Plots({ preferredRunId = "" }: PlotsProps) {
             <option value="">{runs.length ? "Escolher uma corrida…" : "Nenhuma corrida"}</option>
             {runs.map((run) => (
               <option key={run.id} value={run.id}>
-                {run.id} · {run.config_count} configs
+                {run.label || run.id} · {run.config_count} configs
               </option>
             ))}
           </select>
