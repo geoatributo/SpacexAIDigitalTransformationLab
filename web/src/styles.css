@@ -106,6 +106,15 @@ body,
   gap: 6px;
 }
 
+.start-actions .nav-row {
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.start-actions .nav-row .ghost {
+  min-height: 44px;
+}
+
 .app-bar {
   display: flex;
   justify-content: space-between;

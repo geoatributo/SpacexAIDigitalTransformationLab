@@ -4,12 +4,15 @@ import Chat from "./Chat";
 import Compare from "./Compare";
 import Gate from "./Gate";
 import Plots from "./Plots";
+import Start from "./Start";
 import { api } from "./api";
 import { clearSession, loadSession, type Session } from "./session";
 
 type View = "eval" | "compare" | "metrics" | "chat";
 
 export default function App() {
+  const [passedStart, setPassedStart] = useState(false);
+  const [preferredRunId, setPreferredRunId] = useState("");
   const [session, setSession] = useState<Session | null>(() => loadSession());
   const [allowGeneration, setAllowGeneration] = useState(false);
   const [view, setView] = useState<View>("metrics");
@@ -23,6 +26,27 @@ export default function App() {
   function enter(next: Session) {
     setSession(next);
     setView(next.mode === "rate" ? "eval" : "metrics");
+  }
+
+  if (!passedStart) {
+    return (
+      <div className="app-root">
+        <header className="app-bar">
+          <strong>Goldilocks RAG</strong>
+        </header>
+        <Start
+          onUseExisting={() => {
+            setPreferredRunId("");
+            setPassedStart(true);
+          }}
+          onUploaded={(runId) => {
+            setPreferredRunId(runId);
+            setPassedStart(true);
+            setView("metrics");
+          }}
+        />
+      </div>
+    );
   }
 
   if (!session) {
@@ -66,6 +90,8 @@ export default function App() {
             onClick={() => {
               clearSession();
               setSession(null);
+              setPassedStart(false);
+              setPreferredRunId("");
             }}
           >
             Sair
@@ -73,7 +99,7 @@ export default function App() {
         </span>
       </header>
       {view === "eval" && session.mode === "rate" ? <BlindEval session={session} /> : null}
-      {view === "metrics" ? <Plots /> : null}
+      {view === "metrics" ? <Plots preferredRunId={preferredRunId} /> : null}
       {view === "compare" ? <Compare allowGeneration={allowGeneration} /> : null}
       {view === "chat" && allowGeneration ? <Chat /> : null}
     </div>
