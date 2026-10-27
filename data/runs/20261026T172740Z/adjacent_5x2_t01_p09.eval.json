@@ -1,0 +1,2364 @@
+{
+  "evaluated_at": "2026-10-27T10:08:22.114464+00:00",
+  "method": {
+    "correctness": "LLM: mesma key facts que a referência (0–100). Recusa esperada e sem contexto ficam fora.",
+    "completeness": "LLM: cobertura de todos os pontos da referência; extra correcto não penaliza.",
+    "grounded_rate": "LLM: fracção das afirmações suportadas pelos chunks juntos com \\n\\n---\\n\\n.",
+    "pass_rate": "% dos casos pontuados com correctness ≥ 0.8 (só correctness).",
+    "judge": "LLM judge próprio (não ragas): uma chamada por métrica, nota 0–100, ask_score → 0–1. temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=30s. pass_threshold=0.8."
+  },
+  "pass_threshold": 0.8,
+  "models": {
+    "gemini": "gemini-4-argon",
+    "xai": "grok-4.7"
+  },
+  "summary": {
+    "gemini": {
+      "correctness": 0.9425,
+      "grounded_rate": 0.8592,
+      "completeness": 0.9276,
+      "pass_rate": 0.9524,
+      "n": 63
+    },
+    "xai": {
+      "correctness": 0.9311,
+      "grounded_rate": 0.9506,
+      "completeness": 0.9208,
+      "pass_rate": 0.9365,
+      "n": 63
+    }
+  },
+  "cases": [
+    {
+      "case_id": "gold-01",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8889,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8889,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-02",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-03",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-04",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-05",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-06",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-07",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8889,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8889,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.92,
+            "grounded_rate": 1.0,
+            "completeness": 0.8,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.92,
+          "grounded_rate": 1.0,
+          "completeness": 0.8,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-08",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-09",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-10",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-11",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.8667,
+            "grounded_rate": 0.75,
+            "completeness": 0.6667,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.8667,
+          "grounded_rate": 0.75,
+          "completeness": 0.6667,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.8667,
+            "grounded_rate": 0.75,
+            "completeness": 0.6667,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.8667,
+          "grounded_rate": 0.75,
+          "completeness": 0.6667,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-12",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8571,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8571,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-13",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.8,
+            "grounded_rate": 1.0,
+            "completeness": 0.5,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.8,
+          "grounded_rate": 1.0,
+          "completeness": 0.5,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.8,
+            "grounded_rate": 1.0,
+            "completeness": 0.5,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.8,
+          "grounded_rate": 1.0,
+          "completeness": 0.5,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-14",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-15",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.6,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.6,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-16",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.9,
+            "grounded_rate": 1.0,
+            "completeness": 0.75,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.9,
+          "grounded_rate": 1.0,
+          "completeness": 0.75,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-17",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-18",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8333,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8333,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-19",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-20",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-21",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-22",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.9429,
+            "grounded_rate": 1.0,
+            "completeness": 0.8571,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.9429,
+          "grounded_rate": 1.0,
+          "completeness": 0.8571,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.9429,
+            "grounded_rate": 1.0,
+            "completeness": 0.8571,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.9429,
+          "grounded_rate": 1.0,
+          "completeness": 0.8571,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-23",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-24",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.6667,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.6667,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-25",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-26",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.9286,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.9286,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-27",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.913,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.913,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.9714,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.9714,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-28",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8889,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8889,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.9,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.9,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-29",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.9231,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.9231,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-30",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-31",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-32",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-33",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-34",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-35",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-36",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-37",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.6,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.6,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-38",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-39",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-40",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.5,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.5,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-41",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-42",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.6,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.6,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-43",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-44",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-45",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-46",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.5,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.5,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-47",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8333,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8333,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-48",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-49",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "gold-50",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.7143,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.7143,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.92,
+            "grounded_rate": 1.0,
+            "completeness": 0.8,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.92,
+          "grounded_rate": 1.0,
+          "completeness": 0.8,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F8",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F9",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.8,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.8,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.4286,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.4286,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F10",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.7,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.7,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L7",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.2101,
+            "grounded_rate": 1.0,
+            "completeness": 0.3889,
+            "passed": false,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.2101,
+          "grounded_rate": 1.0,
+          "completeness": 0.3889,
+          "passed": false,
+          "notes": "resposta vs referência + contexto"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L8",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.8667,
+            "grounded_rate": 0.8333,
+            "completeness": 0.6667,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 0.8667,
+          "grounded_rate": 0.8333,
+          "completeness": 0.6667,
+          "passed": true,
+          "notes": "resposta vs referência + contexto"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 1.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "recusa indevida"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 1.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "recusa indevida"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L9",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 1.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "recusa indevida"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 1.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "recusa indevida"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 1.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "recusa indevida"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 1.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "recusa indevida"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R1",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R2",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R3",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 0.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "caso de recusa"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 0.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 0.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "caso de recusa"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 0.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R4",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R5",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R6",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 0.0,
+            "grounded_rate": 0.0,
+            "completeness": 0.0,
+            "passed": false,
+            "notes": "caso de recusa"
+          },
+          "correctness": 0.0,
+          "grounded_rate": 0.0,
+          "completeness": 0.0,
+          "passed": false,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    },
+    {
+      "case_id": "refuse-empty",
+      "expected_behavior": "refuse",
+      "context_source": "empty",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa"
+        }
+      ]
+    }
+  ]
+}
