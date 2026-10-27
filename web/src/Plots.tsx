@@ -490,7 +490,9 @@ function Heatmap({
   );
 }
 
-export default function Plots() {
+type PlotsProps = { preferredRunId?: string };
+
+export default function Plots({ preferredRunId = "" }: PlotsProps) {
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [runId, setRunId] = useState("");
   const [report, setReport] = useState<Report | null>(null);
@@ -506,7 +508,7 @@ export default function Plots() {
       .then((rows) => {
         if (!active) return;
         setRuns(rows);
-        setRunId((current) => current || rows[0]?.id || "");
+        setRunId((current) => preferredRunId || current || "");
         setLoading(false);
       })
       .catch((exc: Error) => {
@@ -517,7 +519,11 @@ export default function Plots() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [preferredRunId]);
+
+  useEffect(() => {
+    if (preferredRunId) setRunId(preferredRunId);
+  }, [preferredRunId]);
 
   async function onUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -590,7 +596,7 @@ export default function Plots() {
         <label className="provider">
           Corrida
           <select value={runId} onChange={(event) => setRunId(event.target.value)} disabled={!runs.length}>
-            {runs.length ? null : <option value="">Nenhuma corrida</option>}
+            <option value="">{runs.length ? "Escolher uma corrida…" : "Nenhuma corrida"}</option>
             {runs.map((run) => (
               <option key={run.id} value={run.id}>
                 {run.id} · {run.config_count} configs
@@ -657,7 +663,10 @@ export default function Plots() {
 
       {loading ? <p className="muted">A carregar…</p> : null}
       {error ? <p className="muted">{error}</p> : null}
-      {!loading && !error && !runs.length ? <p className="muted">Nenhuma corrida com métricas.</p> : null}
+      {!loading && !error && !runs.length ? <p className="muted">Nenhuma corrida com métricas. Use «Carregar relatório» ou volte ao início e escolha um JSON.</p> : null}
+      {!loading && !error && runs.length && !runId ? (
+        <p className="muted">Escolha uma corrida ou carregue um documento JSON.</p>
+      ) : null}
 
       {report ? (
         <>

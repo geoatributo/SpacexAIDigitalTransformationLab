@@ -1,0 +1,826 @@
+{
+  "evaluated_at": "2026-10-26T15:32:35.677111+00:00",
+  "method": {
+    "correctness": "LLM: mesma key facts que a referência (0–100). Recusa esperada e sem contexto ficam fora.",
+    "completeness": "LLM: cobertura de todos os pontos da referência; extra correcto não penaliza.",
+    "grounded_rate": "LLM: fracção das afirmações suportadas pelos chunks juntos com \\n\\n---\\n\\n.",
+    "pass_rate": "% dos casos pontuados com correctness ≥ 0.8 (só correctness).",
+    "judge": "LLM judge próprio (não ragas): uma chamada por métrica, nota 0–100, ask_score → 0–1. temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=30s. pass_threshold=0.8. Cruzado às cegas: Grok pontua Gemini e Gemini pontua Grok."
+  },
+  "pass_threshold": 0.8,
+  "models": {
+    "gemini": "gemini-3.5-flash-lite",
+    "xai": "grok-4"
+  },
+  "summary": {
+    "gemini": {
+      "correctness": 1.0,
+      "grounded_rate": 0.7917,
+      "completeness": 1.0,
+      "pass_rate": 1.0,
+      "n": 6
+    },
+    "xai": {
+      "correctness": 1.0,
+      "grounded_rate": 0.9792,
+      "completeness": 1.0,
+      "pass_rate": 1.0,
+      "n": 6
+    }
+  },
+  "cases": [
+    {
+      "case_id": "gold-01",
+      "expected_behavior": "answer",
+      "context_source": "store_fallback",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.75,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.75,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 7614,
+                "usage": {
+                  "prompt_tokens": 1525,
+                  "completion_tokens": 1,
+                  "total_tokens": 2104
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 21876,
+                "usage": {
+                  "prompt_tokens": 2525,
+                  "completion_tokens": 1,
+                  "total_tokens": 4349
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 4860,
+                "usage": {
+                  "prompt_tokens": 1550,
+                  "completion_tokens": 1,
+                  "total_tokens": 2066
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1166,
+                "usage": {
+                  "prompt_tokens": 317,
+                  "completion_tokens": 3,
+                  "total_tokens": 320
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 917,
+                "usage": {
+                  "prompt_tokens": 1352,
+                  "completion_tokens": 3,
+                  "total_tokens": 1355
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 913,
+                "usage": {
+                  "prompt_tokens": 343,
+                  "completion_tokens": 3,
+                  "total_tokens": 346
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-02",
+      "expected_behavior": "answer",
+      "context_source": "store_fallback",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 4296,
+                "usage": {
+                  "prompt_tokens": 1438,
+                  "completion_tokens": 1,
+                  "total_tokens": 1842
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 6966,
+                "usage": {
+                  "prompt_tokens": 2376,
+                  "completion_tokens": 1,
+                  "total_tokens": 3019
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 5348,
+                "usage": {
+                  "prompt_tokens": 1463,
+                  "completion_tokens": 1,
+                  "total_tokens": 1992
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 843,
+                "usage": {
+                  "prompt_tokens": 211,
+                  "completion_tokens": 3,
+                  "total_tokens": 214
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 810,
+                "usage": {
+                  "prompt_tokens": 1177,
+                  "completion_tokens": 3,
+                  "total_tokens": 1180
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 916,
+                "usage": {
+                  "prompt_tokens": 237,
+                  "completion_tokens": 3,
+                  "total_tokens": 240
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-03",
+      "expected_behavior": "answer",
+      "context_source": "store_fallback",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 1.0,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 0.85,
+                "raw_text": "85",
+                "error": null,
+                "latency_ms": 14023,
+                "usage": {
+                  "prompt_tokens": 1490,
+                  "completion_tokens": 1,
+                  "total_tokens": 2860
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 5487,
+                "usage": {
+                  "prompt_tokens": 2521,
+                  "completion_tokens": 1,
+                  "total_tokens": 3191
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 0.85,
+                "raw_text": "85",
+                "error": null,
+                "latency_ms": 47082,
+                "usage": {
+                  "prompt_tokens": 1515,
+                  "completion_tokens": 1,
+                  "total_tokens": 2883
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1274,
+                "usage": {
+                  "prompt_tokens": 262,
+                  "completion_tokens": 3,
+                  "total_tokens": 265
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 838,
+                "usage": {
+                  "prompt_tokens": 1336,
+                  "completion_tokens": 3,
+                  "total_tokens": 1339
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 912,
+                "usage": {
+                  "prompt_tokens": 288,
+                  "completion_tokens": 3,
+                  "total_tokens": 291
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-04",
+      "expected_behavior": "answer",
+      "context_source": "store_fallback",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 1.0,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 0.9,
+                "raw_text": "90",
+                "error": null,
+                "latency_ms": 9855,
+                "usage": {
+                  "prompt_tokens": 1446,
+                  "completion_tokens": 1,
+                  "total_tokens": 2217
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 11177,
+                "usage": {
+                  "prompt_tokens": 2490,
+                  "completion_tokens": 1,
+                  "total_tokens": 3482
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 0.7,
+                "raw_text": "70",
+                "error": null,
+                "latency_ms": 57099,
+                "usage": {
+                  "prompt_tokens": 1471,
+                  "completion_tokens": 1,
+                  "total_tokens": 3284
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1191,
+                "usage": {
+                  "prompt_tokens": 262,
+                  "completion_tokens": 3,
+                  "total_tokens": 265
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1089,
+                "usage": {
+                  "prompt_tokens": 1366,
+                  "completion_tokens": 3,
+                  "total_tokens": 1369
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 707,
+                "usage": {
+                  "prompt_tokens": 288,
+                  "completion_tokens": 3,
+                  "total_tokens": 291
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-05",
+      "expected_behavior": "answer",
+      "context_source": "store_fallback",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 16707,
+                "usage": {
+                  "prompt_tokens": 1564,
+                  "completion_tokens": 1,
+                  "total_tokens": 2790
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 5400,
+                "usage": {
+                  "prompt_tokens": 2494,
+                  "completion_tokens": 1,
+                  "total_tokens": 3096
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 5192,
+                "usage": {
+                  "prompt_tokens": 1589,
+                  "completion_tokens": 1,
+                  "total_tokens": 2043
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 0.875,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "resposta vs referência + contexto"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 0.875,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "resposta vs referência + contexto",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "correctness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1111,
+                "usage": {
+                  "prompt_tokens": 349,
+                  "completion_tokens": 3,
+                  "total_tokens": 352
+                }
+              },
+              {
+                "metric": "grounded",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 764,
+                "usage": {
+                  "prompt_tokens": 1312,
+                  "completion_tokens": 3,
+                  "total_tokens": 1315
+                }
+              },
+              {
+                "metric": "completeness",
+                "score": 1.0,
+                "raw_text": "100",
+                "error": null,
+                "latency_ms": 1109,
+                "usage": {
+                  "prompt_tokens": 375,
+                  "completion_tokens": 3,
+                  "total_tokens": 378
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "refuse-empty",
+      "expected_behavior": "refuse",
+      "context_source": "empty",
+      "providers": [
+        {
+          "provider": "gemini",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-latest"
+          }
+        },
+        {
+          "provider": "xai",
+          "lexical": {
+            "correctness": 1.0,
+            "grounded_rate": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "notes": "caso de recusa"
+          },
+          "correctness": 1.0,
+          "grounded_rate": 1.0,
+          "completeness": 1.0,
+          "passed": true,
+          "notes": "caso de recusa",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-flash-lite-latest"
+          }
+        }
+      ]
+    }
+  ],
+  "cross_judge": {
+    "blind": true,
+    "pairs": {
+      "gemini": "xai",
+      "xai": "gemini"
+    },
+    "models": {
+      "gemini": "gemini-3.5-flash-lite",
+      "xai": "grok-4"
+    }
+  },
+  "summary_cross": {
+    "gemini": {
+      "correctness": 0.95,
+      "grounded_rate": 1.0,
+      "completeness": 0.91,
+      "pass_rate": 1.0,
+      "n": 5,
+      "n_unanswerable_ok": 1,
+      "n_false_refusal": 0,
+      "n_excluded": 1
+    },
+    "xai": {
+      "correctness": 1.0,
+      "grounded_rate": 1.0,
+      "completeness": 1.0,
+      "pass_rate": 1.0,
+      "n": 5,
+      "n_unanswerable_ok": 1,
+      "n_false_refusal": 0,
+      "n_excluded": 1
+    }
+  }
+}

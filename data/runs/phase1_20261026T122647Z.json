@@ -1,0 +1,267 @@
+{
+  "phase": 1,
+  "created_at": "2026-10-26T12:26:47.585346+00:00",
+  "models": {
+    "gemini": "gemini-2.5-flash-lite",
+    "xai": "grok-4"
+  },
+  "max_output_tokens": null,
+  "responses_api_supported": true,
+  "cases": [
+    {
+      "case_id": "gold-01",
+      "question": "Quais são as limitações de tamanho estabelecidas para download ou upload direto de ficheiros através da VPN e que ferramentas alternativas são propostas caso esse limite seja excedido?",
+      "empty_context": false,
+      "chunk_ids": [
+        "cf366d57-8ebe-4618-a608-a51bf8fde39a",
+        "94edfc7e-8868-4416-9092-02a55bee12db",
+        "4bdd2e87-fd1d-4c26-acf1-9070c5232528"
+      ],
+      "chunk_count": 3,
+      "expected_behavior": "answer",
+      "reference_answer": "As cópias de download ou upload direto de ficheiros através da VPN (entre o computador pessoal e o servidor) só devem ser efetuadas para ficheiros ou conjuntos de ficheiros de dimensão inferior a 25 MB. Para ficheiros ou conjuntos de ficheiros de dimensão superior a 25 MB, o manual propõe o recurso às plataformas WeTransfer ou Google Drive.",
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 1096,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "<scratchpad>\n- Pessoas/papéis envolvidos: utilizadores da VPN da GeoAtributo (sem papéis específicos mencionados).\n- Versão do documento: V52, coincide com os excertos recuperados.\n- Restrições e prazos: limitação de capacidade da VPN; sem prazos temporais.\n- Resposta realmente no texto: sim, nos excertos [1] e [2].\n</scratchpad>\n\nAs cópias (download/upload) diretas de ficheiros através da VPN só devem ser realizadas para ficheiros ou conjuntos de ficheiros com dimensão inferior a 25 MB [1]. Caso esse limite seja excedido, propõem-se as ferramentas WeTransfer ou Google Drive [1]. \n\nO processo alternativo implica aceder primeiro a um remoto (PC na GeoAtributo ou servidor remoto), copiar os dados para uma pasta na Google Drive ou WeTransfer, sair do acesso remoto e depois efetuar o download/upload no computador pessoal através do link ou pasta partilhada [2].",
+          "visible_text": "As cópias (download/upload) diretas de ficheiros através da VPN só devem ser realizadas para ficheiros ou conjuntos de ficheiros com dimensão inferior a 25 MB [1]. Caso esse limite seja excedido, propõem-se as ferramentas WeTransfer ou Google Drive [1].\n\nO processo alternativo implica aceder primeiro a um remoto (PC na GeoAtributo ou servidor remoto), copiar os dados para uma pasta na Google Drive ou WeTransfer, sair do acesso remoto e depois efetuar o download/upload no computador pessoal através do link ou pasta partilhada [2].",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 11971,
+          "usage": {
+            "prompt_tokens": 1163,
+            "completion_tokens": 207,
+            "total_tokens": 1928
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-02",
+      "question": "No acesso ao servidor de ficheiros (SAMBA), qual é o limite de tentativas de login incorretas permitido num determinado espaço de tempo e qual o correspondente período de bloqueio?",
+      "empty_context": false,
+      "chunk_ids": [
+        "cb468ddf-4bf3-473d-8db2-07c971337f00"
+      ],
+      "chunk_count": 1,
+      "expected_behavior": "answer",
+      "reference_answer": "No acesso ao servidor, existe o número máximo de quatro tentativas de login incorretas no espaço de um minuto, ficando o utilizador subsequentemente bloqueado durante 30 minutos.",
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 471,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "<scratchpad>\n- Pessoas/papéis: colaboradores da GeoAtributo\n- Versão do documento: V52, coincide com o pedido\n- Restrições/prazos: não aplicável\n- Resposta está no texto: sim, diretamente em [1]\n</scratchpad>\n\nDe acordo com o documento, no acesso ao servidor de ficheiros SAMBA existe o número máximo de quatro tentativas no espaço de um minuto, ficando subsequentemente bloqueado durante 30 minutos [1].",
+          "visible_text": "De acordo com o documento, no acesso ao servidor de ficheiros SAMBA existe o número máximo de quatro tentativas no espaço de um minuto, ficando subsequentemente bloqueado durante 30 minutos [1].",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 3728,
+          "usage": {
+            "prompt_tokens": 767,
+            "completion_tokens": 102,
+            "total_tokens": 1099
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-03",
+      "question": "No controlo de versões, que carateres e em que número exato devem ser adicionados aos nomes dos ficheiros desatualizados guardados na pasta \"old\" para registar quando se tornaram obsoletos?",
+      "empty_context": false,
+      "chunk_ids": [
+        "f79dddce-508d-4bd4-9baa-d1306a9c2ff3",
+        "e6559819-1511-436f-9989-a7bb1d31d8f7",
+        "b156121c-dd66-49d8-83de-1fbebff44198",
+        "cfcff3dd-e388-43b7-94d4-a461d1001f40",
+        "fb437630-dd8d-4501-83e2-6d12943af084",
+        "f6249e1e-09bc-47f2-8786-e6f12381b640"
+      ],
+      "chunk_count": 6,
+      "expected_behavior": "answer",
+      "reference_answer": "Aos ficheiros gravados na pasta \"old\" deverão ser adicionados, ao final do nome do ficheiro, exatamente 11 carateres para registar a data em que essa versão de tornou desatualizada (por exemplo, _2012_05_15).",
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 568,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "<scratchpad>\n- Pessoas/papéis: nenhum mencionado (procedimento geral de controlo de versões).\n- Versão do documento: V52, que coincide exatamente com os excertos [1] e [2].\n- Restrições/prazos: nenhum.\n- Resposta está no texto: sim, em [1] e [2].\n</scratchpad>\n\nDe acordo com as normas, aos ficheiros desatualizados guardados na pasta \"old\" devem ser acrescentados exatamente 11 carateres para registo da data em que a versão se tornou desatualizada, no formato _AAAA_MM_DD (ex.: _2012_05_15). [1][2] \n\nO manual não especifica a resposta para essa questão.",
+          "visible_text": "De acordo com as normas, aos ficheiros desatualizados guardados na pasta \"old\" devem ser acrescentados exatamente 11 carateres para registo da data em que a versão se tornou desatualizada, no formato _AAAA_MM_DD (ex.: _2012_05_15). [1][2]\n\nO manual não especifica a resposta para essa questão.",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 7282,
+          "usage": {
+            "prompt_tokens": 2044,
+            "completion_tokens": 159,
+            "total_tokens": 2653
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-04",
+      "question": "De acordo com as regras de padronização de registo de dados da GeoAtributo, qual é o formato numérico obrigatório para o registo de horas?",
+      "empty_context": false,
+      "chunk_ids": [
+        "0ae9a072-cd30-491a-b66d-a8e7412bdd92",
+        "26f8ee23-c04f-4820-a9d4-cd70ef84cf88",
+        "c8db50f9-1c07-46be-89cb-fe549adeb6dd",
+        "51bc466b-71c9-43bc-9633-f736c63606ae",
+        "91d86eb1-4bcc-487f-be06-bfd7caef36df",
+        "939a5d84-66d8-42fd-9cbc-0602f99c6808"
+      ],
+      "chunk_count": 6,
+      "expected_behavior": "answer",
+      "reference_answer": "No registo de horas, deve ser usado obrigatoriamente o formato numérico decimal com duas casas (por exemplo, registando 8,50 para 8 horas e 30 minutos, em vez de 8h30 ou 08:30).",
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 479,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "<scratchpad>\n- Pessoas/papéis: Não aplicável (regra geral de padronização).\n- Versão do documento: V52, coincide com o pedido (Normas_e_Procedimentos_v52.docx, secção Padronização do registo de dados).\n- Restrições/prazos: Nenhuma mencionada.\n- Resposta no texto: Sim, diretamente em [1].\n</scratchpad>\n\nDe acordo com as regras de padronização de registo de dados da GeoAtributo [1], o formato numérico obrigatório para o registo de horas é o formato numérico decimal com duas casas (exemplo: 8,50 em vez de 8h30 ou 08:30).",
+          "visible_text": "De acordo com as regras de padronização de registo de dados da GeoAtributo [1], o formato numérico obrigatório para o registo de horas é o formato numérico decimal com duas casas (exemplo: 8,50 em vez de 8h30 ou 08:30).",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 4032,
+          "usage": {
+            "prompt_tokens": 2220,
+            "completion_tokens": 151,
+            "total_tokens": 2680
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-05",
+      "question": "Quais são as regras obrigatórias de segurança e composição que os colaboradores devem respeitar ao gerar as suas palavras-passe de acesso?",
+      "empty_context": false,
+      "chunk_ids": [
+        "e138d7e8-abe1-41d6-8088-c6f248283893",
+        "1d82bfab-a23d-46e3-b4ba-366a058b2ab2",
+        "7b27c68d-cacf-4592-a89a-6671e6c6d5c8",
+        "cb468ddf-4bf3-473d-8db2-07c971337f00",
+        "d8113d0a-c6e4-463f-8a21-8beb542333d4",
+        "9a5eaa2e-9f5e-4b98-90f6-61380da6df80"
+      ],
+      "chunk_count": 6,
+      "expected_behavior": "answer",
+      "reference_answer": "Os colaboradores não devem utilizar informação pessoal simples para gerar a palavra-passe. Devem utilizar uma sequência de letras e números aleatórios com no mínimo 9 caracteres, contendo pelo menos 3 números ou letras, e sem repetir qualquer carácter.",
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 297,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "<scratchpad>\n- Pessoas/papéis: colaboradores/utilizadores da GeoAtributo\n- Versão do documento: anexo IX (referenciado na v52), coincide com o pedido\n- Restrições/prazos: cumprimento obrigatório, sem prazos específicos\n- Resposta está no texto: sim, nas boas práticas obrigatórias do anexo IX\n</scratchpad>\n\nAs regras obrigatórias de segurança e composição que os colaboradores devem respeitar ao gerar as suas palavras-passe são as seguintes:\n\n- Não usar informação pessoal (simples) para gerar a sua palavra-passe [1].\n- Usar sequência de letras e números aleatórios (no mínimo 9 caracteres, com pelo menos 3 números ou letras sem repetir qualquer carácter) [1].\n- Não partilhar as palavras-passe [1].\n- Não guardar as palavras-passe em ficheiros desprotegidos (ex. word, mesmo que com palavra-passe) nem em papel, no seu posto ou perto do seu posto de trabalho [1].\n- Se tiver de guardar a palavra-passe, utilizar um \"gestor de palavras-passe\" reconhecido ou recomendado pela organização [1].\n- O cumprimento destas boas práticas é obrigatório e ninguém está dispensado da sua observação [5].",
+          "visible_text": "As regras obrigatórias de segurança e composição que os colaboradores devem respeitar ao gerar as suas palavras-passe são as seguintes:\n\n- Não usar informação pessoal (simples) para gerar a sua palavra-passe [1].\n- Usar sequência de letras e números aleatórios (no mínimo 9 caracteres, com pelo menos 3 números ou letras sem repetir qualquer carácter) [1].\n- Não partilhar as palavras-passe [1].\n- Não guardar as palavras-passe em ficheiros desprotegidos (ex. word, mesmo que com palavra-passe) nem em papel, no seu posto ou perto do seu posto de trabalho [1].\n- Se tiver de guardar a palavra-passe, utilizar um \"gestor de palavras-passe\" reconhecido ou recomendado pela organização [1].\n- O cumprimento destas boas práticas é obrigatório e ninguém está dispensado da sua observação [5].",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 7363,
+          "usage": {
+            "prompt_tokens": 2016,
+            "completion_tokens": 259,
+            "total_tokens": 2689
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "refuse-empty",
+      "question": "Quais são as limitações de tamanho estabelecidas para download ou upload direto de ficheiros através da VPN e que ferramentas alternativas são propostas caso esse limite seja excedido?",
+      "empty_context": true,
+      "chunk_ids": [],
+      "chunk_count": 0,
+      "expected_behavior": "refuse",
+      "reference_answer": null,
+      "providers": [
+        {
+          "provider": "gemini",
+          "raw_text": "",
+          "visible_text": "",
+          "scratchpad_leaked": false,
+          "is_refusal": false,
+          "latency_ms": 704,
+          "usage": {},
+          "error": "ClientError"
+        },
+        {
+          "provider": "xai",
+          "raw_text": "O manual não especifica a resposta para essa questão.",
+          "visible_text": "O manual não especifica a resposta para essa questão.",
+          "scratchpad_leaked": false,
+          "is_refusal": true,
+          "latency_ms": 2713,
+          "usage": {
+            "prompt_tokens": 493,
+            "completion_tokens": 11,
+            "total_tokens": 760
+          },
+          "error": null,
+          "extra": {
+            "responses_api_supported": true
+          }
+        }
+      ]
+    }
+  ]
+}
