@@ -28,11 +28,12 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `9c37bed` | Tabela de estado: D1, D2 e D4 atualizados (PR #3 e #4 fundidos, merge do P4); nova secção 9c (painel e avaliação humana, divisão de trabalho, decisões do Ricardo, pontos em aberto); linha de histórico; estado do bilinguismo. / Status table D1, D2, D4 updated; new section 9c; history row; bilingual status. |
 | `98c7482` | Decisões do Ricardo de 26-10-2026 18:38: secção 9c reescrita (avaliação humana secundária, créditos aceites, descarga com identificador); tabela de estado (D2, D7, nova linha da interface); novo risco na secção 8; linha de histórico. / Ricardo's decisions: section 9c rewritten; status table (D2, D7, new interface row); new risk in section 8; history row. |
 | `751f032` | Secções sobre a chave xAI (passo 1 do «Como correr» e riscos): `CHAVE-API.md` removido, chave continua no histórico; linha de histórico. / Key sections updated: `CHAVE-API.md` removed, key remains in history; history row. |
-| (este commit / this commit) | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
+| `be0dc15` | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
+| (este commit / this commit) | Linhas D3, D7 e «Interface e painel» da tabela de estado; nota de verificação da origem dos prompts na secção 6 (ponto 4); nova secção 9d (ecrã de entrada e enquadramento prático); linha de histórico. / D3, D7 and interface rows; prompt-provenance check note in section 6; new section 9d; history row. |
 
 ## `REQUISITOS-PAINEL-AVALIACAO.md`
 
-Criado pelo assistente (`9c37bed`, 26-10-2026) por ordem expressa do Ricardo e atualizado depois com um bloco das decisões mais recentes (este commit): requisitos para o painel e a avaliação humana (para a Kerolayne) e rascunho do termo de utilização, em PT e EN, a partir das decisões do Ricardo. Não revisto juridicamente. / Created by the assistant on Ricardo's express order: dashboard and human-evaluation requirements (for Kerolayne) and draft terms of use, PT and EN, from Ricardo's decisions. Not legally reviewed.
+Criado pelo assistente (`9c37bed`, 26-10-2026) por ordem expressa do Ricardo e atualizado depois com blocos das decisões mais recentes (`98c7482`; 27-10-2026, este commit: secção 3.5, ecrã de entrada): requisitos para o painel e a avaliação humana (para a Kerolayne) e rascunho do termo de utilização, em PT e EN, a partir das decisões do Ricardo. Não revisto juridicamente. / Created by the assistant on Ricardo's express order: dashboard and human-evaluation requirements (for Kerolayne) and draft terms of use, PT and EN, from Ricardo's decisions. Not legally reviewed.
 
 ## `ORIENTACAO.md`
 
