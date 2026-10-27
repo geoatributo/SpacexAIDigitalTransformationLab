@@ -31,7 +31,8 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `be0dc15` | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
 | `001e415` | Linhas D3, D7 e «Interface e painel» da tabela de estado; nota de verificação da origem dos prompts na secção 6 (ponto 4); nova secção 9d (ecrã de entrada e enquadramento prático); linha de histórico. / D3, D7 and interface rows; prompt-provenance check note in section 6; new section 9d; history row. |
 | `5135b2e` | Decisões do Ricardo de 27-10-2026 (reutilização de conceitos do PC-IA, fundir PR #7, nova chave, raciocínio para o Eduardo); estado dos PR #6 (fundido) e #7 (conflitos). / Ricardo's 27-10 decisions; PR #6 merged, PR #7 in conflict. |
-| (este commit / this commit) | `README.md` (risco da chave e histórico) e `DECISAO-CHAVE-API.md`: chave anulada por declaração do Ricardo, não verificada. / key invalidated per Ricardo's statement, unverified. |
+| `6e1017a` | `README.md` (risco da chave e histórico) e `DECISAO-CHAVE-API.md`: chave anulada por declaração do Ricardo, não verificada. / key invalidated per Ricardo's statement, unverified. |
+| (este commit / this commit) | `README.md`: cabeçalho e título, estado das linhas D1 a D7 e da interface, nova secção 9e (fecho do evento), email da organização retirado, linha de histórico. Decisões de fecho tomadas pelo assistente por delegação do Ricardo (27-10-2026 12:34), critério: coerência com o trabalho e depois conformidade com `RULES.md`. / README header, status rows, new section 9e, organiser email removed, history row. Closing decisions by the assistant on Ricardo's delegation. |
 
 ## `REQUISITOS-PAINEL-AVALIACAO.md`
 
