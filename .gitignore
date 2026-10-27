@@ -13,3 +13,6 @@ data/human_eval.sqlite
 web/.vite/
 *-firebase-adminsdk-*.json
 serviceAccount*.json
+data/metrics/**
+!data/metrics/.gitkeep
+

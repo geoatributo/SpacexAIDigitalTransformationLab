@@ -1,0 +1,4331 @@
+{
+  "evaluated_at": "2026-10-27T11:54:31.309744+00:00",
+  "method": {
+    "correctness": "LLM: mesma key facts que a referência (0–100). Recusa esperada e sem contexto ficam fora.",
+    "completeness": "LLM: cobertura de todos os pontos da referência; extra correcto não penaliza.",
+    "grounded_rate": "LLM: fracção das afirmações suportadas pelos chunks juntos com \\n\\n---\\n\\n.",
+    "pass_rate": "% dos casos pontuados com correctness ≥ 0.8 (só correctness).",
+    "judge": "LLM judge próprio (não ragas): uma chamada JSON com correctness/grounded/completeness (0–100 → 0–1). temperature=0.2 top_p=0.95 max_output_tokens=8192 timeout=120s retries=5 backoff=exp. pass_threshold=0.8. Cruzado às cegas: Grok pontua Gemini e Gemini pontua Grok. Sem métricas lexicais (judge-only).",
+    "scoring": "cross_judge",
+    "lexical": false
+  },
+  "pass_threshold": 0.8,
+  "models": {
+    "gemini": "gemini-3.8-flash",
+    "xai": "grok-4.20-0309-non-reasoning"
+  },
+  "summary": {},
+  "cases": [
+    {
+      "case_id": "gold-01",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 33992,
+                "usage": {
+                  "prompt_tokens": 682,
+                  "completion_tokens": 21,
+                  "total_tokens": 703
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 24801,
+                "usage": {
+                  "prompt_tokens": 537,
+                  "completion_tokens": 27,
+                  "total_tokens": 855
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-02",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.8
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 10002,
+                "usage": {
+                  "prompt_tokens": 667,
+                  "completion_tokens": 21,
+                  "total_tokens": 688
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.85,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.85,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 85, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 21683,
+                "usage": {
+                  "prompt_tokens": 562,
+                  "completion_tokens": 26,
+                  "total_tokens": 972
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-03",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.8,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.8,
+                  "completeness": 0.7
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 80, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 10077,
+                "usage": {
+                  "prompt_tokens": 728,
+                  "completion_tokens": 21,
+                  "total_tokens": 749
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 23591,
+                "usage": {
+                  "prompt_tokens": 578,
+                  "completion_tokens": 27,
+                  "total_tokens": 967
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-04",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 35140,
+                "usage": {
+                  "prompt_tokens": 733,
+                  "completion_tokens": 21,
+                  "total_tokens": 754
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3875,
+                "usage": {
+                  "prompt_tokens": 605,
+                  "completion_tokens": 27,
+                  "total_tokens": 948
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-05",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.95,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.95,
+                  "completeness": 0.7
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 95, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 3998,
+                "usage": {
+                  "prompt_tokens": 802,
+                  "completion_tokens": 21,
+                  "total_tokens": 823
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 15830,
+                "usage": {
+                  "prompt_tokens": 688,
+                  "completion_tokens": 27,
+                  "total_tokens": 933
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-06",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.8
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 30548,
+                "usage": {
+                  "prompt_tokens": 678,
+                  "completion_tokens": 21,
+                  "total_tokens": 699
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3821,
+                "usage": {
+                  "prompt_tokens": 553,
+                  "completion_tokens": 27,
+                  "total_tokens": 735
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-07",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 37059,
+                "usage": {
+                  "prompt_tokens": 841,
+                  "completion_tokens": 21,
+                  "total_tokens": 862
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 12177,
+                "usage": {
+                  "prompt_tokens": 639,
+                  "completion_tokens": 27,
+                  "total_tokens": 855
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-08",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.7
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 6130,
+                "usage": {
+                  "prompt_tokens": 716,
+                  "completion_tokens": 21,
+                  "total_tokens": 737
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 21116,
+                "usage": {
+                  "prompt_tokens": 632,
+                  "completion_tokens": 27,
+                  "total_tokens": 780
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-09",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.5,
+            "grounded": 0.6,
+            "completeness": 0.5,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.5,
+                  "grounded": 0.6,
+                  "completeness": 0.5
+                },
+                "score": 0.5,
+                "raw_text": "{\"correctness\": 50, \"grounded\": 60, \"completeness\": 50}",
+                "error": null,
+                "latency_ms": 3318,
+                "usage": {
+                  "prompt_tokens": 553,
+                  "completion_tokens": 24,
+                  "total_tokens": 753
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-10",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-11",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.5,
+            "grounded": 1.0,
+            "completeness": 0.4,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.5,
+                  "grounded": 1.0,
+                  "completeness": 0.4
+                },
+                "score": 0.5,
+                "raw_text": "{\"correctness\": 50, \"grounded\": 100, \"completeness\": 40}",
+                "error": null,
+                "latency_ms": 9721,
+                "usage": {
+                  "prompt_tokens": 620,
+                  "completion_tokens": 25,
+                  "total_tokens": 1014
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-12",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 27936,
+                "usage": {
+                  "prompt_tokens": 779,
+                  "completion_tokens": 21,
+                  "total_tokens": 800
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 4330,
+                "usage": {
+                  "prompt_tokens": 664,
+                  "completion_tokens": 26,
+                  "total_tokens": 1004
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-13",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.8
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 21845,
+                "usage": {
+                  "prompt_tokens": 720,
+                  "completion_tokens": 21,
+                  "total_tokens": 741
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.85,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.85,
+                  "completeness": 1.0
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 85, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 4126,
+                "usage": {
+                  "prompt_tokens": 562,
+                  "completion_tokens": 25,
+                  "total_tokens": 870
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-14",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-15",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 18954,
+                "usage": {
+                  "prompt_tokens": 682,
+                  "completion_tokens": 21,
+                  "total_tokens": 703
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 4311,
+                "usage": {
+                  "prompt_tokens": 524,
+                  "completion_tokens": 26,
+                  "total_tokens": 767
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-16",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.6,
+            "grounded": 0.9,
+            "completeness": 0.65,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.6,
+                  "grounded": 0.9,
+                  "completeness": 0.65
+                },
+                "score": 0.6,
+                "raw_text": "{\"correctness\": 60, \"grounded\": 90, \"completeness\": 65}",
+                "error": null,
+                "latency_ms": 13400,
+                "usage": {
+                  "prompt_tokens": 838,
+                  "completion_tokens": 21,
+                  "total_tokens": 859
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-17",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 1.0,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 1.0,
+                  "completeness": 0.8
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 100, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 20070,
+                "usage": {
+                  "prompt_tokens": 630,
+                  "completion_tokens": 21,
+                  "total_tokens": 651
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 9107,
+                "usage": {
+                  "prompt_tokens": 565,
+                  "completion_tokens": 26,
+                  "total_tokens": 857
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-18",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 20812,
+                "usage": {
+                  "prompt_tokens": 733,
+                  "completion_tokens": 21,
+                  "total_tokens": 754
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3606,
+                "usage": {
+                  "prompt_tokens": 663,
+                  "completion_tokens": 27,
+                  "total_tokens": 1016
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-19",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 1.0,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 1.0,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 100, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 38129,
+                "usage": {
+                  "prompt_tokens": 647,
+                  "completion_tokens": 21,
+                  "total_tokens": 668
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.85,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.85,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 85, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 5551,
+                "usage": {
+                  "prompt_tokens": 594,
+                  "completion_tokens": 26,
+                  "total_tokens": 1129
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-20",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-21",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 36662,
+                "usage": {
+                  "prompt_tokens": 746,
+                  "completion_tokens": 21,
+                  "total_tokens": 767
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 2340,
+                "usage": {
+                  "prompt_tokens": 598,
+                  "completion_tokens": 27,
+                  "total_tokens": 709
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-22",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 38871,
+                "usage": {
+                  "prompt_tokens": 797,
+                  "completion_tokens": 21,
+                  "total_tokens": 818
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 2472,
+                "usage": {
+                  "prompt_tokens": 646,
+                  "completion_tokens": 27,
+                  "total_tokens": 736
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-23",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 23014,
+                "usage": {
+                  "prompt_tokens": 928,
+                  "completion_tokens": 21,
+                  "total_tokens": 949
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 9376,
+                "usage": {
+                  "prompt_tokens": 847,
+                  "completion_tokens": 25,
+                  "total_tokens": 1246
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-24",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.95,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.95
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 95}",
+                "error": null,
+                "latency_ms": 22981,
+                "usage": {
+                  "prompt_tokens": 687,
+                  "completion_tokens": 21,
+                  "total_tokens": 708
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 2305,
+                "usage": {
+                  "prompt_tokens": 528,
+                  "completion_tokens": 27,
+                  "total_tokens": 662
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-25",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 54652,
+                "usage": {
+                  "prompt_tokens": 707,
+                  "completion_tokens": 21,
+                  "total_tokens": 728
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 6269,
+                "usage": {
+                  "prompt_tokens": 575,
+                  "completion_tokens": 26,
+                  "total_tokens": 974
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-26",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 21570,
+                "usage": {
+                  "prompt_tokens": 985,
+                  "completion_tokens": 21,
+                  "total_tokens": 1006
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3311,
+                "usage": {
+                  "prompt_tokens": 843,
+                  "completion_tokens": 27,
+                  "total_tokens": 1092
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-27",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.75,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.75
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 75}",
+                "error": null,
+                "latency_ms": 24274,
+                "usage": {
+                  "prompt_tokens": 973,
+                  "completion_tokens": 21,
+                  "total_tokens": 994
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.92,
+            "grounded": 1.0,
+            "completeness": 0.88,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.92,
+                  "grounded": 1.0,
+                  "completeness": 0.88
+                },
+                "score": 0.92,
+                "raw_text": "{\"correctness\": 92, \"grounded\": 100, \"completeness\": 88}",
+                "error": null,
+                "latency_ms": 5309,
+                "usage": {
+                  "prompt_tokens": 932,
+                  "completion_tokens": 25,
+                  "total_tokens": 1391
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-28",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.55,
+            "grounded": 1.0,
+            "completeness": 0.5,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.55,
+                  "grounded": 1.0,
+                  "completeness": 0.5
+                },
+                "score": 0.55,
+                "raw_text": "{\"correctness\": 55, \"grounded\": 100, \"completeness\": 50}",
+                "error": null,
+                "latency_ms": 5128,
+                "usage": {
+                  "prompt_tokens": 651,
+                  "completion_tokens": 25,
+                  "total_tokens": 1060
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-29",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-30",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.7,
+            "grounded": 0.9,
+            "completeness": 0.65,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.7,
+                  "grounded": 0.9,
+                  "completeness": 0.65
+                },
+                "score": 0.7,
+                "raw_text": "{\"correctness\": 70, \"grounded\": 90, \"completeness\": 65}",
+                "error": null,
+                "latency_ms": 21491,
+                "usage": {
+                  "prompt_tokens": 780,
+                  "completion_tokens": 21,
+                  "total_tokens": 801
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.55,
+            "grounded": 1.0,
+            "completeness": 0.5,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.55,
+                  "grounded": 1.0,
+                  "completeness": 0.5
+                },
+                "score": 0.55,
+                "raw_text": "{\"correctness\": 55, \"grounded\": 100, \"completeness\": 50}",
+                "error": null,
+                "latency_ms": 9921,
+                "usage": {
+                  "prompt_tokens": 669,
+                  "completion_tokens": 24,
+                  "total_tokens": 1058
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-31",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.95,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.95
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 95}",
+                "error": null,
+                "latency_ms": 37877,
+                "usage": {
+                  "prompt_tokens": 732,
+                  "completion_tokens": 21,
+                  "total_tokens": 753
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3394,
+                "usage": {
+                  "prompt_tokens": 586,
+                  "completion_tokens": 27,
+                  "total_tokens": 857
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-32",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 39932,
+                "usage": {
+                  "prompt_tokens": 681,
+                  "completion_tokens": 21,
+                  "total_tokens": 702
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3708,
+                "usage": {
+                  "prompt_tokens": 548,
+                  "completion_tokens": 27,
+                  "total_tokens": 785
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-33",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 25246,
+                "usage": {
+                  "prompt_tokens": 768,
+                  "completion_tokens": 21,
+                  "total_tokens": 789
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 10373,
+                "usage": {
+                  "prompt_tokens": 706,
+                  "completion_tokens": 26,
+                  "total_tokens": 966
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-34",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 23914,
+                "usage": {
+                  "prompt_tokens": 724,
+                  "completion_tokens": 21,
+                  "total_tokens": 745
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 8746,
+                "usage": {
+                  "prompt_tokens": 591,
+                  "completion_tokens": 26,
+                  "total_tokens": 923
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-35",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 59043,
+                "usage": {
+                  "prompt_tokens": 713,
+                  "completion_tokens": 21,
+                  "total_tokens": 734
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 10972,
+                "usage": {
+                  "prompt_tokens": 618,
+                  "completion_tokens": 26,
+                  "total_tokens": 910
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-36",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 1.0,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 1.0,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 100, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 54393,
+                "usage": {
+                  "prompt_tokens": 665,
+                  "completion_tokens": 21,
+                  "total_tokens": 686
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 5030,
+                "usage": {
+                  "prompt_tokens": 569,
+                  "completion_tokens": 27,
+                  "total_tokens": 697
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-37",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.65,
+            "grounded": 0.75,
+            "completeness": 0.65,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.65,
+                  "grounded": 0.75,
+                  "completeness": 0.65
+                },
+                "score": 0.65,
+                "raw_text": "{\"correctness\": 65, \"grounded\": 75, \"completeness\": 65}",
+                "error": null,
+                "latency_ms": 4413,
+                "usage": {
+                  "prompt_tokens": 688,
+                  "completion_tokens": 24,
+                  "total_tokens": 1076
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-38",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 1.0,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 1.0,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 100, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 25314,
+                "usage": {
+                  "prompt_tokens": 729,
+                  "completion_tokens": 21,
+                  "total_tokens": 750
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 3155,
+                "usage": {
+                  "prompt_tokens": 678,
+                  "completion_tokens": 26,
+                  "total_tokens": 931
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-39",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.7
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 56935,
+                "usage": {
+                  "prompt_tokens": 676,
+                  "completion_tokens": 21,
+                  "total_tokens": 697
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 20317,
+                "usage": {
+                  "prompt_tokens": 605,
+                  "completion_tokens": 24,
+                  "total_tokens": 1058
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-40",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-41",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 26023,
+                "usage": {
+                  "prompt_tokens": 895,
+                  "completion_tokens": 21,
+                  "total_tokens": 916
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 12369,
+                "usage": {
+                  "prompt_tokens": 669,
+                  "completion_tokens": 27,
+                  "total_tokens": 948
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-42",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.8
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 54182,
+                "usage": {
+                  "prompt_tokens": 767,
+                  "completion_tokens": 21,
+                  "total_tokens": 788
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 8471,
+                "usage": {
+                  "prompt_tokens": 605,
+                  "completion_tokens": 27,
+                  "total_tokens": 917
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-43",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.4,
+            "grounded": 0.5,
+            "completeness": 0.35,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.4,
+                  "grounded": 0.5,
+                  "completeness": 0.35
+                },
+                "score": 0.4,
+                "raw_text": "{\"correctness\": 40, \"grounded\": 50, \"completeness\": 35}",
+                "error": null,
+                "latency_ms": 21099,
+                "usage": {
+                  "prompt_tokens": 624,
+                  "completion_tokens": 24,
+                  "total_tokens": 1222
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-44",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.6,
+            "grounded": 0.7,
+            "completeness": 0.6,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.6,
+                  "grounded": 0.7,
+                  "completeness": 0.6
+                },
+                "score": 0.6,
+                "raw_text": "{\"correctness\": 60, \"grounded\": 70, \"completeness\": 60}",
+                "error": null,
+                "latency_ms": 15676,
+                "usage": {
+                  "prompt_tokens": 647,
+                  "completion_tokens": 24,
+                  "total_tokens": 1182
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-45",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.75,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.75
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 75}",
+                "error": null,
+                "latency_ms": 55107,
+                "usage": {
+                  "prompt_tokens": 709,
+                  "completion_tokens": 21,
+                  "total_tokens": 730
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 0.95,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 0.95,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 95, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 9502,
+                "usage": {
+                  "prompt_tokens": 599,
+                  "completion_tokens": 26,
+                  "total_tokens": 1049
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-46",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 58735,
+                "usage": {
+                  "prompt_tokens": 676,
+                  "completion_tokens": 21,
+                  "total_tokens": 697
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 7959,
+                "usage": {
+                  "prompt_tokens": 576,
+                  "completion_tokens": 27,
+                  "total_tokens": 754
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-47",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.4,
+            "grounded": 0.6,
+            "completeness": 0.3,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.4,
+                  "grounded": 0.6,
+                  "completeness": 0.3
+                },
+                "score": 0.4,
+                "raw_text": "{\"correctness\": 40, \"grounded\": 60, \"completeness\": 30}",
+                "error": null,
+                "latency_ms": 53030,
+                "usage": {
+                  "prompt_tokens": 560,
+                  "completion_tokens": 21,
+                  "total_tokens": 581
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.25,
+            "grounded": 1.0,
+            "completeness": 0.25,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.25,
+                  "grounded": 1.0,
+                  "completeness": 0.25
+                },
+                "score": 0.25,
+                "raw_text": "{\"correctness\": 25, \"grounded\": 100, \"completeness\": 25}",
+                "error": null,
+                "latency_ms": 11740,
+                "usage": {
+                  "prompt_tokens": 440,
+                  "completion_tokens": 25,
+                  "total_tokens": 759
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-48",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.7,
+            "grounded": 0.85,
+            "completeness": 0.65,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.7,
+                  "grounded": 0.85,
+                  "completeness": 0.65
+                },
+                "score": 0.7,
+                "raw_text": "{\"correctness\": 70, \"grounded\": 85, \"completeness\": 65}",
+                "error": null,
+                "latency_ms": 55079,
+                "usage": {
+                  "prompt_tokens": 924,
+                  "completion_tokens": 21,
+                  "total_tokens": 945
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.55,
+            "grounded": 1.0,
+            "completeness": 0.5,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.55,
+                  "grounded": 1.0,
+                  "completeness": 0.5
+                },
+                "score": 0.55,
+                "raw_text": "{\"correctness\": 55, \"grounded\": 100, \"completeness\": 50}",
+                "error": null,
+                "latency_ms": 7633,
+                "usage": {
+                  "prompt_tokens": 671,
+                  "completion_tokens": 25,
+                  "total_tokens": 1013
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-49",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.9,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.9
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 90}",
+                "error": null,
+                "latency_ms": 719,
+                "usage": {
+                  "prompt_tokens": 541,
+                  "completion_tokens": 21,
+                  "total_tokens": 562
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 8391,
+                "usage": {
+                  "prompt_tokens": 401,
+                  "completion_tokens": 27,
+                  "total_tokens": 680
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "gold-50",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.9,
+            "grounded": 0.95,
+            "completeness": 0.85,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.9,
+                  "grounded": 0.95,
+                  "completeness": 0.85
+                },
+                "score": 0.9,
+                "raw_text": "{\"correctness\": 90, \"grounded\": 95, \"completeness\": 85}",
+                "error": null,
+                "latency_ms": 730,
+                "usage": {
+                  "prompt_tokens": 867,
+                  "completion_tokens": 21,
+                  "total_tokens": 888
+                },
+                "attempts": 1
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 0.95,
+            "completeness": 0.95,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 0.95,
+                  "completeness": 0.95
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 95, \"completeness\": 95}",
+                "error": null,
+                "latency_ms": 8653,
+                "usage": {
+                  "prompt_tokens": 810,
+                  "completion_tokens": 24,
+                  "total_tokens": 1230
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F8",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.8,
+            "grounded": 1.0,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.8,
+                  "grounded": 1.0,
+                  "completeness": 0.7
+                },
+                "score": 0.8,
+                "raw_text": "{\"correctness\": 80, \"grounded\": 100, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 4043,
+                "usage": {
+                  "prompt_tokens": 639,
+                  "completion_tokens": 21,
+                  "total_tokens": 660
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 1.0,
+            "grounded": 1.0,
+            "completeness": 1.0,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 1.0,
+                  "grounded": 1.0,
+                  "completeness": 1.0
+                },
+                "score": 1.0,
+                "raw_text": "{\"correctness\": 100, \"grounded\": 100, \"completeness\": 100}",
+                "error": null,
+                "latency_ms": 17620,
+                "usage": {
+                  "prompt_tokens": 509,
+                  "completion_tokens": 27,
+                  "total_tokens": 772
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F9",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.8,
+            "grounded": 0.9,
+            "completeness": 0.65,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.8,
+                  "grounded": 0.9,
+                  "completeness": 0.65
+                },
+                "score": 0.8,
+                "raw_text": "{\"correctness\": 80, \"grounded\": 90, \"completeness\": 65}",
+                "error": null,
+                "latency_ms": 7788,
+                "usage": {
+                  "prompt_tokens": 626,
+                  "completion_tokens": 21,
+                  "total_tokens": 647
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.75,
+            "grounded": 1.0,
+            "completeness": 0.5,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.75,
+                  "grounded": 1.0,
+                  "completeness": 0.5
+                },
+                "score": 0.75,
+                "raw_text": "{\"correctness\": 75, \"grounded\": 100, \"completeness\": 50}",
+                "error": null,
+                "latency_ms": 8340,
+                "usage": {
+                  "prompt_tokens": 457,
+                  "completion_tokens": 25,
+                  "total_tokens": 778
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-F10",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.9,
+            "completeness": 0.7,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.9,
+                  "completeness": 0.7
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 90, \"completeness\": 70}",
+                "error": null,
+                "latency_ms": 36236,
+                "usage": {
+                  "prompt_tokens": 634,
+                  "completion_tokens": 21,
+                  "total_tokens": 655
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.95,
+            "grounded": 1.0,
+            "completeness": 0.8,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.95,
+                  "grounded": 1.0,
+                  "completeness": 0.8
+                },
+                "score": 0.95,
+                "raw_text": "{\"correctness\": 95, \"grounded\": 100, \"completeness\": 80}",
+                "error": null,
+                "latency_ms": 7031,
+                "usage": {
+                  "prompt_tokens": 519,
+                  "completion_tokens": 25,
+                  "total_tokens": 1067
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L7",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.35,
+            "grounded": 1.0,
+            "completeness": 0.25,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.35,
+                  "grounded": 1.0,
+                  "completeness": 0.25
+                },
+                "score": 0.35,
+                "raw_text": "{\"correctness\": 35, \"grounded\": 100, \"completeness\": 25}",
+                "error": null,
+                "latency_ms": 6277,
+                "usage": {
+                  "prompt_tokens": 1169,
+                  "completion_tokens": 25,
+                  "total_tokens": 1498
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L8",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": 0.85,
+            "grounded": 0.95,
+            "completeness": 0.75,
+            "passed": true,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.85,
+                  "grounded": 0.95,
+                  "completeness": 0.75
+                },
+                "score": 0.85,
+                "raw_text": "{\"correctness\": 85, \"grounded\": 95, \"completeness\": 75}",
+                "error": null,
+                "latency_ms": 18807,
+                "usage": {
+                  "prompt_tokens": 888,
+                  "completion_tokens": 21,
+                  "total_tokens": 909
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.75,
+            "grounded": 1.0,
+            "completeness": 0.6,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.75,
+                  "grounded": 1.0,
+                  "completeness": 0.6
+                },
+                "score": 0.75,
+                "raw_text": "{\"correctness\": 75, \"grounded\": 100, \"completeness\": 60}",
+                "error": null,
+                "latency_ms": 7869,
+                "usage": {
+                  "prompt_tokens": 761,
+                  "completion_tokens": 25,
+                  "total_tokens": 1174
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-L9",
+      "expected_behavior": "answer",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "false_refusal",
+            "unanswerable_ok": false,
+            "false_refusal": true,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": 0.35,
+            "grounded": 1.0,
+            "completeness": 0.15,
+            "passed": false,
+            "bucket": "score",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [
+              {
+                "metric": "all",
+                "scores": {
+                  "correctness": 0.35,
+                  "grounded": 1.0,
+                  "completeness": 0.15
+                },
+                "score": 0.35,
+                "raw_text": "{\"correctness\": 35, \"grounded\": 100, \"completeness\": 15}",
+                "error": null,
+                "latency_ms": 6635,
+                "usage": {
+                  "prompt_tokens": 514,
+                  "completion_tokens": 25,
+                  "total_tokens": 948
+                }
+              }
+            ],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R1",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R2",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R3",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R4",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R5",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "p4-R6",
+      "expected_behavior": "refusal",
+      "context_source": "run",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_answered",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_answered",
+            "unanswerable_ok": false,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "refuse-empty",
+      "expected_behavior": "refuse",
+      "context_source": "empty",
+      "providers": [
+        {
+          "provider": "gemini",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "xai",
+            "scored_by_model": "grok-4.20-0309-non-reasoning"
+          }
+        },
+        {
+          "provider": "xai",
+          "cross_judge": {
+            "correctness": null,
+            "grounded": null,
+            "completeness": null,
+            "passed": false,
+            "bucket": "unanswerable_ok",
+            "unanswerable_ok": true,
+            "false_refusal": false,
+            "calls": [],
+            "error": null,
+            "blind": true,
+            "scored_by": "gemini",
+            "scored_by_model": "gemini-3.8-flash"
+          }
+        }
+      ]
+    }
+  ],
+  "cross_judge": {
+    "blind": true,
+    "pairs": {
+      "gemini": "xai",
+      "xai": "gemini"
+    },
+    "models": {
+      "gemini": "gemini-3.8-flash",
+      "xai": "grok-4.20-0309-non-reasoning"
+    }
+  },
+  "summary_cross": {
+    "gemini": {
+      "correctness": 0.8709,
+      "grounded_rate": 0.9453,
+      "completeness": 0.8047,
+      "pass_rate": 0.907,
+      "n": 43,
+      "n_unanswerable_ok": 6,
+      "n_false_refusal": 13,
+      "n_excluded": 20
+    },
+    "xai": {
+      "correctness": 0.8664,
+      "grounded_rate": 0.95,
+      "completeness": 0.8446,
+      "pass_rate": 0.74,
+      "n": 50,
+      "n_unanswerable_ok": 6,
+      "n_false_refusal": 6,
+      "n_excluded": 13
+    }
+  }
+}

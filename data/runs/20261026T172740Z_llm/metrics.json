@@ -1,0 +1,51 @@
+[
+  {
+    "name": "adjacent_3x1_t01_p09.eval",
+    "status": "ok",
+    "retried": 6,
+    "still_failed": 0,
+    "elapsed_s": 3.7
+  },
+  {
+    "name": "adjacent_5x2_t01_p09.eval",
+    "status": "ok",
+    "retried": 8,
+    "still_failed": 0,
+    "elapsed_s": 21.6
+  },
+  {
+    "name": "full_top1_t01_p09.eval",
+    "status": "ok",
+    "retried": 56,
+    "still_failed": 0,
+    "elapsed_s": 160.0
+  },
+  {
+    "name": "top_n_10_t01_p09.eval",
+    "status": "ok",
+    "retried": 9,
+    "still_failed": 0,
+    "elapsed_s": 11.6
+  },
+  {
+    "name": "top_n_1_t01_p09.eval",
+    "status": "ok",
+    "retried": 4,
+    "still_failed": 0,
+    "elapsed_s": 1.3
+  },
+  {
+    "name": "top_n_3_t01_p09.eval",
+    "status": "ok",
+    "retried": 9,
+    "still_failed": 0,
+    "elapsed_s": 2.6
+  },
+  {
+    "name": "top_n_6_t01_p09.eval",
+    "status": "ok",
+    "retried": 5,
+    "still_failed": 0,
+    "elapsed_s": 1.1
+  }
+]

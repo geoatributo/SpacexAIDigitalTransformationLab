@@ -13,7 +13,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 METRICS = ("correctness", "grounded_rate", "completeness")
-ROOT_RUN_ID = "runs"
 REPORT_FILENAME = "report.json"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 _RUN_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,80}")
@@ -398,78 +397,78 @@ def save_uploaded_report(runs_root: Path, payload: object) -> dict:
     folder = runs_root / stamp
     folder.mkdir(parents=True, exist_ok=False)
     created = str(report.get("created_at") or datetime.now(timezone.utc).isoformat())
-    report["id"] = stamp
+    label = str(report.get("id") or "").strip() or stamp
+    report["id"] = label
     report["created_at"] = created
     report_pack_path(folder).write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    return {"id": stamp, "created_at": created, "config_count": len(report["configs"])}
+    return {"id": stamp, "label": label, "created_at": created, "config_count": len(report["configs"])}
 
 
 def load_or_build_report(folder: Path, *, run_id: str) -> dict:
     packed = load_report_pack(folder)
     if packed is not None:
         packed = dict(packed)
-        packed["id"] = run_id
+        if not str(packed.get("id") or "").strip():
+            packed["id"] = run_id
         return packed
     return build_report(folder, run_id=run_id)
 
 
+def load_uploaded_report(folder: Path, *, run_id: str) -> dict:
+    """Load a packed Metrics report only — never rebuild from local evals."""
+    packed = load_report_pack(folder)
+    if packed is None:
+        raise FileNotFoundError(run_id)
+    packed = dict(packed)
+    if not str(packed.get("id") or "").strip():
+        packed["id"] = run_id
+    return packed
+
+
+def _run_label(folder: Path, run_id: str) -> str:
+    packed = load_report_pack(folder)
+    if packed is None:
+        return run_id
+    label = str(packed.get("id") or "").strip()
+    return label or run_id
+
+
 def _config_count(folder: Path) -> int:
     packed = load_report_pack(folder)
-    if packed is not None:
-        return len(packed["configs"])
-    return len(list(folder.glob("*.eval.json")))
+    if packed is None:
+        return 0
+    return len(packed["configs"])
 
 
 def _created_at(folder: Path) -> str:
     packed = load_report_pack(folder)
     if packed and packed.get("created_at"):
         return str(packed["created_at"])
-    sweeps = sorted(folder.glob("context_sweep*.json"), key=lambda item: item.stat().st_mtime)
-    if sweeps:
-        created = _load_json(sweeps[-1]).get("created_at")
-        if created:
-            return str(created)
-        stamp = sweeps[-1].stat().st_mtime
-    else:
-        files = list(folder.glob("*.eval.json")) + list(folder.glob(REPORT_FILENAME))
-        stamp = max((path.stat().st_mtime for path in files), default=folder.stat().st_mtime)
+    pack = report_pack_path(folder)
+    stamp = pack.stat().st_mtime if pack.is_file() else folder.stat().st_mtime
     return datetime.fromtimestamp(stamp, timezone.utc).isoformat()
 
 
 def _activity(folder: Path) -> float:
-    files = list(folder.glob("context_sweep*.json")) + list(folder.glob("*.eval.json"))
     pack = report_pack_path(folder)
     if pack.is_file():
-        files.append(pack)
-    if not files:
-        return folder.stat().st_mtime
-    return max(path.stat().st_mtime for path in files)
-
-
-def _has_metrics(folder: Path) -> bool:
-    return (
-        report_pack_path(folder).is_file()
-        or any(folder.glob("context_sweep*.json"))
-        or any(folder.glob("*.eval.json"))
-    )
+        return pack.stat().st_mtime
+    return folder.stat().st_mtime
 
 
 def list_runs(runs_root: Path) -> list[dict]:
-    """Subfolders with a sweep, eval, or report pack, newest first. Flat runs root included too."""
+    """Uploaded report packs only, newest first. Eval/sweep folders are ignored."""
     if not runs_root.is_dir():
         return []
     folders: list[tuple[str, Path]] = []
-    if _has_metrics(runs_root):
-        folders.append((ROOT_RUN_ID, runs_root))
     for child in runs_root.iterdir():
-        if child.is_dir() and _RUN_ID.fullmatch(child.name) and _has_metrics(child):
-            if child.name == ROOT_RUN_ID and any(run_id == ROOT_RUN_ID for run_id, _path in folders):
-                continue
+        if child.is_dir() and _RUN_ID.fullmatch(child.name) and load_report_pack(child) is not None:
             folders.append((child.name, child))
     folders.sort(key=lambda item: _activity(item[1]), reverse=True)
     return [
         {
             "id": run_id,
+            "label": _run_label(folder, run_id),
             "created_at": _created_at(folder),
             "config_count": _config_count(folder),
         }
@@ -486,10 +485,8 @@ def resolve_run_dir(runs_root: Path, run_id: str) -> Path:
         child.relative_to(root)
     except ValueError as exc:
         raise FileNotFoundError(run_id) from exc
-    if child.parent == root and child.is_dir() and _has_metrics(child):
+    if child.parent == root and child.is_dir() and load_report_pack(child) is not None:
         return child
-    if run_id == ROOT_RUN_ID and _has_metrics(root):
-        return root
     raise FileNotFoundError(run_id)
 
 

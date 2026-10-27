@@ -1,0 +1,100 @@
+[
+  {
+    "name": "adjacent_3x1_t01_p09.eval",
+    "status": "ok",
+    "retried": 34,
+    "still_failed": 0,
+    "elapsed_s": 18.4,
+    "answers": {
+      "name": "adjacent_3x1_t01_p09",
+      "status": "ok",
+      "retried": 15,
+      "still_failed": 0,
+      "elapsed_s": 14.4
+    }
+  },
+  {
+    "name": "adjacent_5x2_t01_p09.eval",
+    "status": "ok",
+    "retried": 48,
+    "still_failed": 0,
+    "elapsed_s": 51.0,
+    "answers": {
+      "name": "adjacent_5x2_t01_p09",
+      "status": "ok",
+      "retried": 25,
+      "still_failed": 0,
+      "elapsed_s": 18.1
+    }
+  },
+  {
+    "name": "full_top1_t01_p09.eval",
+    "status": "ok",
+    "retried": 83,
+    "still_failed": 0,
+    "elapsed_s": 73.4,
+    "answers": {
+      "name": "full_top1_t01_p09",
+      "status": "ok",
+      "retried": 26,
+      "still_failed": 0,
+      "elapsed_s": 20.9
+    }
+  },
+  {
+    "name": "top_n_10_t01_p09.eval",
+    "status": "ok",
+    "retried": 33,
+    "still_failed": 0,
+    "elapsed_s": 21.6,
+    "answers": {
+      "name": "top_n_10_t01_p09",
+      "status": "ok",
+      "retried": 24,
+      "still_failed": 0,
+      "elapsed_s": 18.2
+    }
+  },
+  {
+    "name": "top_n_1_t01_p09.eval",
+    "status": "ok",
+    "retried": 24,
+    "still_failed": 0,
+    "elapsed_s": 13.9,
+    "answers": {
+      "name": "top_n_1_t01_p09",
+      "status": "ok",
+      "retried": 21,
+      "still_failed": 0,
+      "elapsed_s": 14.2
+    }
+  },
+  {
+    "name": "top_n_3_t01_p09.eval",
+    "status": "ok",
+    "retried": 16,
+    "still_failed": 0,
+    "elapsed_s": 12.6,
+    "answers": {
+      "name": "top_n_3_t01_p09",
+      "status": "ok",
+      "retried": 9,
+      "still_failed": 0,
+      "elapsed_s": 5.2
+    }
+  },
+  {
+    "name": "top_n_6_t01_p09.eval",
+    "status": "ok",
+    "retried": 30,
+    "still_failed": 0,
+    "elapsed_s": 18.2,
+    "answers": {
+      "name": "top_n_6_t01_p09",
+      "status": "ok",
+      "retried": 18,
+      "still_failed": 0,
+      "elapsed_s": 14.1
+    }
+  }
+]

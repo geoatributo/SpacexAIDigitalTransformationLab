@@ -47,6 +47,16 @@ def test_lab_argv_uses_config_name() -> None:
     assert argv[argv.index("--run-name") + 1] == "top_n_6"
 
 
+def test_lab_argv_passes_case_workers() -> None:
+    argv = sweep._lab_argv(
+        {"name": "top_n_1", "context_mode": "top_n", "top_n": 1},
+        limit=2,
+        dry_run=True,
+        case_workers=32,
+    )
+    assert argv[argv.index("--case-workers") + 1] == "32"
+
+
 def test_lab_argv_full_top1_omits_top_n() -> None:
     argv = sweep._lab_argv({"context_mode": "full_top1", "top_n": 6}, limit=5, dry_run=False)
     assert "--top-n" not in argv

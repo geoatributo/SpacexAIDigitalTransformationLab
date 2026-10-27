@@ -95,12 +95,47 @@ def test_score_generated_answer_makes_one_call_with_all_scores() -> None:
     assert first["temperature"] == JUDGE_TEMPERATURE == 0.2
     assert first["top_p"] == JUDGE_TOP_P == 0.95
     assert first["max_output_tokens"] == JUDGE_MAX_OUTPUT_TOKENS == 8192
-    assert first["timeout"] == JUDGE_TIMEOUT_S == 30.0
+    assert first["timeout"] == JUDGE_TIMEOUT_S == 120.0
     assert "Score the generated answer on three metrics" in first["user"]
     assert "Retrieved context:" in first["user"]
     assert CONTEXT_JOIN.join(["Limite 25 MB.", "Google Drive permitido."]) in first["user"]
     assert '"correctness"' in first["user"]
     assert join_retrieved_context(["a", "b"]) == "a\n\n---\n\nb"
+
+
+def test_score_retries_on_transport_error(monkeypatch) -> None:
+    class FlakyJudge:
+        name = "xai"
+
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def complete(self, **_kwargs):
+            self.calls += 1
+            if self.calls < 3:
+                return CompletionResult(text="", latency_ms=1, error="APITimeoutError: Request timed out.")
+            return CompletionResult(
+                text='{"correctness": 80, "grounded": 90, "completeness": 70}',
+                latency_ms=2,
+            )
+
+    monkeypatch.setattr("lab.rag_judge.JUDGE_RETRY_BACKOFF_S", 0)
+    judge = FlakyJudge()
+    scored = score_generated_answer(
+        judge,
+        model="m",
+        question="q",
+        reference="r",
+        generated="a",
+        context_chunks=["ctx"],
+        expected_behavior="answer",
+        is_refusal=False,
+        error=None,
+    )
+    assert judge.calls == 3
+    assert scored["correctness"] == 0.8
+    assert scored["error"] is None
+    assert scored["calls"][0]["attempts"] == 3
 
 
 def test_score_skips_llm_for_expected_refusal() -> None:

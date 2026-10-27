@@ -5,6 +5,7 @@ import re
 from typing import Any
 
 from lab.providers.base import ChatProvider
+from lab.retry import DEFAULT_BACKOFF_CAP_S, sleep_backoff
 
 JUDGE_SYSTEM_PROMPT = (
     "You are a meticulous QA grader for a RAG system's answers. Follow the instructions exactly."
@@ -12,7 +13,10 @@ JUDGE_SYSTEM_PROMPT = (
 JUDGE_TEMPERATURE = 0.2
 JUDGE_TOP_P = 0.95
 JUDGE_MAX_OUTPUT_TOKENS = 8192
-JUDGE_TIMEOUT_S = 30.0
+JUDGE_TIMEOUT_S = 120.0
+JUDGE_RETRIES = 5
+JUDGE_RETRY_BACKOFF_S = 2.0
+JUDGE_RETRY_BACKOFF_CAP_S = DEFAULT_BACKOFF_CAP_S
 PASS_THRESHOLD = 0.8
 CONTEXT_JOIN = "\n\n---\n\n"
 
@@ -131,24 +135,56 @@ def _ask_scores(
     model: str,
     user: str,
 ) -> dict[str, Any]:
-    result = provider.complete(
-        system=JUDGE_SYSTEM_PROMPT,
-        user=user,
-        model=model,
-        temperature=JUDGE_TEMPERATURE,
-        top_p=JUDGE_TOP_P,
-        max_output_tokens=JUDGE_MAX_OUTPUT_TOKENS,
-        timeout=JUDGE_TIMEOUT_S,
-    )
-    scores = empty_scores() if result.error else parse_scores(result.text or "")
+    """Call the judge once; retry on transport/timeout/empty-parse with exponential backoff."""
+    last_error: str | None = None
+    last_latency_ms = 0
+    last_usage: dict[str, Any] = {}
+    raw_text = ""
+    attempts = max(1, int(JUDGE_RETRIES))
+    for attempt in range(attempts):
+        result = provider.complete(
+            system=JUDGE_SYSTEM_PROMPT,
+            user=user,
+            model=model,
+            temperature=JUDGE_TEMPERATURE,
+            top_p=JUDGE_TOP_P,
+            max_output_tokens=JUDGE_MAX_OUTPUT_TOKENS,
+            timeout=JUDGE_TIMEOUT_S,
+        )
+        last_latency_ms = result.latency_ms
+        last_usage = result.usage or {}
+        raw_text = result.text or ""
+        if not result.error:
+            scores = parse_scores(raw_text)
+            if any(scores.get(key) is not None for key in _SCORE_KEYS):
+                return {
+                    "metric": "all",
+                    "scores": scores,
+                    "score": scores.get("correctness"),
+                    "raw_text": result.text,
+                    "error": None,
+                    "latency_ms": last_latency_ms,
+                    "usage": last_usage,
+                    "attempts": attempt + 1,
+                }
+            last_error = "unparseable_scores"
+        else:
+            last_error = result.error
+        if attempt + 1 < attempts:
+            sleep_backoff(
+                attempt,
+                base_s=JUDGE_RETRY_BACKOFF_S,
+                cap_s=JUDGE_RETRY_BACKOFF_CAP_S,
+            )
     return {
         "metric": "all",
-        "scores": scores,
-        "score": scores.get("correctness"),
-        "raw_text": result.text,
-        "error": result.error,
-        "latency_ms": result.latency_ms,
-        "usage": result.usage,
+        "scores": empty_scores(),
+        "score": None,
+        "raw_text": raw_text,
+        "error": last_error,
+        "latency_ms": last_latency_ms,
+        "usage": last_usage,
+        "attempts": attempts,
     }
 
 
