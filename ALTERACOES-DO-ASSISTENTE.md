@@ -29,7 +29,8 @@ Criado pelo assistente (commit `b13c17c`, 26-10-2026 11:16) e alterado várias v
 | `98c7482` | Decisões do Ricardo de 26-10-2026 18:38: secção 9c reescrita (avaliação humana secundária, créditos aceites, descarga com identificador); tabela de estado (D2, D7, nova linha da interface); novo risco na secção 8; linha de histórico. / Ricardo's decisions: section 9c rewritten; status table (D2, D7, new interface row); new risk in section 8; history row. |
 | `751f032` | Secções sobre a chave xAI (passo 1 do «Como correr» e riscos): `CHAVE-API.md` removido, chave continua no histórico; linha de histórico. / Key sections updated: `CHAVE-API.md` removed, key remains in history; history row. |
 | `be0dc15` | Linha D7 da tabela de estado: versão do Gemini (`gemini-4-argon`), nível de raciocínio por fixar; linha de histórico. / D7 row: Gemini version, reasoning level to pin; history row. |
-| (este commit / this commit) | Linhas D3, D7 e «Interface e painel» da tabela de estado; nota de verificação da origem dos prompts na secção 6 (ponto 4); nova secção 9d (ecrã de entrada e enquadramento prático); linha de histórico. / D3, D7 and interface rows; prompt-provenance check note in section 6; new section 9d; history row. |
+| `001e415` | Linhas D3, D7 e «Interface e painel» da tabela de estado; nota de verificação da origem dos prompts na secção 6 (ponto 4); nova secção 9d (ecrã de entrada e enquadramento prático); linha de histórico. / D3, D7 and interface rows; prompt-provenance check note in section 6; new section 9d; history row. |
+| (este commit / this commit) | Decisões do Ricardo de 27-10-2026 (reutilização de conceitos do PC-IA, fundir PR #7, nova chave, raciocínio para o Eduardo); estado dos PR #6 (fundido) e #7 (conflitos). / Ricardo's 27-10 decisions; PR #6 merged, PR #7 in conflict. |
 
 ## `REQUISITOS-PAINEL-AVALIACAO.md`
 
