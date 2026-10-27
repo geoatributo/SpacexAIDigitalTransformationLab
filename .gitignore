@@ -6,6 +6,7 @@ plots/out/
 data/geoatributo_base2_teste_rag_pronto/
 web/node_modules/
 web/dist/
+data/uploads/
 data/evaluations.json
 data/human_eval.sqlite
 web/.vite/

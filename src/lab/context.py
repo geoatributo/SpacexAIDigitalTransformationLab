@@ -128,6 +128,14 @@ class ContextStore:
             policy=policy,
         )
 
+    def with_gold(self, gold: dict[str, dict[str, Any]]) -> "ContextStore":
+        return ContextStore(
+            chunks=self._chunks,
+            retrieval=self._retrieval,
+            gold=gold,
+            policy=self.policy,
+        )
+
     def _index_documents(self) -> dict[str, list[str]]:
         grouped: dict[str, list[tuple[int, str]]] = {}
         for chunk_id, row in self._chunks.items():

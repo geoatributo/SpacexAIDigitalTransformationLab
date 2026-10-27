@@ -39,10 +39,15 @@ export default function App() {
             setPreferredRunId("");
             setPassedStart(true);
           }}
-          onUploaded={(runId) => {
+          onMetricsUploaded={(runId) => {
             setPreferredRunId(runId);
             setPassedStart(true);
             setView("metrics");
+          }}
+          onQuestionsUploaded={() => {
+            setPreferredRunId("");
+            setPassedStart(true);
+            setView("compare");
           }}
         />
       </div>
