@@ -2,7 +2,6 @@
 .venv/
 __pycache__/
 *.pyc
-data/runs/
 plots/out/
 data/geoatributo_base2_teste_rag_pronto/
 web/node_modules/

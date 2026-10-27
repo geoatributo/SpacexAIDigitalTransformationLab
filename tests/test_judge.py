@@ -12,11 +12,11 @@ class FakeJudge:
         user = kwargs["user"].lower()
         assert "gemini" not in user
         assert "grok" not in user
-        if "key facts" in kwargs["user"]:
-            return CompletionResult(text="90", latency_ms=12)
-        if "factual claims" in kwargs["user"]:
-            return CompletionResult(text="100", latency_ms=12)
-        return CompletionResult(text="80", latency_ms=12)
+        assert "three metrics" in kwargs["user"]
+        return CompletionResult(
+            text='{"correctness": 90, "grounded": 100, "completeness": 80}',
+            latency_ms=12,
+        )
 
 
 def test_evaluate_payload_records_judge_scores() -> None:
@@ -47,6 +47,6 @@ def test_evaluate_payload_records_judge_scores() -> None:
     assert judged["grounded"] == 1.0
     assert judged["completeness"] == 0.8
     assert judged["error"] is None
-    assert len(judged["calls"]) == 3
+    assert len(judged["calls"]) == 1
     assert report["summary_judge"]["gemini"]["pass_rate"] == 1.0
     assert report["judge"]["model"] == "gemini-3.5-flash"

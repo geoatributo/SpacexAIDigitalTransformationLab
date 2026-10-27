@@ -18,6 +18,7 @@ import re
 import subprocess
 import sys
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -183,7 +184,11 @@ def _score_saved_run(run_path: Path, *, pass_threshold: float) -> dict:
 
     out = evaluate_path(run_path, pass_threshold=pass_threshold)
     report = json.loads(out.read_text(encoding="utf-8"))
-    scored = {"eval_path": str(out), "summary": report.get("summary")}
+    scored = {
+        "eval_path": str(out),
+        "summary": report.get("summary"),
+        "scoring": (report.get("method") or {}).get("scoring", "lexical"),
+    }
     for key in ("summary_judge", "summary_cross"):
         if report.get(key):
             scored[key] = report[key]
@@ -199,24 +204,57 @@ def evaluate_config_runs(
 ) -> list[dict]:
     scorer = evaluate_run or (lambda path: _score_saved_run(path, pass_threshold=pass_threshold))
     rows: list[dict] = []
-    for name in names:
+    total = len(names)
+    print(
+        f"[metrics] pasta={runs_dir} · {total} configs · scoring=lexical (sem juiz LLM) · limiar={pass_threshold}",
+        file=sys.stderr,
+        flush=True,
+    )
+    batch_started = time.perf_counter()
+    for index, name in enumerate(names, start=1):
         run_path = runs_dir / f"{name}.json"
         if not run_path.is_file():
             rows.append({"name": name, "status": "missing"})
-            print(f"[metrics] {name}: ficheiro em falta ({run_path.name})", file=sys.stderr, flush=True)
+            print(f"[metrics] {index}/{total} {name}: ficheiro em falta ({run_path.name})", file=sys.stderr, flush=True)
             continue
         payload = json.loads(run_path.read_text(encoding="utf-8"))
+        n_cases = len(payload.get("cases") or [])
         if payload.get("dry_run") or not _has_answers(payload):
             rows.append({"name": name, "status": "no_answers"})
-            print(f"[metrics] {name}: sem respostas de modelo", file=sys.stderr, flush=True)
+            print(f"[metrics] {index}/{total} {name}: sem respostas de modelo", file=sys.stderr, flush=True)
             continue
+        print(
+            f"[metrics] {index}/{total} {name}: a pontuar {n_cases} casos (lexical)…",
+            file=sys.stderr,
+            flush=True,
+        )
+        started = time.perf_counter()
         try:
             scored = scorer(run_path)
         except (Exception, SystemExit) as exc:
             rows.append({"name": name, "status": "error", "error": str(exc)})
-            print(f"[metrics] {name}: {exc}", file=sys.stderr, flush=True)
+            print(f"[metrics] {index}/{total} {name}: ERRO {exc}", file=sys.stderr, flush=True)
             continue
+        elapsed = time.perf_counter() - started
+        summary = scored.get("summary") or {}
+        rates = " ".join(
+            f"{provider}=pass_rate={stats.get('pass_rate')}"
+            for provider, stats in summary.items()
+            if isinstance(stats, dict)
+        )
+        print(
+            f"[metrics] {index}/{total} {name}: ok em {elapsed:.1f}s"
+            + (f" · {rates}" if rates else ""),
+            file=sys.stderr,
+            flush=True,
+        )
         rows.append({"name": name, "status": "ok", **scored})
+    print(
+        f"[metrics] lote concluído em {time.perf_counter() - batch_started:.1f}s "
+        f"({sum(1 for row in rows if row.get('status') == 'ok')}/{total} ok)",
+        file=sys.stderr,
+        flush=True,
+    )
     return rows
 
 

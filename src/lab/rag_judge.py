@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 
@@ -15,37 +16,25 @@ JUDGE_TIMEOUT_S = 30.0
 PASS_THRESHOLD = 0.8
 CONTEXT_JOIN = "\n\n---\n\n"
 
-CORRECTNESS_PROMPT = """Question: {question}
+SCORES_PROMPT = """Question: {question}
 
 Reference answer: {reference}
 
-Generated answer: {generated}
-
-Score how well the generated answer conveys the same key facts as the reference answer,
-from 0 (completely wrong/unrelated) to 100 (fully matches all key facts).
-Respond with ONLY the number, nothing else."""
-
-GROUNDED_PROMPT = """Retrieved context:
+Retrieved context:
 {context}
 
 Generated answer: {generated}
 
-Score what fraction of the factual claims in the generated answer are directly supported
-by the retrieved context above (0 = answer invents facts not in the context at all,
-100 = every claim is explicitly supported by the context).
-Respond with ONLY the number, nothing else."""
+Score the generated answer on three metrics from 0 to 100:
+1. correctness — how well it conveys the same key facts as the reference (0 = wrong/unrelated, 100 = all key facts).
+2. grounded — what fraction of its factual claims are directly supported by the retrieved context (0 = invents facts, 100 = every claim supported).
+3. completeness — how completely it covers every point in the reference; do not penalize extra correct detail (0 = none, 100 = all).
 
-COMPLETENESS_PROMPT = """Question: {question}
+Respond with ONLY a JSON object, no markdown, no other text:
+{{"correctness": <number>, "grounded": <number>, "completeness": <number>}}"""
 
-Reference answer (the complete, correct answer): {reference}
-
-Generated answer: {generated}
-
-Score how completely the generated answer covers EVERY point present in the reference
-answer (0 = covers none of the reference's points, 100 = covers all of them -- partial
-credit for covering some but not all). Do not penalize extra correct detail beyond the
-reference.
-Respond with ONLY the number, nothing else."""
+_SCORE_KEYS = ("correctness", "grounded", "completeness")
+_JSON_OBJECT = re.compile(r"\{[^{}]*\}", re.DOTALL)
 
 
 def ask_score(judge_response_text: str) -> float | None:
@@ -54,6 +43,47 @@ def ask_score(judge_response_text: str) -> float | None:
         return None
     value = float(match.group(1))
     return value / 100.0 if value > 1.0 else value
+
+
+def _normalize_score(value: Any) -> float | None:
+    if value is None or isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        number = float(value)
+    elif isinstance(value, str):
+        return ask_score(value)
+    else:
+        return None
+    if number > 1.0:
+        number = number / 100.0
+    if number < 0.0 or number > 1.0:
+        return None
+    return number
+
+
+def parse_scores(judge_response_text: str) -> dict[str, float | None]:
+    """Parse one judge reply into correctness / grounded / completeness in 0–1."""
+    text = (judge_response_text or "").strip()
+    empty = {key: None for key in _SCORE_KEYS}
+    if not text:
+        return empty
+    candidates: list[str] = []
+    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL | re.IGNORECASE)
+    if fenced:
+        candidates.append(fenced.group(1))
+    match = _JSON_OBJECT.search(text)
+    if match:
+        candidates.append(match.group(0))
+    candidates.append(text)
+    for candidate in candidates:
+        try:
+            payload = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        return {key: _normalize_score(payload.get(key)) for key in _SCORE_KEYS}
+    return empty
 
 
 def join_retrieved_context(chunks: list[str]) -> str:
@@ -80,7 +110,7 @@ def classify_case(
 ) -> str:
     expected = (expected_behavior or "answer").strip().lower()
     has_context = any((chunk or "").strip() for chunk in context_chunks)
-    if expected == "refuse":
+    if expected in {"refuse", "refusal"}:
         return "unanswerable_ok" if is_refusal else "unanswerable_answered"
     if is_refusal:
         return "false_refusal"
@@ -91,12 +121,15 @@ def classify_case(
     return "score"
 
 
-def _ask_metric(
+def empty_scores() -> dict[str, float | None]:
+    return {key: None for key in _SCORE_KEYS}
+
+
+def _ask_scores(
     provider: ChatProvider,
     *,
     model: str,
     user: str,
-    metric: str,
 ) -> dict[str, Any]:
     result = provider.complete(
         system=JUDGE_SYSTEM_PROMPT,
@@ -107,10 +140,11 @@ def _ask_metric(
         max_output_tokens=JUDGE_MAX_OUTPUT_TOKENS,
         timeout=JUDGE_TIMEOUT_S,
     )
-    score = None if result.error else ask_score(result.text or "")
+    scores = empty_scores() if result.error else parse_scores(result.text or "")
     return {
-        "metric": metric,
-        "score": score,
+        "metric": "all",
+        "scores": scores,
+        "score": scores.get("correctness"),
         "raw_text": result.text,
         "error": result.error,
         "latency_ms": result.latency_ms,
@@ -151,42 +185,21 @@ def score_generated_answer(
     if bucket != "score":
         return base
 
-    context = join_retrieved_context(context_chunks)
-    generated_text = generated or ""
-    reference_text = reference or ""
-    calls = [
-        _ask_metric(
-            provider,
-            model=model,
-            metric="correctness",
-            user=CORRECTNESS_PROMPT.format(
-                question=question,
-                reference=reference_text,
-                generated=generated_text,
-            ),
+    call = _ask_scores(
+        provider,
+        model=model,
+        user=SCORES_PROMPT.format(
+            question=question,
+            reference=reference or "",
+            context=join_retrieved_context(context_chunks),
+            generated=generated or "",
         ),
-        _ask_metric(
-            provider,
-            model=model,
-            metric="grounded",
-            user=GROUNDED_PROMPT.format(context=context, generated=generated_text),
-        ),
-        _ask_metric(
-            provider,
-            model=model,
-            metric="completeness",
-            user=COMPLETENESS_PROMPT.format(
-                question=question,
-                reference=reference_text,
-                generated=generated_text,
-            ),
-        ),
-    ]
-    correctness = calls[0]["score"]
-    grounded = calls[1]["score"]
-    completeness = calls[2]["score"]
+    )
+    scores = call["scores"]
+    correctness = scores.get("correctness")
+    grounded = scores.get("grounded")
+    completeness = scores.get("completeness")
     passed = (correctness is not None) and (correctness >= pass_threshold)
-    call_error = next((call["error"] for call in calls if call["error"]), None)
     return {
         "correctness": correctness,
         "grounded": grounded,
@@ -195,8 +208,8 @@ def score_generated_answer(
         "bucket": bucket,
         "unanswerable_ok": False,
         "false_refusal": False,
-        "calls": calls,
-        "error": call_error,
+        "calls": [call],
+        "error": call["error"],
     }
 
 

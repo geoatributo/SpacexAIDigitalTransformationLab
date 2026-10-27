@@ -59,6 +59,20 @@ def test_expected_refusal_scores_one() -> None:
     assert scores.passed is True
 
 
+def test_expected_behavior_refusal_alias_scores_one() -> None:
+    # Gold p4-R* cases use "refusal"; empty-context runs use "refuse".
+    scores = score_completion(
+        expected_behavior="refusal",
+        reference_answer=None,
+        visible_text=REFUSAL_SENTENCE,
+        is_refusal=True,
+        context_text="",
+        error=None,
+    )
+    assert scores.passed is True
+    assert scores.notes == "caso de recusa"
+
+
 def test_invented_claim_lowers_grounding() -> None:
     scores = score_completion(
         expected_behavior="answer",

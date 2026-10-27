@@ -18,7 +18,10 @@ class RecordingJudge:
         assert "gemini" not in kwargs["user"].lower()
         assert "grok" not in kwargs["user"].lower()
         assert "xai" not in kwargs["user"].lower()
-        return CompletionResult(text="85", latency_ms=5)
+        return CompletionResult(
+            text='{"correctness": 85, "grounded": 85, "completeness": 85}',
+            latency_ms=5,
+        )
 
 
 def test_cross_panel_routes_gemini_to_xai() -> None:
@@ -81,11 +84,12 @@ def test_evaluate_payload_cross_judge_is_blind_and_swapped() -> None:
     assert gemini_row["scored_by"] == "xai"
     assert gemini_row["scored_by_model"] == "grok-latest"
     assert xai_row["scored_by"] == "gemini"
-    assert len(xai.calls) == 3
-    assert len(gemini.calls) == 3
+    assert len(xai.calls) == 1
+    assert len(gemini.calls) == 1
     assert xai.calls[0]["model"] == "grok-latest"
     assert "O limite é 25 MB." in xai.calls[0]["user"]
     assert "Limite de 25 MB." in gemini.calls[0]["user"]
+    assert "three metrics" in xai.calls[0]["user"]
     assert report["summary_cross"]["gemini"]["n"] == 1
     assert report["summary_cross"]["gemini"]["n_unanswerable_ok"] == 1
     assert report["cases"][1]["providers"][0]["cross_judge"]["bucket"] == "unanswerable_ok"

@@ -10,6 +10,7 @@ from lab.rag_judge import (
     classify_case,
     join_retrieved_context,
     media,
+    parse_scores,
     pass_rate,
     score_generated_answer,
 )
@@ -35,6 +36,20 @@ def test_ask_score_normalizes_0_100_and_0_1() -> None:
     assert ask_score("no number") is None
 
 
+def test_parse_scores_reads_json_and_fences() -> None:
+    assert parse_scores('{"correctness": 90, "grounded": 80, "completeness": 100}') == {
+        "correctness": 0.9,
+        "grounded": 0.8,
+        "completeness": 1.0,
+    }
+    assert parse_scores('```json\n{"correctness": 0.5, "grounded": 1, "completeness": 70}\n```') == {
+        "correctness": 0.5,
+        "grounded": 1.0,
+        "completeness": 0.7,
+    }
+    assert parse_scores("no json") == {"correctness": None, "grounded": None, "completeness": None}
+
+
 def test_media_and_pass_rate_skip_none_and_use_correctness_only() -> None:
     casos = [
         {"correctness": 1.0, "grounded": 0.5, "passed": True},
@@ -48,13 +63,15 @@ def test_media_and_pass_rate_skip_none_and_use_correctness_only() -> None:
 
 def test_classify_excludes_expected_refuse_false_refusal_and_empty_context() -> None:
     assert classify_case(expected_behavior="refuse", is_refusal=True, context_chunks=[], error=None) == "unanswerable_ok"
+    assert classify_case(expected_behavior="refusal", is_refusal=True, context_chunks=[], error=None) == "unanswerable_ok"
+    assert classify_case(expected_behavior="refusal", is_refusal=False, context_chunks=["ctx"], error=None) == "unanswerable_answered"
     assert classify_case(expected_behavior="answer", is_refusal=True, context_chunks=["ctx"], error=None) == "false_refusal"
     assert classify_case(expected_behavior="answer", is_refusal=False, context_chunks=[], error=None) == "no_context"
     assert classify_case(expected_behavior="answer", is_refusal=False, context_chunks=["ctx"], error=None) == "score"
 
 
-def test_score_generated_answer_makes_three_calls_with_exact_params() -> None:
-    judge = SequentialJudge(["90", "80", "100"])
+def test_score_generated_answer_makes_one_call_with_all_scores() -> None:
+    judge = SequentialJudge(['{"correctness": 90, "grounded": 80, "completeness": 100}'])
     scored = score_generated_answer(
         judge,
         model="grok-latest",
@@ -72,17 +89,17 @@ def test_score_generated_answer_makes_three_calls_with_exact_params() -> None:
     assert scored["completeness"] == 1.0
     assert scored["passed"] is True
     assert scored["bucket"] == "score"
-    assert len(judge.calls) == 3
+    assert len(judge.calls) == 1
     first = judge.calls[0]
     assert first["system"] == JUDGE_SYSTEM_PROMPT
     assert first["temperature"] == JUDGE_TEMPERATURE == 0.2
     assert first["top_p"] == JUDGE_TOP_P == 0.95
     assert first["max_output_tokens"] == JUDGE_MAX_OUTPUT_TOKENS == 8192
     assert first["timeout"] == JUDGE_TIMEOUT_S == 30.0
-    assert "Score how well the generated answer conveys the same key facts" in first["user"]
-    assert "Retrieved context:" in judge.calls[1]["user"]
-    assert CONTEXT_JOIN.join(["Limite 25 MB.", "Google Drive permitido."]) in judge.calls[1]["user"]
-    assert "covers EVERY point present in the reference" in judge.calls[2]["user"]
+    assert "Score the generated answer on three metrics" in first["user"]
+    assert "Retrieved context:" in first["user"]
+    assert CONTEXT_JOIN.join(["Limite 25 MB.", "Google Drive permitido."]) in first["user"]
+    assert '"correctness"' in first["user"]
     assert join_retrieved_context(["a", "b"]) == "a\n\n---\n\nb"
 
 

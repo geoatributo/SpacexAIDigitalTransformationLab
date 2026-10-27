@@ -4,7 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from lab.sweep_report import build_report, list_runs, resolve_run_dir
+from lab.sweep_report import (
+    build_report,
+    list_runs,
+    load_or_build_report,
+    resolve_run_dir,
+    save_uploaded_report,
+    validate_report_pack,
+    write_report_pack,
+)
 
 
 def _write(path: Path, payload: dict) -> None:
@@ -29,6 +37,26 @@ def _case(case_id: str, providers: list[dict]) -> dict:
 
 def _passed(gemini: bool, xai: bool) -> list[dict]:
     return [{"provider": "gemini", "passed": gemini}, {"provider": "xai", "passed": xai}]
+
+
+def _cross_passed(gemini: bool, xai: bool, *, gemini_ok_refusal: bool = False, xai_ok_refusal: bool = False) -> list[dict]:
+    def block(passed: bool, ok_refusal: bool) -> dict:
+        if ok_refusal:
+            return {"passed": False, "bucket": "unanswerable_ok", "unanswerable_ok": True}
+        return {"passed": passed, "bucket": "score"}
+
+    return [
+        {
+            "provider": "gemini",
+            "passed": False,
+            "cross_judge": block(gemini, gemini_ok_refusal),
+        },
+        {
+            "provider": "xai",
+            "passed": False,
+            "cross_judge": block(xai, xai_ok_refusal),
+        },
+    ]
 
 
 def _called(gemini_refusal: bool, xai_refusal: bool, gemini_ms: int, xai_ms: int) -> list[dict]:
@@ -139,3 +167,81 @@ def test_unknown_run_is_rejected(tmp_path: Path) -> None:
         resolve_run_dir(root, "../secret")
     with pytest.raises(FileNotFoundError):
         resolve_run_dir(root, "missing")
+
+
+def test_write_and_load_report_pack(tmp_path: Path) -> None:
+    folder = tmp_path / "20260102T000000Z"
+    _fill(folder)
+    path = write_report_pack(folder)
+    assert path.name == "report.json"
+    packed = load_or_build_report(folder, run_id="20260102T000000Z")
+    built = build_report(folder, run_id="20260102T000000Z")
+    assert packed["configs"] == built["configs"]
+    assert packed["disagreement"] == built["disagreement"]
+    assert packed["configs"][0]["cost"]["gemini"]["median_s"] == 2
+    assert packed["disagreement"]["refusal"] == [[0, 2], [0, 3]]
+
+
+def test_list_runs_includes_pack_only_folder(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    source = tmp_path / "source"
+    _fill(source)
+    report = build_report(source, run_id="source")
+    saved = save_uploaded_report(root, report)
+    listed = list_runs(root)
+    assert listed[0]["id"] == saved["id"]
+    assert listed[0]["config_count"] == 2
+    loaded = load_or_build_report(resolve_run_dir(root, saved["id"]), run_id=saved["id"])
+    assert loaded["id"] == saved["id"]
+    assert loaded["disagreement"]["pass"] == report["disagreement"]["pass"]
+
+
+def test_validate_report_pack_rejects_incomplete(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="configs"):
+        validate_report_pack({"cases": [], "disagreement": {"pass": [], "refusal": []}})
+    with pytest.raises(ValueError, match="disagreement"):
+        validate_report_pack({"configs": [{"name": "x"}], "cases": []})
+
+
+def test_report_prefers_cross_judge_summary_and_pass(tmp_path: Path) -> None:
+    folder = tmp_path / "20260103T000000Z"
+    _write(
+        folder / "context_sweep.json",
+        {"created_at": "2026-01-03T00:00:00+00:00", "results": [{"name": "top1", "returncode": 0}]},
+    )
+    _write(
+        folder / "top1.eval.json",
+        {
+            "models": {"gemini": "g", "xai": "x"},
+            "summary": {
+                "gemini": {"correctness": 0.1, "grounded_rate": 0.1, "completeness": 0.1, "n": 2},
+                "xai": {"correctness": 0.1, "grounded_rate": 0.1, "completeness": 0.1, "n": 2},
+            },
+            "summary_cross": {
+                "gemini": {"correctness": 0.9, "grounded_rate": 0.8, "completeness": 0.7, "n": 1},
+                "xai": {"correctness": 0.85, "grounded_rate": 0.75, "completeness": 0.65, "n": 1},
+            },
+            "cases": [
+                _case("gold-01", _cross_passed(True, True)),
+                _case("gold-02", _cross_passed(False, False, gemini_ok_refusal=True, xai_ok_refusal=True)),
+            ],
+        },
+    )
+    _write(
+        folder / "top1.json",
+        {
+            "temperature": 0.1,
+            "top_p": 0.9,
+            "context_policy": {"mode": "top_n", "top_n": 1},
+            "cases": [
+                _case("gold-01", _called(False, False, 1000, 1000)),
+                _case("gold-02", _called(True, True, 1000, 1000)),
+            ],
+        },
+    )
+    report = build_report(folder, run_id=folder.name)
+    assert report["scoring"] == "cross_judge"
+    assert report["configs"][0]["scoring"] == "cross_judge"
+    assert abs(report["configs"][0]["metrics"]["gemini"]["correctness"] - 0.9) < 1e-9
+    # lexical passed was False for both; cross_judge says both pass (incl. unanswerable_ok)
+    assert report["disagreement"]["pass"] == [[0, 0]]

@@ -109,7 +109,7 @@ def score_completion(
     expected = (expected_behavior or "answer").strip().lower()
     answer = (visible_text or "").strip()
 
-    if expected == "refuse":
+    if expected in {"refuse", "refusal"}:
         ok = 1.0 if is_refusal or answer == REFUSAL_SENTENCE else 0.0
         grounded = 1.0 if ok == 1.0 else (0.0 if answer else 0.0)
         return CaseScores(ok, grounded, ok, ok >= PASS_THRESHOLD, "caso de recusa")

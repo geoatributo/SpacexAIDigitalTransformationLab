@@ -1,5 +1,5 @@
-import { PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "./api";
+import { ChangeEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { api, apiForm } from "./api";
 import { formatPt } from "./metrics";
 
 type RunSummary = {
@@ -496,7 +496,9 @@ export default function Plots() {
   const [report, setReport] = useState<Report | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -516,6 +518,26 @@ export default function Plots() {
       active = false;
     };
   }, []);
+
+  async function onUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    setError("");
+    const body = new FormData();
+    body.append("file", file);
+    try {
+      const saved = await apiForm<RunSummary>("/metrics/runs/upload", body);
+      const rows = await api<RunSummary[]>("/metrics/runs");
+      setRuns(rows);
+      setRunId(saved.id);
+    } catch (exc) {
+      setError(exc instanceof Error ? exc.message : String(exc));
+    } finally {
+      setUploading(false);
+    }
+  }
 
   useEffect(() => {
     if (!runId) return;
@@ -577,6 +599,21 @@ export default function Plots() {
           </select>
         </label>
         {report?.sampling_note ? <span className="muted">{report.sampling_note}</span> : null}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json,.json"
+          hidden
+          onChange={onUpload}
+        />
+        <button
+          type="button"
+          className="ghost"
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {uploading ? "A carregar…" : "Carregar relatório"}
+        </button>
         <button
           type="button"
           className={showInfo ? "ghost active" : "ghost"}
